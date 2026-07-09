@@ -1,0 +1,30 @@
+{
+  "name": "prod-own",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "clean": "node -e \"const fs = require('fs'); ['apps/web/.next', '.turbo', 'apps/web/.turbo', 'apps/api/.turbo', 'apps/worker/.turbo'].forEach(p => fs.rmSync(p, { recursive: true, force: true }))\"",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write .",
+    "dev:api": "pnpm --filter @prod-own/api dev",
+    "dev:worker": "pnpm --filter @prod-own/worker dev",
+    "dev:web": "pnpm --filter @prod-own/web dev",
+    "db:generate": "pnpm --filter @prod-own/db prisma generate",
+    "db:migrate": "pnpm --filter @prod-own/db prisma migrate dev",
+    "db:studio": "pnpm --filter @prod-own/db prisma studio",
+    "compose:up": "docker compose up --build",
+    "compose:down": "docker compose down -v"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "eslint": "^9.32.0",
+    "@types/node": "^22.15.30",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.37.0",
+    "turbo": "^2.5.5",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@prod-own/config": ["packages/config/src/index.ts"],
+      "@prod-own/db": ["packages/db/src/index.ts"],
+      "@prod-own/queue": ["packages/queue/src/index.ts"],
+      "@prod-own/observability": ["packages/observability/src/index.ts"],
+      "@prod-own/types": ["packages/types/src/index.ts"]
+    }
+  }
+}

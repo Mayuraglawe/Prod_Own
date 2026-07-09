@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id         String        @id @default(cuid())
+  slug       String        @unique
+  name       String
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  users      User[]
+  sources    Source[]
+  jobs       FingerprintJob[]
+  alerts     AlertEvent[]
+  payments   PaymentEvent[]
+
+  @@index([slug])
+}
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  email     String
+  role      String   @default("member")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model Source {
+  id         String          @id @default(cuid())
+  tenantId   String
+  externalId String
+  name       String
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  jobs       FingerprintJob[]
+
+  @@unique([tenantId, externalId])
+  @@index([tenantId])
+}
+
+model FingerprintJob {
+  id          String   @id @default(cuid())
+  tenantId    String
+  sourceId    String
+  status      String   @default("queued")
+  fingerprint String?
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  source      Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([sourceId])
+}
+
+model AlertEvent {
+  id         String   @id @default(cuid())
+  tenantId   String
+  channel    String
+  severity   String   @default("info")
+  title      String
+  message    String
+  createdAt  DateTime @default(now())
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, channel])
+}
+
+model PaymentEvent {
+  id            String   @id @default(cuid())
+  tenantId      String
+  provider      String
+  providerEvent String
+  payload       Json
+  createdAt     DateTime @default(now())
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, provider])
+}
+
+// RLS note:
+// Apply row-level security in Postgres migrations using tenant_id scoped policies.
+// Prisma defines the multi-tenant data model, but policy enforcement lives in SQL.
