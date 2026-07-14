@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,6 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Represents a Tenant (Workspace / Organization).
+/// The primary boundary for data isolation (Row Level Security target).
 model Tenant {
   id         String        @id @default(cuid())
   slug       String        @unique
@@ -22,6 +27,7 @@ model Tenant {
   @@index([slug])
 }
 
+/// Represents a User account associated with a specific Tenant.
 model User {
   id        String   @id @default(cuid())
   tenantId  String
@@ -35,6 +41,7 @@ model User {
   @@index([tenantId])
 }
 
+/// Represents an external ingest source producing errors (e.g., API servers, Frontends).
 model Source {
   id         String          @id @default(cuid())
   tenantId   String
@@ -49,6 +56,7 @@ model Source {
   @@index([tenantId])
 }
 
+/// Represents a background job queued to generate deduplicated error groupings (fingerprints).
 model FingerprintJob {
   id          String   @id @default(cuid())
   tenantId    String
@@ -65,6 +73,7 @@ model FingerprintJob {
   @@index([sourceId])
 }
 
+/// Represents an alert incident event pushed to channels like Slack or n8n.
 model AlertEvent {
   id         String   @id @default(cuid())
   tenantId   String
@@ -78,6 +87,7 @@ model AlertEvent {
   @@index([tenantId, channel])
 }
 
+/// Represents a billing hook notification event tracked from Razorpay.
 model PaymentEvent {
   id            String   @id @default(cuid())
   tenantId      String
@@ -93,3 +103,4 @@ model PaymentEvent {
 // RLS note:
 // Apply row-level security in Postgres migrations using tenant_id scoped policies.
 // Prisma defines the multi-tenant data model, but policy enforcement lives in SQL.
+

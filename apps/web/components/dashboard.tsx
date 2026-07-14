@@ -119,24 +119,48 @@ const INITIAL_JOBS: WorkerJob[] = [
   { id: 'job-108', name: 'process-fingerprint:err-3', status: 'failed', progress: 40, durationMs: 82, timestamp: '1 hour ago' }
 ];
 
+/**
+ * Main dashboard view component.
+ * Integrates APM monitoring logs, background queues, webhook setups, and telemetry payload simulations.
+ */
 export function Dashboard() {
+  // Navigation tabs state switcher: 'overview' | 'inbox' | 'apm' | 'billing' | 'settings'
   const [activeTab, setActiveTab] = useState<'overview' | 'inbox' | 'apm' | 'billing' | 'settings'>('overview');
+  
+  // Real-time telemetry errors list state (populated with mock events initially)
   const [errors, setErrors] = useState<ErrorEvent[]>(INITIAL_ERRORS);
+  
+  // Active/waiting background BullMQ queue jobs status stream
   const [jobs, setJobs] = useState<WorkerJob[]>(INITIAL_JOBS);
+  
+  // Currently inspected error event object in the Error Inbox tab view details pane
   const [selectedError, setSelectedError] = useState<ErrorEvent | null>(INITIAL_ERRORS[0] || null);
+  
+  // Search query text used to filter error title, message or source signatures
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Severity filter state: 'all' or specific levels ('critical', 'error', 'warning')
   const [severityFilter, setSeverityFilter] = useState<'all' | 'critical' | 'error' | 'warning'>('all');
+  
+  // Current active workspace tenantId selection for multi-tenant simulation scoping
   const [currentTenant, setCurrentTenant] = useState('tenant-12');
+  
+  // User integration settings endpoints
   const [slackUrl, setSlackUrl] = useState('https://hooks.slack.com/services/YOUR-SLACK-WEBHOOK-URL');
   const [n8nUrl, setN8nUrl] = useState('https://n8n.mycompany.com/webhook/alert-receiver');
+  
+  // Authentication ingest key display/generation states
   const [apiKey, setApiKey] = useState('prodown_live_a1b2c3d4e5f6g7h8i9j0');
   const [showApiKey, setShowApiKey] = useState(false);
+  
+  // Simulator UI button triggers loading state
   const [isSimulating, setIsSimulating] = useState(false);
 
-  // Ingest simulator options
+  // Selected payload error type for local ingest simulator
   const [simType, setSimType] = useState<'NullPointer' | 'NetworkReset' | 'OutOfMemory'>('NullPointer');
 
-  // BullMQ Worker simulation runner
+  // React hook simulation simulating BullMQ background execution processes.
+  // Periodically polls, increments active jobs progress, and completes or wakes waiting jobs.
   useEffect(() => {
     const timer = setInterval(() => {
       setJobs((prevJobs) => {
@@ -159,7 +183,7 @@ export function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // Filter errors
+  // Memoized search-and-severity filtered error collection list shown in the inbox pane
   const filteredErrors = useMemo(() => {
     return errors.filter((err) => {
       const matchesSearch =
@@ -171,13 +195,22 @@ export function Dashboard() {
     });
   }, [errors, searchQuery, severityFilter]);
 
-  // Simulate Trigger Event
+
+  /**
+   * Local ingest simulator action.
+   * Simulates sending a structured error payload to the APM control plane ingest endpoint:
+   * 1. Constructs a mock error event depending on user selection ('NullPointer', 'NetworkReset', 'OutOfMemory').
+   * 2. Checks if an event with the same signature exists to increment the frequency count (deduplication simulation).
+   * 3. Schedules a simulated worker fingerprinting background job.
+   * 4. Updates tab state to direct focus to the Error Inbox to view the newly ingested error event.
+   */
   const triggerSimulation = () => {
     setIsSimulating(true);
     setTimeout(() => {
       const newErrId = `err-${Date.now()}`;
       let newEvent: ErrorEvent;
 
+      // Construct simulator error structures
       if (simType === 'NullPointer') {
         newEvent = {
           id: newErrId,
@@ -227,7 +260,7 @@ export function Dashboard() {
       }
 
       setErrors((prev) => {
-        // If error with same title exists, just bump count, else add new
+        // De-duplication check: if error with same signature exists, bump count, else add new
         const existingIdx = prev.findIndex((e) => e.title === newEvent.title);
         if (existingIdx !== -1) {
           const updated = [...prev];
@@ -244,7 +277,7 @@ export function Dashboard() {
         return [newEvent, ...prev];
       });
 
-      // Add a corresponding BullMQ job
+      // Enqueue a corresponding simulated BullMQ worker process job
       const newJobId = `job-${Math.floor(Math.random() * 1000)}`;
       const newJob: WorkerJob = {
         id: newJobId,
@@ -261,6 +294,7 @@ export function Dashboard() {
       setSelectedError(newEvent);
     }, 800);
   };
+
 
   return (
     <div className="flex h-screen w-screen overflow-hidden text-slate-100 bg-[#070913]">
