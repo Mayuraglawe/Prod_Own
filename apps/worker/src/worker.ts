@@ -5,6 +5,9 @@ import { createObservabilitySdk } from '@prod-own/observability';
 import { redisConnection } from '@prod-own/queue';
 import { queueNames } from '@prod-own/queue';
 
+// Import job handlers
+import { processFingerprintJob } from './jobs/fingerprint.job';
+
 /**
  * Initializes and starts the BullMQ background worker service.
  * - Starts the OpenTelemetry SDK to record tracing spans of processed queue jobs.
@@ -20,15 +23,7 @@ export async function startWorker() {
   // Instantiate the fingerprints processor worker subscribing to the 'fingerprints' queue
   const worker = new Worker(
     queueNames.fingerprints,
-    async (job) => {
-      // Job processing handler logic: processes error payloads and groups them by fingerprint signature
-      return {
-        jobId: job.id,
-        tenantId: job.data.tenantId,
-        sourceId: job.data.sourceId,
-        processed: true
-      };
-    },
+    processFingerprintJob,
     {
       // Cast to ConnectionOptions to bypass type mismatch between different resolved ioredis subversions
       connection: redisConnection as unknown as ConnectionOptions,

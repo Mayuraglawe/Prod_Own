@@ -7,8 +7,8 @@ import './globals.css';
  * Metadata configuration for search engine optimization (SEO) and tab titles.
  */
 export const metadata: Metadata = {
-  title: 'Prod Own Dashboard',
-  description: 'Self-hosted multi-tenant operations dashboard'
+  title: 'Donezo — Prod Own Operations & Error Dashboard',
+  description: 'Plan, prioritize, and accomplish your tasks and monitor self-hosted error telemetry with ease'
 };
 
 /**
@@ -17,8 +17,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-[#F3F5F4] text-[#13221C] antialiased selection:bg-[#20C997] selection:text-white">
+        {children}
+      </body>
     </html>
   );
 }
-

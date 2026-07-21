@@ -61,6 +61,26 @@ export async function buildApp() {
   // Payment and billing webhook endpoints (e.g. Razorpay webhook payloads)
   await app.register(registerPaymentRoutes);
 
+  // Centralized Error Handling: Catches unhandled errors or validation failures
+  app.setErrorHandler((error: any, request, reply) => {
+    // If it's a validation error from our schema, fastify adds validation context
+    if (error.validation) {
+      return reply.code(400).send({
+        error: 'Bad Request',
+        message: 'Payload validation failed',
+        details: error.validation
+      });
+    }
+
+    // Generic fallback for unhandled exceptions
+    request.log.error(error);
+    const statusCode = error.statusCode || 500;
+    return reply.code(statusCode).send({
+      error: statusCode === 500 ? 'Internal Server Error' : error.name,
+      message: statusCode === 500 ? 'An unexpected error occurred' : error.message
+    });
+  });
+
   // Register onClose hook to guarantee graceful shutdown of OpenTelemetry SDK trace pipelines on server termination
   app.addHook('onClose', async () => {
     await sdk.shutdown();

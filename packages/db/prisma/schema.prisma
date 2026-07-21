@@ -16,6 +16,7 @@ model Tenant {
   id         String        @id @default(cuid())
   slug       String        @unique
   name       String
+
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
   users      User[]
@@ -23,6 +24,8 @@ model Tenant {
   jobs       FingerprintJob[]
   alerts     AlertEvent[]
   payments   PaymentEvent[]
+  events     Event[]
+  issues     Issue[]
 
   @@index([slug])
 }
@@ -51,6 +54,8 @@ model Source {
   updatedAt  DateTime        @updatedAt
   tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   jobs       FingerprintJob[]
+  events     Event[]
+  issues     Issue[]
 
   @@unique([tenantId, externalId])
   @@index([tenantId])
@@ -104,3 +109,50 @@ model PaymentEvent {
 // Apply row-level security in Postgres migrations using tenant_id scoped policies.
 // Prisma defines the multi-tenant data model, but policy enforcement lives in SQL.
 
+enum IssueStatus {
+  OPEN
+  RESOLVED
+  IGNORED
+}
+
+/// Represents a grouped collection of identical errors.
+model Issue {
+  id          String      @id @default(cuid())
+  tenantId    String
+  sourceId    String
+  fingerprint String
+  status      IssueStatus @default(OPEN)
+  title       String?
+  firstSeen   DateTime    @default(now())
+  lastSeen    DateTime    @default(now())
+  eventCount  Int         @default(0)
+  
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  source      Source      @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  events      Event[]
+
+  // A fingerprint is unique within a specific project/source
+  @@unique([sourceId, fingerprint])
+  @@index([tenantId, status])
+  @@index([lastSeen])
+}
+
+/// Represents a raw error event received from an external source.
+model Event {
+  id          String   @id @default(cuid())
+  tenantId    String
+  sourceId    String
+  issueId     String?
+  content     String
+  metadata    Json?
+  environment String?
+  release     String?
+  createdAt   DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  source      Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  issue       Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, createdAt])
+  @@index([sourceId])
+  @@index([issueId, createdAt])
+}
