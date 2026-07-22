@@ -10,8 +10,8 @@ This repository is a self-hosted, INR-priced error tracking and sampled-APM plat
 
 - TypeScript end-to-end across ingest, worker, dashboard, shared packages, and SDK surfaces.
 - Keep the monorepo single-rooted; do not split into separate repos for services.
-- Core runtime services for self-hosting are Postgres, Redis, API, and worker.
-- Dashboard stays as a separate Next.js app, not part of the Docker runtime stack.
+- The application follows a Next.js-only architecture, handling both frontend dashboard and backend API logic.
+- Core runtime services for self-hosting are Next.js, Postgres, and Redis.
 - RLS is the multi-tenancy boundary. Enforce tenant/project isolation in Postgres, not in ad hoc app logic.
 - Use BullMQ for queueing and retries; do not hand-roll retry/backoff logic.
 - Use plain HTTP integrations for alerting and billing hooks; prefer Slack webhooks, n8n webhooks, and Razorpay APIs over vendor SDK sprawl.

@@ -27,10 +27,10 @@ services:
       timeout: 5s
       retries: 5
 
-  api:
+  web:
     image: node:22-alpine
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm dev:api"
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm dev:web"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
       REDIS_URL: redis://redis:6379
@@ -40,30 +40,12 @@ services:
       N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      OTEL_SERVICE_NAME: prod-own-api
+      OTEL_SERVICE_NAME: prod-own-web
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
     volumes:
       - ./:/app
     ports:
-      - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
-  worker:
-    image: node:22-alpine
-    working_dir: /app
-    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm dev:worker"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
-      REDIS_URL: redis://redis:6379
-      TENANT_HEADER: x-tenant-id
-      OTEL_SERVICE_NAME: prod-own-worker
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
-    volumes:
-      - ./:/app
+      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
