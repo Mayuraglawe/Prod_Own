@@ -23,6 +23,7 @@ model Tenant {
   sources    Source[]
   jobs       FingerprintJob[]
   alerts     AlertEvent[]
+  alertConfigs AlertConfig[]
   payments   PaymentEvent[]
   events     Event[]
   issues     Issue[]
@@ -97,9 +98,28 @@ model Source {
   jobs       FingerprintJob[]
   events     Event[]
   issues     Issue[]
+  alerts     AlertConfig[]
 
   @@unique([tenantId, externalId])
   @@index([tenantId])
+}
+
+/// Represents a configuration for dispatching alert webhooks per project/source.
+model AlertConfig {
+  id         String   @id @default(cuid())
+  tenantId   String
+  sourceId   String
+  channel    String   @default("webhook") // e.g. "webhook", "slack", "n8n"
+  webhookUrl String
+  events     String[] // e.g. ["new_issue", "reopened"]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  source     Source   @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([sourceId])
 }
 
 /// Represents a background job queued to generate deduplicated error groupings (fingerprints).

@@ -7,7 +7,11 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. ENUMS
-CREATE TYPE "IssueStatus" AS ENUM ('OPEN', 'RESOLVED', 'IGNORED');
+DO $$ BEGIN
+    CREATE TYPE "IssueStatus" AS ENUM ('OPEN', 'RESOLVED', 'IGNORED');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- ==============================================================================
 -- 2. TABLES
@@ -16,7 +20,7 @@ CREATE TYPE "IssueStatus" AS ENUM ('OPEN', 'RESOLVED', 'IGNORED');
 -- ------------------------------------------------------------------------------
 -- Tenant (Organization/Workspace)
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Tenant" (
+CREATE TABLE IF NOT EXISTS "Tenant" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "slug" TEXT NOT NULL UNIQUE,
     "name" TEXT NOT NULL,
@@ -24,12 +28,12 @@ CREATE TABLE "Tenant" (
     "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
-CREATE INDEX "Tenant_slug_idx" ON "Tenant"("slug");
+CREATE INDEX IF NOT EXISTS "Tenant_slug_idx" ON "Tenant"("slug");
 
 -- ------------------------------------------------------------------------------
 -- User
 -- ------------------------------------------------------------------------------
-CREATE TABLE "User" (
+CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT,
     "name" TEXT,
@@ -43,13 +47,13 @@ CREATE TABLE "User" (
     CONSTRAINT "User_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-CREATE INDEX "User_tenantId_idx" ON "User"("tenantId");
+CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
+CREATE INDEX IF NOT EXISTS "User_tenantId_idx" ON "User"("tenantId");
 
 -- ------------------------------------------------------------------------------
 -- Account
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Account" (
+CREATE TABLE IF NOT EXISTS "Account" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -65,12 +69,12 @@ CREATE TABLE "Account" (
     CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
+CREATE UNIQUE INDEX IF NOT EXISTS "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- ------------------------------------------------------------------------------
 -- Session
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Session" (
+CREATE TABLE IF NOT EXISTS "Session" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "sessionToken" TEXT NOT NULL UNIQUE,
     "userId" TEXT NOT NULL,
@@ -81,18 +85,18 @@ CREATE TABLE "Session" (
 -- ------------------------------------------------------------------------------
 -- VerificationToken
 -- ------------------------------------------------------------------------------
-CREATE TABLE "VerificationToken" (
+CREATE TABLE IF NOT EXISTS "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL UNIQUE,
     "expires" TIMESTAMP(3) NOT NULL
 );
 
-CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
+CREATE UNIQUE INDEX IF NOT EXISTS "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- ------------------------------------------------------------------------------
 -- Source (Project / App)
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Source" (
+CREATE TABLE IF NOT EXISTS "Source" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "externalId" TEXT NOT NULL,
@@ -102,13 +106,13 @@ CREATE TABLE "Source" (
     CONSTRAINT "Source_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "Source_tenantId_externalId_key" ON "Source"("tenantId", "externalId");
-CREATE INDEX "Source_tenantId_idx" ON "Source"("tenantId");
+CREATE UNIQUE INDEX IF NOT EXISTS "Source_tenantId_externalId_key" ON "Source"("tenantId", "externalId");
+CREATE INDEX IF NOT EXISTS "Source_tenantId_idx" ON "Source"("tenantId");
 
 -- ------------------------------------------------------------------------------
 -- FingerprintJob (Async grouping jobs)
 -- ------------------------------------------------------------------------------
-CREATE TABLE "FingerprintJob" (
+CREATE TABLE IF NOT EXISTS "FingerprintJob" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
@@ -121,13 +125,13 @@ CREATE TABLE "FingerprintJob" (
     CONSTRAINT "FingerprintJob_sourceId_fkey" FOREIGN KEY ("sourceId") REFERENCES "Source"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX "FingerprintJob_tenantId_status_idx" ON "FingerprintJob"("tenantId", "status");
-CREATE INDEX "FingerprintJob_sourceId_idx" ON "FingerprintJob"("sourceId");
+CREATE INDEX IF NOT EXISTS "FingerprintJob_tenantId_status_idx" ON "FingerprintJob"("tenantId", "status");
+CREATE INDEX IF NOT EXISTS "FingerprintJob_sourceId_idx" ON "FingerprintJob"("sourceId");
 
 -- ------------------------------------------------------------------------------
 -- AlertEvent
 -- ------------------------------------------------------------------------------
-CREATE TABLE "AlertEvent" (
+CREATE TABLE IF NOT EXISTS "AlertEvent" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "channel" TEXT NOT NULL,
@@ -138,12 +142,31 @@ CREATE TABLE "AlertEvent" (
     CONSTRAINT "AlertEvent_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX "AlertEvent_tenantId_channel_idx" ON "AlertEvent"("tenantId", "channel");
+CREATE INDEX IF NOT EXISTS "AlertEvent_tenantId_channel_idx" ON "AlertEvent"("tenantId", "channel");
+
+-- ------------------------------------------------------------------------------
+-- AlertConfig
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "AlertConfig" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "tenantId" TEXT NOT NULL,
+    "sourceId" TEXT NOT NULL,
+    "channel" TEXT NOT NULL DEFAULT 'webhook',
+    "webhookUrl" TEXT NOT NULL,
+    "events" TEXT[] NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    CONSTRAINT "AlertConfig_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "AlertConfig_sourceId_fkey" FOREIGN KEY ("sourceId") REFERENCES "Source"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS "AlertConfig_tenantId_idx" ON "AlertConfig"("tenantId");
+CREATE INDEX IF NOT EXISTS "AlertConfig_sourceId_idx" ON "AlertConfig"("sourceId");
 
 -- ------------------------------------------------------------------------------
 -- PaymentEvent
 -- ------------------------------------------------------------------------------
-CREATE TABLE "PaymentEvent" (
+CREATE TABLE IF NOT EXISTS "PaymentEvent" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -153,12 +176,12 @@ CREATE TABLE "PaymentEvent" (
     CONSTRAINT "PaymentEvent_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX "PaymentEvent_tenantId_provider_idx" ON "PaymentEvent"("tenantId", "provider");
+CREATE INDEX IF NOT EXISTS "PaymentEvent_tenantId_provider_idx" ON "PaymentEvent"("tenantId", "provider");
 
 -- ------------------------------------------------------------------------------
 -- Issue (Grouped Error Events)
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Issue" (
+CREATE TABLE IF NOT EXISTS "Issue" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
@@ -172,14 +195,14 @@ CREATE TABLE "Issue" (
     CONSTRAINT "Issue_sourceId_fkey" FOREIGN KEY ("sourceId") REFERENCES "Source"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE UNIQUE INDEX "Issue_sourceId_fingerprint_key" ON "Issue"("sourceId", "fingerprint");
-CREATE INDEX "Issue_tenantId_status_idx" ON "Issue"("tenantId", "status");
-CREATE INDEX "Issue_lastSeen_idx" ON "Issue"("lastSeen");
+CREATE UNIQUE INDEX IF NOT EXISTS "Issue_sourceId_fingerprint_key" ON "Issue"("sourceId", "fingerprint");
+CREATE INDEX IF NOT EXISTS "Issue_tenantId_status_idx" ON "Issue"("tenantId", "status");
+CREATE INDEX IF NOT EXISTS "Issue_lastSeen_idx" ON "Issue"("lastSeen");
 
 -- ------------------------------------------------------------------------------
 -- Event (Raw Error Occurrences)
 -- ------------------------------------------------------------------------------
-CREATE TABLE "Event" (
+CREATE TABLE IF NOT EXISTS "Event" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
@@ -194,9 +217,9 @@ CREATE TABLE "Event" (
     CONSTRAINT "Event_issueId_fkey" FOREIGN KEY ("issueId") REFERENCES "Issue"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE INDEX "Event_tenantId_createdAt_idx" ON "Event"("tenantId", "createdAt");
-CREATE INDEX "Event_sourceId_idx" ON "Event"("sourceId");
-CREATE INDEX "Event_issueId_createdAt_idx" ON "Event"("issueId", "createdAt");
+CREATE INDEX IF NOT EXISTS "Event_tenantId_createdAt_idx" ON "Event"("tenantId", "createdAt");
+CREATE INDEX IF NOT EXISTS "Event_sourceId_idx" ON "Event"("sourceId");
+CREATE INDEX IF NOT EXISTS "Event_issueId_createdAt_idx" ON "Event"("issueId", "createdAt");
 
 
 -- ==============================================================================
@@ -211,33 +234,46 @@ ALTER TABLE "User" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Source" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "FingerprintJob" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "AlertEvent" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "AlertConfig" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "PaymentEvent" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Issue" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "Event" ENABLE ROW LEVEL SECURITY;
 
 -- Tenant Policy: Users can only see their own tenant record
+DROP POLICY IF EXISTS tenant_isolation_policy ON "Tenant";
 CREATE POLICY tenant_isolation_policy ON "Tenant"
     FOR ALL
     USING (id = current_setting('app.current_tenant_id', true));
 
 -- Generic Policy: Applied to all tables with a `tenantId` column
+DROP POLICY IF EXISTS user_isolation_policy ON "User";
 CREATE POLICY user_isolation_policy ON "User"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS source_isolation_policy ON "Source";
 CREATE POLICY source_isolation_policy ON "Source"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS fingerprintjob_isolation_policy ON "FingerprintJob";
 CREATE POLICY fingerprintjob_isolation_policy ON "FingerprintJob"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS alertexent_isolation_policy ON "AlertEvent";
 CREATE POLICY alertexent_isolation_policy ON "AlertEvent"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS alertconfig_isolation_policy ON "AlertConfig";
+CREATE POLICY alertconfig_isolation_policy ON "AlertConfig"
+    FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
+
+DROP POLICY IF EXISTS paymentevent_isolation_policy ON "PaymentEvent";
 CREATE POLICY paymentevent_isolation_policy ON "PaymentEvent"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS issue_isolation_policy ON "Issue";
 CREATE POLICY issue_isolation_policy ON "Issue"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));
 
+DROP POLICY IF EXISTS event_isolation_policy ON "Event";
 CREATE POLICY event_isolation_policy ON "Event"
     FOR ALL USING ("tenantId" = current_setting('app.current_tenant_id', true));

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { init } = require('../packages/sdk-node/dist/index.js');
 
 init({

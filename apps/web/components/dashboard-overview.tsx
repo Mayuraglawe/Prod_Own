@@ -1,0 +1,282 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import {
+  ArrowUpRight,
+  Play,
+  Pause,
+  Square,
+  Plus
+} from 'lucide-react';
+import Link from 'next/link';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: 'Admin' | 'Engineer' | 'Viewer';
+  assignedTask: string;
+  status: 'Completed' | 'In Progress' | 'Pending';
+}
+
+const MOCK_TEAM: TeamMember[] = [
+  { id: 'tm-1', name: 'Eleanor Pena', email: 'eleanor@example.com', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', role: 'Admin', assignedTask: 'Setup BullMQ Redis', status: 'Completed' },
+  { id: 'tm-2', name: 'Darrell Steward', email: 'darrell@example.com', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d', role: 'Engineer', assignedTask: 'Fingerprint Issue Grouping', status: 'In Progress' },
+  { id: 'tm-3', name: 'Cody Fisher', email: 'cody@example.com', avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d', role: 'Engineer', assignedTask: 'Next.js API Ingest', status: 'In Progress' },
+  { id: 'tm-4', name: 'Bessie Cooper', email: 'bessie@example.com', avatar: 'https://i.pravatar.cc/150?u=a04258114e29026302d', role: 'Viewer', assignedTask: 'Verify Alert Webhooks', status: 'Pending' }
+];
+
+export function DashboardOverview() {
+  const [isWorkerTracking, setIsWorkerTracking] = useState(true);
+  const [uptimeSeconds, setUptimeSeconds] = useState(5048); // 01:24:08
+
+  // Live Timer for BullMQ Uptime
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isWorkerTracking) {
+      interval = setInterval(() => {
+        setUptimeSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isWorkerTracking]);
+
+  const formatTimer = (totalSec: number) => {
+    const hrs = Math.floor(totalSec / 3600);
+    const mins = Math.floor((totalSec % 3600) / 60);
+    const secs = totalSec % 60;
+    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+        <div>
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-[#13221C] tracking-tight">Dashboard</h1>
+          <p className="text-xs lg:text-sm text-[#687870] mt-0.5">Plan, prioritize, and accomplish your tasks with ease</p>
+        </div>
+      </div>
+      
+      {/* 4 TOP STAT CARDS ROW */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1 */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B4F3A] via-[#094231] to-[#052A1F] p-6 text-white shadow-md flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-emerald-100">Total Projects</span>
+            <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+              <ArrowUpRight className="w-4 h-4 text-white" />
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl lg:text-4xl font-extrabold tracking-tight">24</div>
+            <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#20C997]/20 text-[#20C997] text-[10px] font-bold">
+              <ArrowUpRight className="w-3 h-3" />
+              <span>Increased from last month</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2 */}
+        <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#687870]">Ended Projects</span>
+            <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
+              <ArrowUpRight className="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">10</div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
+              <span className="font-semibold text-emerald-600">↗ Increased</span>
+              <span>from last month</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3 */}
+        <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#687870]">Running Projects</span>
+            <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
+              <ArrowUpRight className="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">12</div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
+              <span className="font-semibold text-emerald-600">↗ Increased</span>
+              <span>from last month</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4 */}
+        <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-[#687870]">Pending Project</span>
+            <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
+              <ArrowUpRight className="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">2</div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
+              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200">On Discuss</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MIDDLE GRID (3 COLUMNS) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-bold text-[#13221C]">Project Analytics</h3>
+          </div>
+          <div className="flex items-end justify-between h-44 gap-2 pt-6 px-2">
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#E2E8E4] bg-hatched-pattern rounded-full h-28"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">S</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#E2E8E4] bg-hatched-pattern rounded-full h-36"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">M</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1 relative">
+              <span className="absolute -top-6 px-1.5 py-0.5 bg-[#20C997] text-[#052A1F] text-[9px] font-extrabold rounded-md shadow-sm">34%</span>
+              <div className="w-full bg-[#20C997] rounded-full h-32"></div>
+              <span className="text-[11px] font-bold text-[#0B4F3A]">T</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#0B4F3A] rounded-full h-40"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">W</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#E2E8E4] bg-hatched-pattern rounded-full h-32"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">T</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#E2E8E4] bg-hatched-pattern rounded-full h-24"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">F</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 flex-1">
+              <div className="w-full bg-[#E2E8E4] bg-hatched-pattern rounded-full h-30"></div>
+              <span className="text-[11px] font-semibold text-[#687870]">S</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-3 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 className="text-base font-bold text-[#13221C] mb-4">Reminders</h3>
+            <div className="space-y-1">
+              <h4 className="text-lg font-bold text-[#13221C] leading-snug">Meeting with Arc Company</h4>
+              <p className="text-xs text-[#687870]">Time : 02.00 pm - 04.00 pm</p>
+            </div>
+          </div>
+          <Link href="/calendar" className="mt-6 w-full flex items-center justify-center gap-2 py-3 bg-[#0B4F3A] hover:bg-[#083E2D] text-white font-bold text-xs rounded-full shadow-sm transition-all">
+            <Play className="w-3.5 h-3.5 fill-current" />
+            <span>Start Meeting</span>
+          </Link>
+        </div>
+
+        <div className="lg:col-span-4 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-[#13221C]">Project</h3>
+            <Link href="/tasks" className="flex items-center gap-1 text-xs font-bold text-[#0B4F3A] hover:underline">
+              <Plus className="w-3.5 h-3.5" />
+              <span>New</span>
+            </Link>
+          </div>
+          <div className="space-y-3">
+            <Link href="/tasks" className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">⚡</div>
+                <div>
+                  <h5 className="text-xs font-bold text-[#13221C]">Develop API Endpoints</h5>
+                  <p className="text-[10px] text-[#687870]">Due date: Feb 24, 2024</p>
+                </div>
+              </div>
+            </Link>
+            <Link href="/tasks" className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs">🛡️</div>
+                <div>
+                  <h5 className="text-xs font-bold text-[#13221C]">Onboarding Flow</h5>
+                  <p className="text-[10px] text-[#687870]">Due date: Feb 26, 2024</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* BOTTOM GRID (3 COLUMNS) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base font-bold text-[#13221C]">Team Collaboration</h3>
+            <Link href="/team" className="flex items-center gap-1 px-3 py-1 bg-white border border-[#E2E8E4] text-[#13221C] font-bold text-[11px] rounded-full hover:bg-gray-50 transition-all">
+              <Plus className="w-3 h-3" />
+              <span>Add Member</span>
+            </Link>
+          </div>
+          <div className="space-y-4">
+            {MOCK_TEAM.map((tm) => (
+              <div key={tm.id} className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-3 min-w-0">
+                  <img src={tm.avatar} alt={tm.name} className="w-9 h-9 rounded-full object-cover" />
+                  <div className="min-w-0">
+                    <h5 className="text-xs font-bold text-[#13221C] truncate">{tm.name}</h5>
+                    <p className="text-[10px] text-[#687870] truncate">{tm.assignedTask}</p>
+                  </div>
+                </div>
+                <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] shrink-0 border ${
+                  tm.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                  tm.status === 'In Progress' ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-rose-50 text-rose-700 border-rose-200'
+                }`}>
+                  {tm.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="lg:col-span-3 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between">
+          <h3 className="text-base font-bold text-[#13221C]">Project Progress</h3>
+          <div className="relative flex flex-col items-center justify-center py-4">
+            <svg className="w-40 h-24" viewBox="0 0 160 90">
+              <path d="M 15 80 A 65 65 0 0 1 145 80" fill="none" stroke="#E2E8E4" strokeWidth="18" strokeLinecap="round" />
+              <path d="M 15 80 A 65 65 0 0 1 95 22" fill="none" stroke="#0B4F3A" strokeWidth="18" strokeLinecap="round" />
+            </svg>
+            <div className="text-center mt-[-2.5rem]">
+              <span className="text-3xl font-extrabold text-[#13221C] tracking-tight">41%</span>
+              <span className="block text-[11px] text-[#687870] font-semibold">Project Ended</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="lg:col-span-4 rounded-3xl bg-gradient-to-br from-[#052A1F] via-[#094231] to-[#0B4F3A] p-6 text-white shadow-md relative overflow-hidden flex flex-col justify-between">
+          <div className="absolute inset-0 bg-wave-dark pointer-events-none opacity-60"></div>
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-xs font-semibold text-emerald-100">Time Tracker</span>
+          </div>
+          <div className="relative z-10 py-6 text-center">
+            <div className="text-4xl font-extrabold tracking-wider font-mono drop-shadow-sm">
+              {formatTimer(uptimeSeconds)}
+            </div>
+          </div>
+          <div className="relative z-10 flex items-center justify-center gap-3">
+            <button onClick={() => setIsWorkerTracking(!isWorkerTracking)} className="w-10 h-10 rounded-full bg-white text-[#052A1F] flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+              {isWorkerTracking ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+            </button>
+            <button onClick={() => { setIsWorkerTracking(false); setUptimeSeconds(0); }} className="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+              <Square className="w-4 h-4 fill-current" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

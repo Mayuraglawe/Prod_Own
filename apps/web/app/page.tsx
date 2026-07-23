@@ -23,7 +23,7 @@ export default function LandingPage() {
               Sign In
             </Link>
             <Link 
-              href="/login"
+              href="/register"
               className="group relative inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-200 overflow-hidden"
             >
               <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
@@ -57,7 +57,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link 
-              href="/login"
+              href="/register"
               className="group flex items-center gap-2 px-8 py-4 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] active:scale-[0.98]"
             >
               Start Tracking Now

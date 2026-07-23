@@ -60,6 +60,21 @@ export function ClientRegisterForm() {
           placeholder="••••••••"
         />
       </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-neutral-300" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
+        </div>
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          required
+          className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-800 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          placeholder="••••••••"
+        />
+      </div>
       <button
         type="submit"
         disabled={loading}
