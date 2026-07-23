@@ -21,6 +21,7 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    command: redis-server --appendonly yes
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -30,11 +31,11 @@ services:
   web:
     image: node:22-alpine
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm dev:web"
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm --filter @prod-own/db prisma generate && pnpm dev:web"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
       REDIS_URL: redis://redis:6379
-      APP_URL: http://localhost:3000
+      APP_URL: http://localhost:3001
       TENANT_HEADER: x-tenant-id
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
       N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
@@ -42,10 +43,35 @@ services:
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
       OTEL_SERVICE_NAME: prod-own-web
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-changeme-in-production}
+      NEXTAUTH_URL: http://localhost:3001
     volumes:
       - ./:/app
     ports:
-      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm --filter @prod-own/worker dev"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
+      REDIS_URL: redis://redis:6379
+      APP_URL: http://localhost:3001
+      TENANT_HEADER: x-tenant-id
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+      N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      OTEL_SERVICE_NAME: prod-own-worker
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+    volumes:
+      - ./:/app
     depends_on:
       postgres:
         condition: service_healthy

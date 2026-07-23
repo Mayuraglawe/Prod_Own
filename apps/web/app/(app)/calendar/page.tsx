@@ -3,19 +3,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-interface CalendarEvent {
-  id: string;
-  title: string;
-  time: string;
-  type: 'Meeting' | 'Deployment' | 'Maintenance';
-  date: string;
-}
-
-const MOCK_CALENDAR: CalendarEvent[] = [
-  { id: 'cal-1', title: 'Meeting with Arc Company', time: '02:00 pm - 04:00 pm', type: 'Meeting', date: 'Today' },
-  { id: 'cal-2', title: 'PostgreSQL RLS Policy Audit', time: '10:00 am - 11:30 am', type: 'Maintenance', date: 'Tomorrow' },
-  { id: 'cal-3', title: 'Deploy Ingest API v1.4.0', time: '05:00 pm - 06:00 pm', type: 'Deployment', date: 'Feb 24, 2026' }
-];
+import { CalendarEvent, MOCK_CALENDAR } from '../../../lib/mock-data';
 
 export default function CalendarPage() {
   return (
@@ -31,7 +19,7 @@ export default function CalendarPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {MOCK_CALENDAR.map((evt) => (
+        {MOCK_CALENDAR.map((evt: CalendarEvent) => (
           <div key={evt.id} className="p-5 rounded-2xl border border-[#E2E8E4] bg-[#F3F5F4] space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0B4F3A] font-bold text-[10px]">

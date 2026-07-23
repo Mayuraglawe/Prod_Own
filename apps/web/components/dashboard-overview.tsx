@@ -10,24 +10,21 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-interface TeamMember {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  role: 'Admin' | 'Engineer' | 'Viewer';
-  assignedTask: string;
-  status: 'Completed' | 'In Progress' | 'Pending';
+export interface DashboardStats {
+  totalIssues: number;
+  totalEvents: number;
+  resolvedIssues: number;
 }
 
-const MOCK_TEAM: TeamMember[] = [
-  { id: 'tm-1', name: 'Eleanor Pena', email: 'eleanor@example.com', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d', role: 'Admin', assignedTask: 'Setup BullMQ Redis', status: 'Completed' },
-  { id: 'tm-2', name: 'Darrell Steward', email: 'darrell@example.com', avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026703d', role: 'Engineer', assignedTask: 'Fingerprint Issue Grouping', status: 'In Progress' },
-  { id: 'tm-3', name: 'Cody Fisher', email: 'cody@example.com', avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d', role: 'Engineer', assignedTask: 'Next.js API Ingest', status: 'In Progress' },
-  { id: 'tm-4', name: 'Bessie Cooper', email: 'bessie@example.com', avatar: 'https://i.pravatar.cc/150?u=a04258114e29026302d', role: 'Viewer', assignedTask: 'Verify Alert Webhooks', status: 'Pending' }
-];
+export interface IssueData {
+  id: string;
+  title: string | null;
+  status: string;
+  eventCount: number;
+  lastSeen: Date;
+}
 
-export function DashboardOverview() {
+export function DashboardOverview({ stats, activeIssues }: { stats: DashboardStats, activeIssues: IssueData[] }) {
   const [isWorkerTracking, setIsWorkerTracking] = useState(true);
   const [uptimeSeconds, setUptimeSeconds] = useState(5048); // 01:24:08
 
@@ -63,16 +60,16 @@ export function DashboardOverview() {
         {/* Card 1 */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B4F3A] via-[#094231] to-[#052A1F] p-6 text-white shadow-md flex flex-col justify-between min-h-[140px]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-emerald-100">Total Projects</span>
+            <span className="text-xs font-semibold text-emerald-100">Total Issues</span>
             <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
               <ArrowUpRight className="w-4 h-4 text-white" />
             </div>
           </div>
           <div>
-            <div className="text-3xl lg:text-4xl font-extrabold tracking-tight">24</div>
+            <div className="text-3xl lg:text-4xl font-extrabold tracking-tight">{stats.totalIssues}</div>
             <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#20C997]/20 text-[#20C997] text-[10px] font-bold">
               <ArrowUpRight className="w-3 h-3" />
-              <span>Increased from last month</span>
+              <span>Tracked by LiteTrace</span>
             </div>
           </div>
         </div>
@@ -80,16 +77,15 @@ export function DashboardOverview() {
         {/* Card 2 */}
         <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#687870]">Ended Projects</span>
+            <span className="text-xs font-bold text-[#687870]">Total Events</span>
             <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
               <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">10</div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">{stats.totalEvents}</div>
             <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
-              <span className="font-semibold text-emerald-600">↗ Increased</span>
-              <span>from last month</span>
+              <span className="font-semibold text-emerald-600">Events Handled</span>
             </div>
           </div>
         </div>
@@ -97,16 +93,15 @@ export function DashboardOverview() {
         {/* Card 3 */}
         <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#687870]">Running Projects</span>
+            <span className="text-xs font-bold text-[#687870]">Resolved</span>
             <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
               <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">12</div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">{stats.resolvedIssues}</div>
             <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
-              <span className="font-semibold text-emerald-600">↗ Increased</span>
-              <span>from last month</span>
+              <span className="font-semibold text-emerald-600">Issues fixed</span>
             </div>
           </div>
         </div>
@@ -114,15 +109,17 @@ export function DashboardOverview() {
         {/* Card 4 */}
         <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm flex flex-col justify-between min-h-[140px]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#687870]">Pending Project</span>
+            <span className="text-xs font-bold text-[#687870]">Active Error Rate</span>
             <div className="w-8 h-8 rounded-full border border-[#E2E8E4] flex items-center justify-center text-[#13221C]">
               <ArrowUpRight className="w-4 h-4" />
             </div>
           </div>
           <div>
-            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">2</div>
+            <div className="text-3xl lg:text-4xl font-extrabold text-[#13221C] tracking-tight">
+              {stats.totalIssues > 0 ? Math.round((stats.totalIssues - stats.resolvedIssues) / stats.totalIssues * 100) : 0}%
+            </div>
             <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
-              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200">On Discuss</span>
+              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200">Unresolved %</span>
             </div>
           </div>
         </div>
@@ -216,30 +213,41 @@ export function DashboardOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-5 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-base font-bold text-[#13221C]">Team Collaboration</h3>
-            <Link href="/team" className="flex items-center gap-1 px-3 py-1 bg-white border border-[#E2E8E4] text-[#13221C] font-bold text-[11px] rounded-full hover:bg-gray-50 transition-all">
-              <Plus className="w-3 h-3" />
-              <span>Add Member</span>
+            <h3 className="text-base font-bold text-[#13221C]">Active Issues</h3>
+            <Link href="/dashboard" className="flex items-center gap-1 px-3 py-1 bg-white border border-[#E2E8E4] text-[#13221C] font-bold text-[11px] rounded-full hover:bg-gray-50 transition-all">
+              <span>View All</span>
             </Link>
           </div>
           <div className="space-y-4">
-            {MOCK_TEAM.map((tm) => (
-              <div key={tm.id} className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-3 min-w-0">
-                  <img src={tm.avatar} alt={tm.name} className="w-9 h-9 rounded-full object-cover" />
-                  <div className="min-w-0">
-                    <h5 className="text-xs font-bold text-[#13221C] truncate">{tm.name}</h5>
-                    <p className="text-[10px] text-[#687870] truncate">{tm.assignedTask}</p>
+            {activeIssues.length === 0 ? (
+              <div className="text-sm text-gray-500 py-4 text-center">No active issues found! You are all caught up.</div>
+            ) : (
+              activeIssues.map((issue) => (
+                <div key={issue.id} className="flex items-center justify-between gap-2 p-2 rounded-xl hover:bg-gray-50 cursor-pointer transition-all">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 font-bold text-xs shrink-0">
+                      ⚡
+                    </div>
+                    <div className="min-w-0">
+                      <h5 className="text-xs font-bold text-[#13221C] truncate">{issue.title || 'Unknown Error'}</h5>
+                      <p className="text-[10px] text-[#687870] truncate">Last seen: {new Date(issue.lastSeen).toLocaleString()}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] font-bold text-[#13221C]">{issue.eventCount}</span>
+                      <span className="text-[9px] text-[#687870]">Events</span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] border ${
+                      issue.status === 'RESOLVED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                      issue.status === 'OPEN' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+                    }`}>
+                      {issue.status}
+                    </span>
                   </div>
                 </div>
-                <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] shrink-0 border ${
-                  tm.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                  tm.status === 'In Progress' ? 'bg-sky-50 text-sky-700 border-sky-200' : 'bg-rose-50 text-rose-700 border-rose-200'
-                }`}>
-                  {tm.status}
-                </span>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 

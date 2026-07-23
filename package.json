@@ -10,6 +10,7 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
     "dev:web": "pnpm --filter @prod-own/web dev",
+    "dev:worker": "pnpm --filter @prod-own/worker dev",
     "db:generate": "pnpm --filter @prod-own/db prisma generate",
     "db:migrate": "pnpm --filter @prod-own/db prisma migrate dev",
     "db:studio": "pnpm --filter @prod-own/db prisma studio",

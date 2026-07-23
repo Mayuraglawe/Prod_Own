@@ -88,17 +88,22 @@ model VerificationToken {
 
 /// Represents an external ingest source producing errors (e.g., API servers, Frontends).
 model Source {
-  id         String          @id @default(cuid())
-  tenantId   String
-  externalId String
-  name       String
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  tenant     Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  jobs       FingerprintJob[]
-  events     Event[]
-  issues     Issue[]
-  alerts     AlertConfig[]
+  id           String          @id @default(cuid())
+  tenantId     String
+  externalId   String
+  name         String
+  /// SHA-256 hash of the source's ingest API key. Nullable for sources created before key auth was added.
+  apiKeyHash   String?         @unique
+  /// Short display prefix of the API key (first 7 chars of the plaintext key, e.g. "po_live").
+  /// Safe to display in the UI — does NOT reveal the full key.
+  apiKeyPrefix String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  jobs         FingerprintJob[]
+  events       Event[]
+  issues       Issue[]
+  alerts       AlertConfig[]
 
   @@unique([tenantId, externalId])
   @@index([tenantId])

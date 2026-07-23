@@ -1,0 +1,57 @@
+.scene {
+  perspective: 800px;
+  width: 120px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring {
+  width: 0;
+  height: 0;
+  position: absolute;
+  transform-style: preserve-3d;
+  animation: spin 3s linear infinite;
+}
+
+/* Give it a slight tilt to see the ring shape */
+@keyframes spin {
+  from { transform: rotateX(-10deg) rotateY(0deg); }
+  to { transform: rotateX(-10deg) rotateY(360deg); }
+}
+
+.dotContainer {
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  margin-left: -8px;
+  border-radius: 50%;
+  /* We use the theme's emerald color, but add a glow */
+  background: #0B4F3A;
+  box-shadow: 0 0 10px rgba(11, 79, 58, 0.5);
+  animation: counterSpin 3s linear infinite;
+}
+
+@keyframes counterSpin {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(-360deg); }
+}
+
+.dotContainer:nth-child(1) { transform: rotateY(0deg) translateZ(45px); }
+.dotContainer:nth-child(2) { transform: rotateY(45deg) translateZ(45px); }
+.dotContainer:nth-child(3) { transform: rotateY(90deg) translateZ(45px); }
+.dotContainer:nth-child(4) { transform: rotateY(135deg) translateZ(45px); }
+.dotContainer:nth-child(5) { transform: rotateY(180deg) translateZ(45px); }
+.dotContainer:nth-child(6) { transform: rotateY(225deg) translateZ(45px); }
+.dotContainer:nth-child(7) { transform: rotateY(270deg) translateZ(45px); }
+.dotContainer:nth-child(8) { transform: rotateY(315deg) translateZ(45px); }

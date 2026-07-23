@@ -1,0 +1,23 @@
+{
+  "name": "@prod-own/worker",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@prod-own/config": "workspace:*",
+    "@prod-own/db": "workspace:*",
+    "@prod-own/ingest": "workspace:*",
+    "@prod-own/queue": "workspace:*",
+    "bullmq": "^5.58.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3"
+  }
+}

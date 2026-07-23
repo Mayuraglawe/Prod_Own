@@ -25,6 +25,7 @@ import {
   Check,
   ExternalLink
 } from 'lucide-react';
+import { CalendarEvent, MOCK_CALENDAR } from '../lib/mock-data';
 
 // Prod Own Domain Types
 interface ErrorEvent {
@@ -60,14 +61,6 @@ interface TeamMember {
   role: 'Admin' | 'Engineer' | 'Viewer';
   assignedTask: string;
   status: 'Completed' | 'In Progress' | 'Pending';
-}
-
-interface CalendarEvent {
-  id: string;
-  title: string;
-  time: string;
-  type: 'Meeting' | 'Deployment' | 'Maintenance';
-  date: string;
 }
 
 const MOCK_ERRORS: ErrorEvent[] = [
@@ -146,12 +139,6 @@ const MOCK_TEAM: TeamMember[] = [
   { id: 'tm-2', name: 'Edwin Aderike', email: 'edwin@prodown.dev', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'Fastify Helmet Security Rules', status: 'In Progress' },
   { id: 'tm-3', name: 'Isaac Oluwatemilorun', email: 'isaac@prodown.dev', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'BullMQ Fingerprint Deduplication', status: 'Pending' },
   { id: 'tm-4', name: 'David Okhodi', email: 'david@prodown.dev', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80', role: 'Viewer', assignedTask: 'Slack & n8n Alert Webhooks', status: 'In Progress' }
-];
-
-const MOCK_CALENDAR: CalendarEvent[] = [
-  { id: 'cal-1', title: 'Meeting with Arc Company', time: '02:00 pm - 04:00 pm', type: 'Meeting', date: 'Today' },
-  { id: 'cal-2', title: 'PostgreSQL RLS Policy Audit', time: '10:00 am - 11:30 am', type: 'Maintenance', date: 'Tomorrow' },
-  { id: 'cal-3', title: 'Deploy Ingest API v1.4.0', time: '05:00 pm - 06:00 pm', type: 'Deployment', date: 'Feb 24, 2026' }
 ];
 
 export function Dashboard() {
@@ -835,7 +822,7 @@ export function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {MOCK_CALENDAR.map((evt) => (
+              {MOCK_CALENDAR.map((evt: CalendarEvent) => (
                 <div key={evt.id} className="p-5 rounded-2xl border border-[#E2E8E4] bg-[#F3F5F4] space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0B4F3A] font-bold text-[10px]">
