@@ -1,6 +1,6 @@
-# Next.js Dashboard UI (`apps/web`) — Development & Governance Guidelines
+# Next.js Dashboard UI (`apps/dashboard`) — Development & Governance Guidelines
 
-This document provides application-specific execution boundaries, patterns, security, and verification rules for `apps/web`.
+This document provides application-specific execution boundaries, patterns, security, and verification rules for `apps/dashboard`.
 
 ---
 
@@ -8,7 +8,7 @@ This document provides application-specific execution boundaries, patterns, secu
 
 - **Primary Responsibility**: Client-side web dashboard UI for project management, error stack trace visualization, and alert configuration.
 - **Forbidden Scope Extensions**:
-  - Do **NOT** include `apps/web` in the core runtime `docker-compose.yml` stack (it runs separately via `pnpm dev:web`).
+  - Do **NOT** include `apps/dashboard` in the core runtime `docker-compose.yml` stack (it runs separately via `pnpm dev:web`).
   - Do **NOT** introduce heavy client-side session recording / DOM canvas replay libraries.
   - Do **NOT** perform direct database connection calls from Client Components; interact via API routes or server actions.
 

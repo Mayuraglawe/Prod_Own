@@ -17,7 +17,7 @@ TypeScript monorepo scaffold for a self-hosted multi-tenant product stack.
 
 - `apps/api` - ingest API and public HTTP surface
 - `apps/worker` - queue processor and background jobs
-- `apps/web` - dashboard UI
+- `apps/dashboard` - dashboard UI
 - `packages/db` - Prisma schema and client
 - `packages/queue` - BullMQ queue names and helpers
 - `packages/observability` - OpenTelemetry bootstrap

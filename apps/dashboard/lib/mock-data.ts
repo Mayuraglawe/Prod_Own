@@ -85,7 +85,7 @@ export const MOCK_ERRORS: ErrorEvent[] = [
     count: 87,
     lastSeen: '14m ago',
     stackTrace: `TypeError: Cannot read properties of undefined (reading 'tenantId')
-  at callback (apps/web/app/page.tsx)
+  at callback (apps/dashboard/app/page.tsx)
   at async nextAuth (node_modules/next-auth/core/index.js)`,
     status: 'unresolved',
   },
