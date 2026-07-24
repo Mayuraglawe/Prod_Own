@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Building2, ChevronDown, Plus, Shield, UserCheck, X, Check } from 'lucide-react';
+import { Building2, ChevronDown, Plus, Shield, X } from 'lucide-react';
 
 interface WorkspaceItem {
   id: string;

@@ -65,8 +65,6 @@ describe('Workspace Role-Based Platform & Email Invitations', () => {
   });
 
   it('generates a 64-character hex invite token with 7-day expiration', () => {
-    const email = 'newemployee@acme.com';
-    const role = 'EMPLOYEE';
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
