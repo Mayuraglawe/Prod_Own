@@ -35,8 +35,9 @@ export async function registerUser(formData: FormData) {
     })
 
     return { success: true }
-  } catch (e: any) {
-    console.error("Registration error:", e)
-    return { error: "Database error: " + (e.message || String(e)) }
+  } catch (e: unknown) {
+    console.error("Registration error:", e);
+    const msg = e instanceof Error ? e.message : String(e);
+    return { error: "Database error: " + msg };
   }
 }

@@ -1,4 +1,4 @@
-import { createAlertQueue } from '../factories.js';
+import { createAlertQueue } from '../factories';
 
 export type AlertJobPayload = {
   issueId: string;

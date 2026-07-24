@@ -1,3 +1,4 @@
-export * from './validator.js';
-export * from './scrubber.js';
-export * from './fingerprinter.js';
+export * from './validator';
+export * from './scrubber';
+export * from './fingerprinter';
+

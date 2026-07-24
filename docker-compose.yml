@@ -28,12 +28,12 @@ services:
       timeout: 5s
       retries: 5
 
-  web:
+  dashboard:
     image: node:22-alpine
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm --filter @prod-own/db prisma generate && pnpm dev:web"
+    command: sh -c "corepack enable && pnpm install && pnpm --filter @litetrace/db prisma generate && pnpm dev:web"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/litetrace?schema=public
       REDIS_URL: redis://redis:6379
       APP_URL: http://localhost:3001
       TENANT_HEADER: x-tenant-id
@@ -41,10 +41,10 @@ services:
       N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      OTEL_SERVICE_NAME: prod-own-web
+      OTEL_SERVICE_NAME: litetrace-dashboard
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-changeme-in-production}
-      NEXTAUTH_URL: http://localhost:3001
+      AUTH_SECRET: ${AUTH_SECRET:-development-secret-key-change-in-production}
+      AUTH_TRUST_HOST: "true"
     volumes:
       - ./:/app
     ports:
@@ -58,9 +58,9 @@ services:
   worker:
     image: node:22-alpine
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install --frozen-lockfile=false && pnpm --filter @prod-own/worker dev"
+    command: sh -c "corepack enable && pnpm install && pnpm --filter @litetrace/worker dev"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/prodown?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/litetrace?schema=public
       REDIS_URL: redis://redis:6379
       APP_URL: http://localhost:3001
       TENANT_HEADER: x-tenant-id
@@ -68,7 +68,7 @@ services:
       N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
       RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
       RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      OTEL_SERVICE_NAME: prod-own-worker
+      OTEL_SERVICE_NAME: litetrace-worker
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
     volumes:
       - ./:/app
@@ -81,3 +81,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+
