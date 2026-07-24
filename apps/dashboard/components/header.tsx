@@ -16,7 +16,7 @@ export function Header({ user }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <header className="w-full min-w-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
       {/* Search Input */}
       <div className="relative flex-1 max-w-md">
         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />

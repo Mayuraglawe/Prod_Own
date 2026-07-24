@@ -16,12 +16,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased">
+    <div className="flex min-h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased overflow-x-hidden">
       <Sidebar />
-      <main className="flex-1 p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto space-y-6">
-        <Header user={user} />
-        {children}
-      </main>
+      <div className="flex-1 flex flex-col min-w-0">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+          <Header user={user} />
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
