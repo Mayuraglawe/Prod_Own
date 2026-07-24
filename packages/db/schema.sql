@@ -94,6 +94,39 @@ CREATE TABLE IF NOT EXISTS "VerificationToken" (
 CREATE UNIQUE INDEX IF NOT EXISTS "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- ------------------------------------------------------------------------------
+-- WorkspaceMember (Role-Based Multi-Tenancy: ADMIN | EMPLOYEE)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "WorkspaceMember" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "userId" TEXT NOT NULL,
+    "tenantId" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'EMPLOYEE',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "WorkspaceMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "WorkspaceMember_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "WorkspaceMember_userId_tenantId_key" ON "WorkspaceMember"("userId", "tenantId");
+CREATE INDEX IF NOT EXISTS "WorkspaceMember_tenantId_idx" ON "WorkspaceMember"("tenantId");
+CREATE INDEX IF NOT EXISTS "WorkspaceMember_userId_idx" ON "WorkspaceMember"("userId");
+
+-- ------------------------------------------------------------------------------
+-- WorkspaceInvite (Pending Email Invitations)
+-- ------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS "WorkspaceInvite" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "tenantId" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'EMPLOYEE',
+    "token" TEXT NOT NULL UNIQUE,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "WorkspaceInvite_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS "WorkspaceInvite_tenantId_idx" ON "WorkspaceInvite"("tenantId");
+
+-- ------------------------------------------------------------------------------
 -- Source (Project / App)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "Source" (

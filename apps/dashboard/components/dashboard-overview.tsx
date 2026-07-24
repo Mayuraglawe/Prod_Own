@@ -25,10 +25,28 @@ export interface IssueData {
 }
 
 export function DashboardOverview({ stats, activeIssues }: { stats: DashboardStats, activeIssues: IssueData[] }) {
-  const [isWorkerTracking, setIsWorkerTracking] = useState(true);
-  const [uptimeSeconds, setUptimeSeconds] = useState(5048); // 01:24:08
+  const [isWorkerTracking, setIsWorkerTracking] = useState(false);
+  const [uptimeSeconds, setUptimeSeconds] = useState(0);
 
-  // Live Timer for BullMQ Uptime
+  // Fetch DB tracker state on mount
+  const fetchDbTrackerState = async () => {
+    try {
+      const res = await fetch('/api/tracker');
+      if (res.ok) {
+        const data = await res.json();
+        setIsWorkerTracking(data.isRunning || false);
+        setUptimeSeconds(data.elapsedSeconds || 0);
+      }
+    } catch (e) {
+      console.error('Failed to fetch DB tracker state:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchDbTrackerState();
+  }, []);
+
+  // Live Timer when tracking is RUNNING
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isWorkerTracking) {
@@ -38,6 +56,36 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
     }
     return () => clearInterval(interval);
   }, [isWorkerTracking]);
+
+  // DB Sync Handlers for Play / Pause / Stop
+  const handleToggleTracking = async () => {
+    const nextState = !isWorkerTracking;
+    setIsWorkerTracking(nextState);
+    const action = nextState ? 'start' : 'pause';
+    try {
+      await fetch('/api/tracker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, elapsedSeconds: uptimeSeconds }),
+      });
+    } catch (e) {
+      console.error('Failed to update tracker DB:', e);
+    }
+  };
+
+  const handleStopTracking = async () => {
+    setIsWorkerTracking(false);
+    setUptimeSeconds(0);
+    try {
+      await fetch('/api/tracker', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'stop', elapsedSeconds: 0 }),
+      });
+    } catch (e) {
+      console.error('Failed to stop tracker DB:', e);
+    }
+  };
 
   const formatTimer = (totalSec: number) => {
     const hrs = Math.floor(totalSec / 3600);
@@ -276,10 +324,10 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
             </div>
           </div>
           <div className="relative z-10 flex items-center justify-center gap-3">
-            <button onClick={() => setIsWorkerTracking(!isWorkerTracking)} className="w-10 h-10 rounded-full bg-white text-[#052A1F] flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+            <button onClick={handleToggleTracking} className="w-10 h-10 rounded-full bg-white text-[#052A1F] flex items-center justify-center shadow-sm hover:scale-105 transition-all">
               {isWorkerTracking ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
             </button>
-            <button onClick={() => { setIsWorkerTracking(false); setUptimeSeconds(0); }} className="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-sm hover:scale-105 transition-all">
+            <button onClick={handleStopTracking} className="w-10 h-10 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-sm hover:scale-105 transition-all">
               <Square className="w-4 h-4 fill-current" />
             </button>
           </div>

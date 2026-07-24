@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Search, Mail, Bell, Menu, PanelLeft } from 'lucide-react';
 import Link from 'next/link';
 
+import { WorkspaceSwitcher } from './workspace-switcher';
+
 interface HeaderProps {
   user?: {
     name?: string | null;
@@ -68,6 +70,7 @@ export function Header({
 
         {/* Right Header Actions & User Profile */}
         <div className="flex items-center gap-2.5 justify-end shrink-0">
+          <WorkspaceSwitcher />
           <button
             className="w-9 h-9 rounded-full bg-white border border-[#E2E8E4] flex items-center justify-center text-[#687870] hover:text-[#0B4F3A] hover:bg-[#E6F7F0] transition-all shadow-sm"
             title="Messages"

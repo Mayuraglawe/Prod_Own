@@ -45,3 +45,44 @@ export type PaymentWebhookEvent = {
   payload: Record<string, unknown>;
 };
 
+/**
+ * User roles in a Workspace project.
+ */
+export type UserRole = 'ADMIN' | 'EMPLOYEE';
+
+/**
+ * Representation of a Workspace (Organization/Tenant) containing exactly 1 project.
+ */
+export type Workspace = {
+  id: string;
+  slug: string;
+  name: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+};
+
+/**
+ * Workspace membership record.
+ */
+export type WorkspaceMember = {
+  id: string;
+  userId: string;
+  tenantId: string;
+  role: UserRole;
+  createdAt: Date | string;
+};
+
+/**
+ * Email invitation to join a workspace project as EMPLOYEE or ADMIN.
+ */
+export type WorkspaceInvite = {
+  id: string;
+  tenantId: string;
+  email: string;
+  role: UserRole;
+  token: string;
+  expiresAt: Date | string;
+  createdAt: Date | string;
+};
+
+

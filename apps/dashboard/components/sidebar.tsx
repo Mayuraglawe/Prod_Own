@@ -14,6 +14,7 @@ import {
   Cpu,
   Webhook,
   ShieldCheck,
+  Building2,
   X,
   ChevronLeft,
   ChevronRight
@@ -101,11 +102,11 @@ export function Sidebar({
               href="/tasks"
               onClick={onCloseMobile}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/tasks') ? activeClass : inactiveClass}`}
-              title="Tasks / Errors"
+              title="Issues & Errors"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <CheckSquare className="w-4 h-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">Tasks / Errors</span>}
+                {!isCollapsed && <span className="truncate">Issues &amp; Errors</span>}
               </div>
               {!isCollapsed && (
                 <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-[#E6F7F0] text-[#0B4F3A]">12+</span>
@@ -135,18 +136,6 @@ export function Sidebar({
                 {!isCollapsed && <span className="truncate">Analytics</span>}
               </div>
             </Link>
-
-            <Link
-              href="/team"
-              onClick={onCloseMobile}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/team') ? activeClass : inactiveClass}`}
-              title="Team"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <Users className="w-4 h-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">Team</span>}
-              </div>
-            </Link>
           </nav>
         </div>
 
@@ -160,11 +149,11 @@ export function Sidebar({
               href="/sources"
               onClick={onCloseMobile}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/sources') ? activeClass : inactiveClass}`}
-              title="Sources & SDKs"
+              title="Projects & SDK Keys"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Server className="w-4 h-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">Sources & SDKs</span>}
+                {!isCollapsed && <span className="truncate">Projects &amp; SDK Keys</span>}
               </div>
             </Link>
 
@@ -172,11 +161,11 @@ export function Sidebar({
               href="/workers"
               onClick={onCloseMobile}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/workers') ? activeClass : inactiveClass}`}
-              title="BullMQ Workers"
+              title="Queue Workers"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Cpu className="w-4 h-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">BullMQ Workers</span>}
+                {!isCollapsed && <span className="truncate">Queue Workers</span>}
               </div>
             </Link>
 
@@ -184,11 +173,11 @@ export function Sidebar({
               href="/settings"
               onClick={onCloseMobile}
               className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/settings') ? activeClass : inactiveClass}`}
-              title="Alert Hooks & Billing"
+              title="Alert Rules & Integrations"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <Webhook className="w-4 h-4 shrink-0" />
-                {!isCollapsed && <span className="truncate">Alert Hooks & Billing</span>}
+                {!isCollapsed && <span className="truncate">Alert Rules &amp; Integrations</span>}
               </div>
             </Link>
           </nav>
@@ -200,6 +189,19 @@ export function Sidebar({
             <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">General</p>
           )}
           <nav className="space-y-1">
+            <Link
+              href="/workspace"
+              onClick={onCloseMobile}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/workspace') || isActive('/team') ? activeClass : inactiveClass}`}
+              title="Workspace & Team"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <Building2 className="w-4 h-4 shrink-0" />
+                {!isCollapsed && <span className="truncate">Workspace &amp; Team</span>}
+              </div>
+              {!isCollapsed && (isActive('/workspace') || isActive('/team')) && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+            </Link>
+
             <Link
               href="/profile"
               onClick={onCloseMobile}

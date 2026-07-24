@@ -20,6 +20,8 @@ model Tenant {
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
   users      User[]
+  members    WorkspaceMember[]
+  invites    WorkspaceInvite[]
   sources    Source[]
   jobs       FingerprintJob[]
   alerts     AlertEvent[]
@@ -27,6 +29,7 @@ model Tenant {
   payments   PaymentEvent[]
   events     Event[]
   issues     Issue[]
+  tracker    TimeTracker?
 
   @@index([slug])
 }
@@ -45,8 +48,40 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   tenant        Tenant?   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberships   WorkspaceMember[]
   accounts      Account[]
   sessions      Session[]
+
+  @@index([tenantId])
+}
+
+/// Join table for user workspace memberships and role permissions (ADMIN / EMPLOYEE).
+model WorkspaceMember {
+  id        String   @id @default(cuid())
+  userId    String
+  tenantId  String
+  role      String   @default("EMPLOYEE") // "ADMIN" | "EMPLOYEE"
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tenantId])
+  @@index([tenantId])
+  @@index([userId])
+}
+
+/// Pending email invitation to join a workspace project.
+model WorkspaceInvite {
+  id        String   @id @default(cuid())
+  tenantId  String
+  email     String
+  role      String   @default("EMPLOYEE") // "ADMIN" | "EMPLOYEE"
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
 }
@@ -221,4 +256,16 @@ model Event {
   @@index([tenantId, createdAt])
   @@index([sourceId])
   @@index([issueId, createdAt])
+}
+
+/// Persisted Time Tracker state per workspace (RUNNING, PAUSED, STOPPED).
+model TimeTracker {
+  id             String    @id @default(cuid())
+  tenantId       String    @unique
+  status         String    @default("STOPPED") // "RUNNING" | "PAUSED" | "STOPPED"
+  elapsedSeconds Int       @default(0)
+  lastStartedAt  DateTime?
+  updatedAt      DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
