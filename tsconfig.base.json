@@ -15,11 +15,11 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "@prod-own/config": ["packages/config/src/index.ts"],
-      "@prod-own/db": ["packages/db/src/index.ts"],
-      "@prod-own/queue": ["packages/queue/src/index.ts"],
-      "@prod-own/observability": ["packages/observability/src/index.ts"],
-      "@prod-own/types": ["packages/types/src/index.ts"]
+      "@litetrace/config": ["packages/config/src/index.ts"],
+      "@litetrace/db": ["packages/db/src/index.ts"],
+      "@litetrace/queue": ["packages/queue/src/index.ts"],
+      "@litetrace/observability": ["packages/observability/src/index.ts"],
+      "@litetrace/types": ["packages/types/src/index.ts"]
     }
   }
 }

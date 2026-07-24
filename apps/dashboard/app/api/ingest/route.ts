@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { prisma } from '@prod-own/db';
-import { redisConnection } from '@prod-own/queue';
-import { validateRawIngestBody, scrubContent, scrubMetadata } from '@prod-own/ingest';
+import { prisma } from '@litetrace/db';
+import { redisConnection } from '@litetrace/queue';
+import { validateRawIngestBody, scrubContent, scrubMetadata } from '@litetrace/ingest';
 
 /**
  * POST /api/ingest

@@ -1,6 +1,6 @@
 import { Worker, ConnectionOptions } from 'bullmq';
-import { queueNames, redisConnection, AlertJobPayload } from '@prod-own/queue';
-import { prisma } from '@prod-own/db';
+import { queueNames, redisConnection, AlertJobPayload } from '@litetrace/queue';
+import { prisma } from '@litetrace/db';
 
 /**
  * Maps a job trigger type to an alert severity level.

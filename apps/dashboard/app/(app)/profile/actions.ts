@@ -1,7 +1,7 @@
 'use server';
 
 import { auth } from '../../../auth';
-import { prisma } from '@prod-own/db';
+import { prisma } from '@litetrace/db';
 import { revalidatePath } from 'next/cache';
 
 export async function updateProfile(formData: FormData) {

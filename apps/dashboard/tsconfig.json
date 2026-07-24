@@ -13,7 +13,7 @@
       "@/*": [
         "./*"
       ],
-      "@prod-own/types": [
+      "@litetrace/types": [
         "../../packages/types/src/index.ts"
       ]
     },

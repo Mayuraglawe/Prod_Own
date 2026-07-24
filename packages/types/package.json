@@ -1,5 +1,5 @@
 {
-  "name": "@prod-own/types",
+  "name": "@litetrace/types",
   "private": true,
   "type": "module",
   "main": "./src/index.ts",

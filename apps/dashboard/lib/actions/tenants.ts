@@ -1,6 +1,6 @@
 'use server';
 
-import { prisma } from '@prod-own/db';
+import { prisma } from '@litetrace/db';
 import { auth } from '../../auth';
 import { redirect } from 'next/navigation';
 

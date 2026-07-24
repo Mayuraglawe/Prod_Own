@@ -2,7 +2,7 @@ import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 
-import { env } from '@prod-own/config';
+import { env } from '@litetrace/config';
 
 /**
  * Initializes and configures the OpenTelemetry Node SDK.

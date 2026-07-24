@@ -10,7 +10,7 @@ let isInitialized = false;
 
 export function init(options: InitOptions) {
   if (isInitialized) {
-    console.warn('@prod-own/sdk-node is already initialized.');
+    console.warn('@litetrace/sdk-node is already initialized.');
     return;
   }
 

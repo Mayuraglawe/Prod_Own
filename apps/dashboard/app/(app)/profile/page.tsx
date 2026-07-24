@@ -1,6 +1,6 @@
 import { auth } from '../../../auth';
 import { redirect } from 'next/navigation';
-import { prisma } from '@prod-own/db';
+import { prisma } from '@litetrace/db';
 import ProfileClient from './profile-client';
 
 export default async function ProfilePage() {

@@ -1,4 +1,4 @@
-import { prisma } from '@prod-own/db';
+import { prisma } from '@litetrace/db';
 
 /**
  * Explicit interface for tenantsRepository return shapes.

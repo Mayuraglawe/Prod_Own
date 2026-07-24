@@ -1,6 +1,6 @@
-import { redisConnection, enqueueAlert } from '@prod-own/queue';
-import { prisma } from '@prod-own/db';
-import { scrubContent, scrubMetadata, fingerprint as computeFingerprint } from '@prod-own/ingest';
+import { redisConnection, enqueueAlert } from '@litetrace/queue';
+import { prisma } from '@litetrace/db';
+import { scrubContent, scrubMetadata, fingerprint as computeFingerprint } from '@litetrace/ingest';
 
 const STREAM_KEY = 'litetrace:events';
 

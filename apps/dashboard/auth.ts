@@ -2,7 +2,7 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { prisma } from "@prod-own/db"
+import { prisma } from "@litetrace/db"
 import bcrypt from "bcryptjs"
 import { authConfig } from "./auth.config"
 

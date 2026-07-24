@@ -1,5 +1,5 @@
 {
-  "name": "@prod-own/worker",
+  "name": "@litetrace/worker",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,10 +9,10 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@prod-own/config": "workspace:*",
-    "@prod-own/db": "workspace:*",
-    "@prod-own/ingest": "workspace:*",
-    "@prod-own/queue": "workspace:*",
+    "@litetrace/config": "workspace:*",
+    "@litetrace/db": "workspace:*",
+    "@litetrace/ingest": "workspace:*",
+    "@litetrace/queue": "workspace:*",
     "bullmq": "^5.58.7"
   },
   "devDependencies": {

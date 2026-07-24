@@ -2,7 +2,7 @@ import React from 'react';
 import { Sidebar } from '../../components/sidebar';
 import { Header } from '../../components/header';
 import { auth } from '../../auth';
-import { prisma } from '@prod-own/db';
+import { prisma } from '@litetrace/db';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();

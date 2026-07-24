@@ -1,7 +1,7 @@
 import { Queue, ConnectionOptions } from 'bullmq';
 import IORedis from 'ioredis';
 
-import { env } from '@prod-own/config';
+import { env } from '@litetrace/config';
 
 /**
  * Shared IORedis client instance configuration.

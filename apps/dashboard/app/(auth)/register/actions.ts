@@ -1,6 +1,6 @@
 "use server"
 
-import { prisma } from "@prod-own/db"
+import { prisma } from "@litetrace/db"
 import bcrypt from "bcryptjs"
 
 export async function registerUser(formData: FormData) {

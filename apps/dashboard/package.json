@@ -1,5 +1,5 @@
 {
-  "name": "@prod-own/web",
+  "name": "@litetrace/dashboard",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,9 +12,9 @@
   "dependencies": {
     "@auth/core": "^0.41.3",
     "@auth/prisma-adapter": "^2.11.3",
-    "@prod-own/db": "workspace:*",
-    "@prod-own/ingest": "workspace:*",
-    "@prod-own/queue": "workspace:*",
+    "@litetrace/db": "workspace:*",
+    "@litetrace/ingest": "workspace:*",
+    "@litetrace/queue": "workspace:*",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.539.0",
