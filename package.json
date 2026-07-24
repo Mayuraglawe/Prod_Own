@@ -24,6 +24,7 @@
     "prettier": "^3.5.3",
     "typescript-eslint": "^8.37.0",
     "turbo": "^2.5.5",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.8"
   }
 }

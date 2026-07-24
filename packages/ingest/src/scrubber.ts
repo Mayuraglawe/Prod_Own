@@ -18,7 +18,7 @@ const SCRUB_PATTERNS: Array<{ label: string; pattern: RegExp; replacement: strin
   },
   {
     label: 'authorization_header',
-    pattern: /Authorization:\s*\S+/gi,
+    pattern: /Authorization:\s*(?!Bearer\b)\S+/gi,
     replacement: 'Authorization: [REDACTED]',
   },
   {
@@ -104,8 +104,12 @@ export function scrubMetadata(
   return Object.fromEntries(
     Object.entries(metadata).map(([key, value]) => {
       const stringified = typeof value === 'string' ? value : JSON.stringify(value);
-      const { content } = scrubContent(stringified);
-      return [key, content];
+      const target = `${key}: ${stringified}`;
+      const { content } = scrubContent(target);
+      const scrubbedValue = content.startsWith(`${key}: `)
+        ? content.slice(key.length + 2)
+        : content;
+      return [key, scrubbedValue];
     })
   );
 }

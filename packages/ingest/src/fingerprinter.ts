@@ -19,15 +19,15 @@ const NORMALISE_PATTERNS: Array<{ label: string; pattern: RegExp; replacement: s
     replacement: '0xADDR',
   },
   {
-    label: 'absolute_unix_paths',
-    // Strip leading absolute path up to the project root (heuristic: up to /src/ or /dist/)
-    pattern: /\/(?:[^/\s]+\/)*(?=(?:src|dist|node_modules)\/)/g,
+    label: 'absolute_windows_paths',
+    // Windows drive letter absolute paths like "C:/Users/..." after backslash conversion
+    pattern: /[A-Z]:\/(?:[^/\s]+\/)*(?=(?:src|dist|node_modules)\/)/gi,
     replacement: '',
   },
   {
-    label: 'absolute_windows_paths',
-    // Windows absolute paths like "C:\Users\..." or "D:\project\..."
-    pattern: /[A-Z]:\\(?:[^\\]+\\)*(?=(?:src|dist|node_modules)\\)/gi,
+    label: 'absolute_unix_paths',
+    // Strip leading absolute path up to the project root (heuristic: up to /src/ or /dist/)
+    pattern: /\/(?:[^/\s]+\/)*(?=(?:src|dist|node_modules)\/)/g,
     replacement: '',
   },
   {
@@ -83,7 +83,8 @@ function extractTitle(content: string): string {
  * produces the same fingerprint across restarts and deployments.
  */
 function normaliseStack(content: string): string {
-  let normalised = content;
+  // Convert Windows backslashes to forward slashes for cross-platform fingerprint consistency
+  let normalised = content.replace(/\\/g, '/');
   for (const { pattern, replacement } of NORMALISE_PATTERNS) {
     normalised = normalised.replace(pattern, replacement);
   }
