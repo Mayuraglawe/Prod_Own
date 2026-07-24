@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS "VerificationToken" (
 CREATE UNIQUE INDEX IF NOT EXISTS "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- ------------------------------------------------------------------------------
--- WorkspaceMember (Role-Based Multi-Tenancy: ADMIN | EMPLOYEE)
+-- WorkspaceMember (Role-Based Multi-Tenancy: SUPER_ADMIN | ADMIN | EMPLOYEE)
 -- ------------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS "WorkspaceMember" (
     "id" TEXT NOT NULL PRIMARY KEY,

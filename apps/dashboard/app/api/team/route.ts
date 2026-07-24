@@ -58,12 +58,20 @@ export async function GET(req: Request) {
       orderBy: { createdAt: 'desc' },
     }) : Promise.resolve([]));
 
+    // Helper to format role safely
+    const formatRole = (rawRole: string): 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE' => {
+      const upper = String(rawRole || '').toUpperCase();
+      if (upper === 'SUPER_ADMIN' || upper === 'SUPERADMIN' || upper === 'OWNER') return 'SUPER_ADMIN';
+      if (upper === 'ADMIN') return 'ADMIN';
+      return 'EMPLOYEE';
+    };
+
     // If no members in join table yet, fallback to Users attached directly to Tenant
     let members = membersData.map((m: { id: string; role: string; user: { name: string | null; email: string | null } }) => ({
       id: m.id,
       name: m.user.name || m.user.email?.split('@')[0] || 'Member',
       email: m.user.email || '',
-      role: m.role as 'ADMIN' | 'EMPLOYEE',
+      role: formatRole(m.role),
       status: 'Active' as const,
     }));
 
@@ -77,16 +85,16 @@ export async function GET(req: Request) {
         id: u.id,
         name: u.name || u.email?.split('@')[0] || 'Member',
         email: u.email || '',
-        role: (u.role === 'admin' ? 'ADMIN' : 'EMPLOYEE') as 'ADMIN' | 'EMPLOYEE',
+        role: formatRole(u.role),
         status: 'Active' as const,
       }));
     }
 
     const invites = invitesData.map((inv: { id: string; email: string; role: string }) => ({
       id: inv.id,
-      name: inv.email.split('@')[0] || 'Invited Employee',
+      name: inv.email.split('@')[0] || 'Invited User',
       email: inv.email,
-      role: inv.role as 'ADMIN' | 'EMPLOYEE',
+      role: formatRole(inv.role),
       status: 'Pending' as const,
     }));
 

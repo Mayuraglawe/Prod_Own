@@ -23,7 +23,10 @@ import {
   ShieldCheck,
   Copy,
   Check,
-  ExternalLink
+  ExternalLink,
+  BookOpen,
+  GitBranch,
+  HardDrive
 } from 'lucide-react';
 import { CalendarEvent, MOCK_CALENDAR } from '../lib/mock-data';
 
@@ -58,7 +61,7 @@ interface TeamMember {
   name: string;
   email: string;
   avatar: string;
-  role: 'Admin' | 'Engineer' | 'Viewer';
+  role: 'Super Admin' | 'Admin' | 'Employee';
   assignedTask: string;
   status: 'Completed' | 'In Progress' | 'Pending';
 }
@@ -135,14 +138,14 @@ const MOCK_SOURCES: IngestSource[] = [
 ];
 
 const MOCK_TEAM: TeamMember[] = [
-  { id: 'tm-1', name: 'Alexandra Deff', email: 'alexandra@prodown.dev', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80', role: 'Admin', assignedTask: 'PostgreSQL RLS Migrations', status: 'Completed' },
-  { id: 'tm-2', name: 'Edwin Aderike', email: 'edwin@prodown.dev', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'Fastify Helmet Security Rules', status: 'In Progress' },
-  { id: 'tm-3', name: 'Isaac Oluwatemilorun', email: 'isaac@prodown.dev', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'BullMQ Fingerprint Deduplication', status: 'Pending' },
-  { id: 'tm-4', name: 'David Okhodi', email: 'david@prodown.dev', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80', role: 'Viewer', assignedTask: 'Slack & n8n Alert Webhooks', status: 'In Progress' }
+  { id: 'tm-1', name: 'Alexandra Deff', email: 'alexandra@prodown.dev', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80', role: 'Super Admin', assignedTask: 'PostgreSQL RLS Migrations', status: 'Completed' },
+  { id: 'tm-2', name: 'Edwin Aderike', email: 'edwin@prodown.dev', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80', role: 'Admin', assignedTask: 'Fastify Helmet Security Rules', status: 'In Progress' },
+  { id: 'tm-3', name: 'Isaac Oluwatemilorun', email: 'isaac@prodown.dev', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80', role: 'Employee', assignedTask: 'BullMQ Fingerprint Deduplication', status: 'Pending' },
+  { id: 'tm-4', name: 'David Okhodi', email: 'david@prodown.dev', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80', role: 'Employee', assignedTask: 'Slack & n8n Alert Webhooks', status: 'In Progress' }
 ];
 
 export function Dashboard() {
-  type NavigationTab = 'dashboard' | 'tasks' | 'calendar' | 'analytics' | 'team' | 'sources' | 'workers' | 'settings' | 'help';
+  type NavigationTab = 'dashboard' | 'tasks' | 'calendar' | 'analytics' | 'team' | 'sources' | 'workers' | 'settings' | 'help' | 'architecture';
   const [activeTab, setActiveTab] = useState<NavigationTab>('dashboard');
   
   // Interactive UI state
@@ -284,6 +287,23 @@ export function Dashboard() {
                   <Users className="w-4 h-4" />
                   <span>Team</span>
                 </div>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('architecture')}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                  activeTab === 'architecture'
+                    ? 'bg-[#0B4F3A] text-white shadow-sm'
+                    : 'text-[#687870] hover:bg-[#E6F7F0] hover:text-[#0B4F3A]'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-4 h-4 text-amber-500" />
+                  <span>Architecture &amp; KT Guide</span>
+                </div>
+                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-100 text-amber-800">
+                  SUPER_ADMIN
+                </span>
               </button>
             </nav>
           </div>
@@ -890,7 +910,13 @@ export function Dashboard() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 bg-[#F3F5F4] text-[#0B4F3A] font-bold text-xs rounded-full border border-[#E2E8E4]">
+                    <span className={`px-3 py-1 font-bold text-xs rounded-full border ${
+                      tm.role === 'Super Admin' 
+                        ? 'bg-amber-50 text-amber-800 border-amber-300' 
+                        : tm.role === 'Admin'
+                        ? 'bg-purple-50 text-purple-800 border-purple-300'
+                        : 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                    }`}>
                       {tm.role}
                     </span>
                     <span className="text-xs text-[#687870] hidden md:inline">{tm.assignedTask}</span>
@@ -1041,6 +1067,129 @@ export function Dashboard() {
                 <a href="/apps/api/AGENTS.md" className="inline-flex items-center gap-1 text-xs font-bold text-[#0B4F3A]">
                   View API Specs <ExternalLink className="w-3 h-3" />
                 </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 10: ARCHITECTURE & DEVELOPER KT GUIDE SCREEN */}
+        {activeTab === 'architecture' && (
+          <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-300">
+                    SUPER_ADMIN GOVERNANCE
+                  </span>
+                  <h3 className="text-lg font-bold text-[#13221C]">System Architecture &amp; Developer KT Guide</h3>
+                </div>
+                <p className="text-xs text-[#687870]">
+                  Deep technical breakdown of microservices, event streams, CQRS, polyglot DBs, and resilience.
+                </p>
+              </div>
+              <a
+                href="/architecture"
+                className="flex items-center gap-1.5 px-4 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white rounded-full font-bold text-xs transition-all shadow-sm"
+              >
+                Full Interactive View <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Architecture Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-2xl bg-[#FAFBFB] border border-[#E2E8E4] space-y-2">
+                <div className="flex items-center gap-2 font-bold text-xs text-[#13221C]">
+                  <GitBranch className="w-4 h-4 text-[#0B4F3A]" /> CQRS Read/Write Separation
+                </div>
+                <p className="text-xs text-[#687870]">
+                  `POST /api/v1/ingest` and `GET /api/v1/query` are completely decoupled service boundaries.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[#FAFBFB] border border-[#E2E8E4] space-y-2">
+                <div className="flex items-center gap-2 font-bold text-xs text-[#13221C]">
+                  <Server className="w-4 h-4 text-amber-600" /> Kafka Event Bus
+                </div>
+                <p className="text-xs text-[#687870]">
+                  Decoupled microservices communicate asynchronously via Kafka telemetry event streaming.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[#FAFBFB] border border-[#E2E8E4] space-y-2">
+                <div className="flex items-center gap-2 font-bold text-xs text-[#13221C]">
+                  <HardDrive className="w-4 h-4 text-purple-600" /> Polyglot Persistence
+                </div>
+                <p className="text-xs text-[#687870]">
+                  Postgres for issues, ClickHouse for time-series analytics, S3 for raw stack traces, and Redis for cooldowns.
+                </p>
+              </div>
+            </div>
+
+            {/* Visual Node Diagram */}
+            <div className="bg-slate-900 text-white rounded-2xl p-6 overflow-x-auto space-y-6">
+              <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                Microservices Topology &amp; Telemetry Pipeline
+              </div>
+              <div className="grid grid-cols-4 gap-4 min-w-[650px]">
+                <div className="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-1 text-center">
+                  <div className="text-xs font-bold text-emerald-300">1. apps/gateway</div>
+                  <div className="text-[10px] text-slate-400">Rate Limits &amp; Auth</div>
+                </div>
+                <div className="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-1 text-center">
+                  <div className="text-xs font-bold text-amber-300">2. apps/ingestion</div>
+                  <div className="text-[10px] text-slate-400">202 Accepted Write</div>
+                </div>
+                <div className="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-1 text-center">
+                  <div className="text-xs font-bold text-purple-300">3. apps/processing</div>
+                  <div className="text-[10px] text-slate-400">PII Scrubbing &amp; S3</div>
+                </div>
+                <div className="p-3 bg-slate-800 rounded-xl border border-slate-700 space-y-1 text-center">
+                  <div className="text-xs font-bold text-sky-300">4. apps/grouping</div>
+                  <div className="text-[10px] text-slate-400">SHA256 &amp; Postgres</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Polyglot Persistence Table */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-bold text-[#13221C]">Polyglot Persistence Specifications</h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-[#E2E8E4] bg-[#FAFBFB]">
+                      <th className="p-2.5 font-bold text-[#13221C]">Service</th>
+                      <th className="p-2.5 font-bold text-[#13221C]">Store</th>
+                      <th className="p-2.5 font-bold text-[#13221C]">Role &amp; Content</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E2E8E4]">
+                    <tr>
+                      <td className="p-2.5 font-semibold text-[#13221C]">Ingestion</td>
+                      <td className="p-2.5 text-emerald-800 font-bold">Redis</td>
+                      <td className="p-2.5 text-[#687870]">Rate limit counters &amp; API key verification</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2.5 font-semibold text-[#13221C]">Processing</td>
+                      <td className="p-2.5 text-amber-800 font-bold">S3 / MinIO</td>
+                      <td className="p-2.5 text-[#687870]">Raw stack trace payload blobs</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2.5 font-semibold text-[#13221C]">Grouping</td>
+                      <td className="p-2.5 text-sky-800 font-bold">PostgreSQL</td>
+                      <td className="p-2.5 text-[#687870]">Domain issues, fingerprints, tenant memberships</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2.5 font-semibold text-[#13221C]">Grouping / Query</td>
+                      <td className="p-2.5 text-purple-800 font-bold">ClickHouse</td>
+                      <td className="p-2.5 text-[#687870]">High-volume occurrence telemetry &amp; metrics</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2.5 font-semibold text-[#13221C]">Alerting</td>
+                      <td className="p-2.5 text-rose-800 font-bold">Redis</td>
+                      <td className="p-2.5 text-[#687870]">Alert cooldown timestamps (300s window)</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

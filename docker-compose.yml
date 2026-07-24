@@ -28,57 +28,133 @@ services:
       timeout: 5s
       retries: 5
 
-  dashboard:
-    image: node:22-alpine
-    working_dir: /app
-    command: sh -c "corepack enable && pnpm install && pnpm --filter @litetrace/db prisma generate && pnpm dev:web"
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/litetrace?schema=public
-      REDIS_URL: redis://redis:6379
-      APP_URL: http://localhost:3001
-      TENANT_HEADER: x-tenant-id
-      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
-      N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      OTEL_SERVICE_NAME: litetrace-dashboard
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
-      AUTH_SECRET: ${AUTH_SECRET:-development-secret-key-change-in-production}
-      AUTH_TRUST_HOST: "true"
-    volumes:
-      - ./:/app
+  kafka:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.3.14
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 1G
+      - --reserve-memory 0M
+      - --overprovisioned
+      - --node-id 0
+      - --check=false
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://kafka:29092,OUTSIDE://localhost:9092
     ports:
-      - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - "9092:9092"
+      - "9644:9644"
 
-  worker:
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8-alpine
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    volumes:
+      - minio_data:/data
+
+  gateway:
     image: node:22-alpine
     working_dir: /app
-    command: sh -c "corepack enable && pnpm install && pnpm --filter @litetrace/worker dev"
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/gateway"
+    ports:
+      - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/litetrace?schema=public
-      REDIS_URL: redis://redis:6379
-      APP_URL: http://localhost:3001
-      TENANT_HEADER: x-tenant-id
-      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
-      N8N_ALERT_WEBHOOK_URL: ${N8N_ALERT_WEBHOOK_URL:-}
-      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
-      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
-      OTEL_SERVICE_NAME: litetrace-worker
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      PORT: "8000"
+    volumes:
+      - ./:/app
+
+  ingestion-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/ingestion"
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
     volumes:
       - ./:/app
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - kafka
+
+  processing-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/processing"
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+      S3_ENDPOINT: "http://minio:9000"
+    volumes:
+      - ./:/app
+    depends_on:
+      - kafka
+      - minio
+
+  grouping-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/grouping"
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/prodown"
+      CLICKHOUSE_URL: "http://clickhouse:8123"
+    volumes:
+      - ./:/app
+    depends_on:
+      - kafka
+      - postgres
+      - clickhouse
+
+  alerting-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/alerting"
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+      REDIS_URL: "redis://redis:6379"
+    volumes:
+      - ./:/app
+    depends_on:
+      - kafka
+      - redis
+
+  notification-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/notification"
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+    volumes:
+      - ./:/app
+    depends_on:
+      - kafka
+
+  query-service:
+    image: node:22-alpine
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm dev --filter @litetrace/query"
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/prodown"
+      CLICKHOUSE_URL: "http://clickhouse:8123"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+      - clickhouse
 
 volumes:
   postgres_data:
   redis_data:
-
+  clickhouse_data:
+  minio_data:

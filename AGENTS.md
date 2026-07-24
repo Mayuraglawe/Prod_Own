@@ -8,59 +8,23 @@ This repository is a self-hosted, INR-priced error tracking and sampled-APM plat
 
 ## Architecture Rules
 
-- TypeScript end-to-end across ingest, worker, dashboard, shared packages, and SDK surfaces.
-- Keep the monorepo single-rooted; do not split into separate repos for services.
-- The application follows a Next.js-only architecture, handling both frontend dashboard and backend API logic.
-- Core runtime services for self-hosting are Next.js, Postgres, and Redis.
-- RLS is the multi-tenancy boundary. Enforce tenant/project isolation in Postgres, not in ad hoc app logic.
-- Use BullMQ for queueing and retries; do not hand-roll retry/backoff logic.
-- Use plain HTTP integrations for alerting and billing hooks; prefer Slack webhooks, n8n webhooks, and Razorpay APIs over vendor SDK sprawl.
-
-## Coding Conventions
-
-- Keep TypeScript strict.
-- Avoid `any` unless there is a clear, inline justification.
-- Validate ingest payloads before any persistence, queueing, or side effects.
-- Read environment variables in one config module and pass values down.
-- Prefer interfaces at module boundaries.
-- Keep one exported responsibility per file.
-- Do not add silent catch blocks.
-- Prefer extending an interface over adding conditional branches in shared implementations.
-
-## Interface-First Workflow
-
-- Define the contract before the implementation when adding a new channel, source, repository, or worker boundary.
-- Existing implementations should conform to the interface; do not change the contract unless the task explicitly requires it.
-- Keep responsibilities separated: validator, scrubber, fingerprinter, repositories, alert channel, and dispatcher should remain distinct.
-
-## Testing Rules
-
-- Add or update a Vitest suite for any new interface implementation.
-- Prove RLS isolation with cross-project read/write tests.
-- Add realistic scrubbing tests for secrets, tokens, API keys, and emails.
-- Cover hard fingerprinting cases, not just happy paths.
-- Verify alert cooldown behavior when repeated bursts occur.
-- Run the relevant package tests before considering the task complete.
-
-## Security Rules
-
-- Scrub before persistence, never after.
-- Hash API keys at rest; never log or store plaintext keys.
-- Enforce ingest rate limiting before payloads reach the queue.
-- Keep secrets in environment variables only.
+- TypeScript end-to-end across microservices, worker, gateway, dashboard, shared packages, and SDK surfaces.
+- Microservices architecture split by function: Gateway, Ingestion (write), Processing, Grouping, Alerting, Query/API (read), Notification.
+- Asynchronous / Event-Driven communication using Kafka (or compatible event streaming backbone) for loose coupling between services.
+- Database-per-service (polyglot persistence): Postgres for domain objects/issues, ClickHouse/Elasticsearch for analytical metrics/search, S3 for raw blob storage, and Redis for caching/cooldowns.
+- CQRS API pattern: Heavy write ingestion and read queries are completely isolated service boundaries.
+- Multi-tenancy isolation enforced via tenant/project boundaries across database stores.
+- Built-in resilience: Circuit breakers, retries with exponential backoff, and Dead-Letter Queues (DLQ).
 
 ## Scope Guardrails
 
-Do not silently add:
+Authorized architecture for the microservices platform:
 
-- Session replay
-- Mobile SDKs
-- Full-fidelity unsampled distributed tracing
-- Kafka, ClickHouse, or other new stateful services beyond Postgres and Redis
-- A custom auth-as-a-service platform
-- Kubernetes or multi-node orchestration for the MVP
-
-If a task requires one of those, stop and flag it as a scope change.
+- Functionally decoupled microservices (Gateway, Ingestion, Processing, Grouping, Alerting, Notification, Query)
+- Kafka event streaming backbone & BullMQ queueing
+- Polyglot persistence (Postgres, ClickHouse/Elasticsearch, S3/MinIO, Redis)
+- CQRS read/write separation
+- Kubernetes manifests and Docker Compose multi-service orchestration
 
 ## Workflow
 

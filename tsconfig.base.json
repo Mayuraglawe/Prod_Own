@@ -17,8 +17,11 @@
     "paths": {
       "@litetrace/config": ["packages/config/src/index.ts"],
       "@litetrace/db": ["packages/db/src/index.ts"],
-      "@litetrace/queue": ["packages/queue/src/index.ts"],
+      "@litetrace/events": ["packages/events/src/index.ts"],
+      "@litetrace/ingest": ["packages/ingest/src/index.ts"],
       "@litetrace/observability": ["packages/observability/src/index.ts"],
+      "@litetrace/queue": ["packages/queue/src/index.ts"],
+      "@litetrace/sdk-node": ["packages/sdk-node/src/index.ts"],
       "@litetrace/types": ["packages/types/src/index.ts"]
     }
   }

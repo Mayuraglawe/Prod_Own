@@ -7,7 +7,7 @@ interface WorkspaceItem {
   id: string;
   name: string;
   slug: string;
-  role: 'ADMIN' | 'EMPLOYEE';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
   project?: {
     id: string;
     name: string;
@@ -85,7 +85,13 @@ export function WorkspaceSwitcher() {
         <Building2 className="w-4 h-4 text-[#0B4F3A]" />
         <span>{activeWorkspace ? activeWorkspace.name : 'Select Workspace'}</span>
         {activeWorkspace && (
-          <span className="px-2 py-0.5 rounded-full bg-[#0B4F3A] text-white text-[9px] font-bold">
+          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
+            activeWorkspace.role === 'SUPER_ADMIN'
+              ? 'bg-amber-600 text-white'
+              : activeWorkspace.role === 'ADMIN'
+              ? 'bg-[#0B4F3A] text-white'
+              : 'bg-slate-200 text-slate-700'
+          }`}>
             {activeWorkspace.role}
           </span>
         )}
@@ -117,7 +123,13 @@ export function WorkspaceSwitcher() {
                   <Building2 className="w-3.5 h-3.5 shrink-0" />
                   <span className="truncate">{ws.name}</span>
                 </div>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                  ws.role === 'SUPER_ADMIN'
+                    ? 'bg-amber-100 text-amber-800'
+                    : ws.role === 'ADMIN'
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-slate-100 text-slate-700'
+                }`}>
                   {ws.role}
                 </span>
               </button>

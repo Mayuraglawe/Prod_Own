@@ -40,7 +40,7 @@ export interface TeamMember {
   name: string;
   email: string;
   avatar: string;
-  role: 'Admin' | 'Engineer' | 'Viewer';
+  role: 'Super Admin' | 'Admin' | 'Employee';
   assignedTask: string;
   status: 'Completed' | 'In Progress' | 'Pending';
 }
@@ -129,10 +129,10 @@ export const MOCK_SOURCES: IngestSource[] = [
 ];
 
 export const MOCK_TEAM: TeamMember[] = [
-  { id: 'tm-1', name: 'Alexandra Deff', email: 'alexandra@prodown.dev', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80', role: 'Admin', assignedTask: 'PostgreSQL RLS Migrations', status: 'Completed' },
-  { id: 'tm-2', name: 'Edwin Aderike', email: 'edwin@prodown.dev', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'Fastify Helmet Security Rules', status: 'In Progress' },
-  { id: 'tm-3', name: 'Isaac Oluwatemilorun', email: 'isaac@prodown.dev', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80', role: 'Engineer', assignedTask: 'BullMQ Fingerprint Deduplication', status: 'Pending' },
-  { id: 'tm-4', name: 'David Okhodi', email: 'david@prodown.dev', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80', role: 'Viewer', assignedTask: 'Slack & n8n Alert Webhooks', status: 'In Progress' },
+  { id: 'tm-1', name: 'Alexandra Deff', email: 'alexandra@prodown.dev', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80', role: 'Super Admin', assignedTask: 'PostgreSQL RLS Migrations', status: 'Completed' },
+  { id: 'tm-2', name: 'Edwin Aderike', email: 'edwin@prodown.dev', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80', role: 'Admin', assignedTask: 'Fastify Helmet Security Rules', status: 'In Progress' },
+  { id: 'tm-3', name: 'Isaac Oluwatemilorun', email: 'isaac@prodown.dev', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80', role: 'Employee', assignedTask: 'BullMQ Fingerprint Deduplication', status: 'Pending' },
+  { id: 'tm-4', name: 'David Okhodi', email: 'david@prodown.dev', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=80&q=80', role: 'Employee', assignedTask: 'Slack & n8n Alert Webhooks', status: 'In Progress' },
 ];
 
 export const MOCK_CALENDAR: CalendarEvent[] = [

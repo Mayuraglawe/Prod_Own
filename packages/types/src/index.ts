@@ -48,7 +48,7 @@ export type PaymentWebhookEvent = {
 /**
  * User roles in a Workspace project.
  */
-export type UserRole = 'ADMIN' | 'EMPLOYEE';
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
 
 /**
  * Representation of a Workspace (Organization/Tenant) containing exactly 1 project.
@@ -73,7 +73,7 @@ export type WorkspaceMember = {
 };
 
 /**
- * Email invitation to join a workspace project as EMPLOYEE or ADMIN.
+ * Email invitation to join a workspace project as EMPLOYEE, ADMIN, or SUPER_ADMIN.
  */
 export type WorkspaceInvite = {
   id: string;

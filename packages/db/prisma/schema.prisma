@@ -55,12 +55,12 @@ model User {
   @@index([tenantId])
 }
 
-/// Join table for user workspace memberships and role permissions (ADMIN / EMPLOYEE).
+/// Join table for user workspace memberships and role permissions (SUPER_ADMIN / ADMIN / EMPLOYEE).
 model WorkspaceMember {
   id        String   @id @default(cuid())
   userId    String
   tenantId  String
-  role      String   @default("EMPLOYEE") // "ADMIN" | "EMPLOYEE"
+  role      String   @default("EMPLOYEE") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
   createdAt DateTime @default(now())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -76,7 +76,7 @@ model WorkspaceInvite {
   id        String   @id @default(cuid())
   tenantId  String
   email     String
-  role      String   @default("EMPLOYEE") // "ADMIN" | "EMPLOYEE"
+  role      String   @default("EMPLOYEE") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())

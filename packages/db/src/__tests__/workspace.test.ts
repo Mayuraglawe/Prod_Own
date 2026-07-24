@@ -21,9 +21,16 @@ describe('Workspace Role-Based Platform & Email Invitations', () => {
     expect(project.externalId).toBe('payment-operations-main');
   });
 
-  it('assigns ADMIN role to workspace creator and EMPLOYEE role to invited member', () => {
+  it('supports SUPER_ADMIN, ADMIN, and EMPLOYEE roles for workspace memberships', () => {
+    const superAdminUser = { id: 'usr_super', email: 'owner@acme.com' };
     const adminUser = { id: 'usr_admin', email: 'admin@acme.com' };
     const employeeUser = { id: 'usr_employee', email: 'employee@acme.com' };
+
+    const superAdminMembership = {
+      userId: superAdminUser.id,
+      tenantId: 'ws_123',
+      role: 'SUPER_ADMIN' as const,
+    };
 
     const adminMembership = {
       userId: adminUser.id,
@@ -37,21 +44,24 @@ describe('Workspace Role-Based Platform & Email Invitations', () => {
       role: 'EMPLOYEE' as const,
     };
 
+    expect(superAdminMembership.role).toBe('SUPER_ADMIN');
     expect(adminMembership.role).toBe('ADMIN');
     expect(employeeMembership.role).toBe('EMPLOYEE');
   });
 
-  it('allows one user to belong to multiple workspaces', () => {
+  it('allows one user to belong to multiple workspaces with different roles', () => {
     const user = { id: 'usr_multi', email: 'dev@acme.com' };
 
     const memberships = [
+      { userId: user.id, tenantId: 'ws_system', role: 'SUPER_ADMIN' as const },
       { userId: user.id, tenantId: 'ws_alpha', role: 'ADMIN' as const },
       { userId: user.id, tenantId: 'ws_beta', role: 'EMPLOYEE' as const },
     ];
 
-    expect(memberships).toHaveLength(2);
-    expect(memberships[0]?.role).toBe('ADMIN');
-    expect(memberships[1]?.role).toBe('EMPLOYEE');
+    expect(memberships).toHaveLength(3);
+    expect(memberships[0]?.role).toBe('SUPER_ADMIN');
+    expect(memberships[1]?.role).toBe('ADMIN');
+    expect(memberships[2]?.role).toBe('EMPLOYEE');
   });
 
   it('generates a 64-character hex invite token with 7-day expiration', () => {

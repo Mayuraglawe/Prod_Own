@@ -17,15 +17,16 @@ type PrismaClientWithModels = typeof prisma & {
 
 /**
  * POST /api/workspaces/invite
- * Sends an email invitation from an ADMIN to an EMPLOYEE for a workspace project.
+ * Sends an email invitation to join a workspace project.
  *
- * Body: { tenantId: string, email: string, role?: 'EMPLOYEE' | 'ADMIN' }
+ * Body: { tenantId: string, email: string, role?: 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE' }
  */
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const email = String(body.email || '').trim().toLowerCase();
-    const role = body.role === 'ADMIN' ? 'ADMIN' : 'EMPLOYEE';
+    const roleInput = String(body.role || 'EMPLOYEE').toUpperCase();
+    const role = (['SUPER_ADMIN', 'ADMIN', 'EMPLOYEE'].includes(roleInput) ? roleInput : 'EMPLOYEE') as 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'Valid email address is required' }, { status: 400 });

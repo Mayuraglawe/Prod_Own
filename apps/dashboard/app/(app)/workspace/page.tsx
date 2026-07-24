@@ -18,7 +18,7 @@ interface WorkspaceItem {
   id: string;
   name: string;
   slug: string;
-  role: 'ADMIN' | 'EMPLOYEE';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
   createdAt: string;
   project?: {
     id: string;
@@ -32,7 +32,7 @@ interface MemberItem {
   id: string;
   name: string;
   email: string;
-  role: 'ADMIN' | 'EMPLOYEE';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
   status: 'Active' | 'Pending';
 }
 
@@ -49,7 +49,7 @@ export default function WorkspacePage() {
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState<'EMPLOYEE' | 'ADMIN'>('EMPLOYEE');
+  const [inviteRole, setInviteRole] = useState<'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('EMPLOYEE');
   const [inviteResult, setInviteResult] = useState<{ email: string; inviteLink: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [members, setMembers] = useState<MemberItem[]>([]);
@@ -182,9 +182,12 @@ export default function WorkspacePage() {
           <div className="flex items-center gap-2">
             <Building2 className="w-6 h-6 text-emerald-400" />
             <h1 className="text-2xl font-bold">Dedicated Workspace Dashboard</h1>
+            <span className="ml-2 px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-extrabold rounded-full">
+              SUPER_ADMIN CONTROLLED
+            </span>
           </div>
           <p className="text-xs text-emerald-100/80">
-            Manage your organization workspace, 1-to-1 dedicated project, SDK credentials, and employee access.
+            Manage organization workspaces, 1-to-1 dedicated projects, SDK credentials, system architecture, and user access roles.
           </p>
         </div>
 
@@ -368,7 +371,9 @@ init({
                     <div className="flex items-center gap-2">
                       <span
                         className={`px-2.5 py-0.5 text-[10px] font-bold rounded-full border ${
-                          m.role === 'ADMIN'
+                          m.role === 'SUPER_ADMIN'
+                            ? 'bg-amber-100 text-amber-800 border-amber-300'
+                            : m.role === 'ADMIN'
                             ? 'bg-emerald-100 text-[#0B4F3A] border-emerald-300'
                             : 'bg-slate-100 text-slate-700 border-slate-300'
                         }`}
@@ -549,11 +554,12 @@ init({
                   </label>
                   <select
                     value={inviteRole}
-                    onChange={(e) => setInviteRole(e.target.value as 'EMPLOYEE' | 'ADMIN')}
+                    onChange={(e) => setInviteRole(e.target.value as 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE')}
                     className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
                   >
                     <option value="EMPLOYEE">EMPLOYEE (Access project metrics &amp; issues)</option>
-                    <option value="ADMIN">ADMIN (Full workspace &amp; team management)</option>
+                    <option value="ADMIN">ADMIN (Workspace &amp; team management)</option>
+                    <option value="SUPER_ADMIN">SUPER_ADMIN (Full system &amp; organization admin)</option>
                   </select>
                 </div>
 

@@ -4,7 +4,7 @@ import { prisma } from '@litetrace/db';
 
 /**
  * GET /api/workspaces
- * Returns list of all Workspaces current user is a member of (with ADMIN / EMPLOYEE role),
+ * Returns list of all Workspaces current user is a member of (with SUPER_ADMIN / ADMIN / EMPLOYEE role),
  * along with each workspace's single dedicated project.
  */
 export async function GET() {
@@ -24,11 +24,11 @@ export async function GET() {
       },
     });
 
-    const workspaces = tenants.map((t) => ({
+    const workspaces = tenants.map((t, idx) => ({
       id: t.id,
       name: t.name,
       slug: t.slug,
-      role: 'ADMIN', // Default role for active user workspace
+      role: idx === 0 ? 'SUPER_ADMIN' : 'ADMIN', // Primary workspace is SUPER_ADMIN
       project: t.sources[0] || null,
       createdAt: t.createdAt,
     }));
@@ -43,7 +43,7 @@ export async function GET() {
 /**
  * POST /api/workspaces
  * Creates a new Workspace (Tenant), automatically provisions its 1 dedicated Project (Source),
- * generates its DSN/API Key, and assigns creator role as ADMIN.
+ * generates its DSN/API Key, and assigns creator role as SUPER_ADMIN.
  *
  * Body: { name: string }
  */
@@ -91,7 +91,7 @@ export async function POST(req: Request) {
           id: tenant.id,
           name: tenant.name,
           slug: tenant.slug,
-          role: 'ADMIN',
+          role: 'SUPER_ADMIN',
           project: {
             id: project.id,
             name: project.name,
