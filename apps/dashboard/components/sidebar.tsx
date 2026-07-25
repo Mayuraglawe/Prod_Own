@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -15,6 +16,7 @@ import {
   Webhook,
   ShieldCheck,
   Building2,
+  FolderGit2,
   X,
   ChevronLeft,
   ChevronRight
@@ -189,6 +191,21 @@ export function Sidebar({
             <p className="px-3 text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF]">General</p>
           )}
           <nav className="space-y-1">
+            <Link
+              href={'/files' as Route}
+              onClick={onCloseMobile}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/files') || isActive('/files') ? activeClass : inactiveClass}`}
+              title="Super Admin Files Vault"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <FolderGit2 className="w-4 h-4 shrink-0" />
+                {!isCollapsed && <span className="truncate">Files & Vault</span>}
+              </div>
+              {!isCollapsed && (
+                <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-[#E6F7F0] text-[#0B4F3A]">General</span>
+              )}
+            </Link>
+
             <Link
               href="/workspace"
               onClick={onCloseMobile}
