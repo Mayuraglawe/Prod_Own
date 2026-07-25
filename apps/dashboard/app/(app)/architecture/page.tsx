@@ -32,8 +32,8 @@ export default function ArchitecturePage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Header Banner */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#052A1F] via-[#094231] to-[#0B4F3A] p-8 text-white shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#20C997]/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="rounded-3xl bg-gradient-to-br from-[#1b4332] via-[#2d6a4f] to-[#52b788] p-8 text-white shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#52b788]/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -70,7 +70,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('overview')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'overview'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -81,7 +81,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('flow')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'flow'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -92,7 +92,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('components')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'components'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -103,7 +103,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('resilience')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'resilience'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -114,7 +114,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('storage')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'storage'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -125,7 +125,7 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('deploy')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'deploy'
-                ? 'bg-white text-[#0B4F3A] shadow-md'
+                ? 'bg-white text-[#52b788] shadow-md'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
             }`}
           >
@@ -150,7 +150,7 @@ export default function ArchitecturePage() {
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-[#0B4F3A] flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-[#52b788] flex items-center justify-center font-bold">
                 <GitBranch className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#13221C]">CQRS Architecture</h3>
@@ -256,7 +256,7 @@ export default function ArchitecturePage() {
 
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0B4F3A] text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                <div className="w-8 h-8 rounded-full bg-[#52b788] text-white flex items-center justify-center font-bold text-sm shrink-0">1</div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-[#13221C]">Client Telemetry Ingestion (`POST /api/v1/ingest/store`)</h4>
                   <p className="text-xs text-[#687870]">
@@ -266,7 +266,7 @@ export default function ArchitecturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0B4F3A] text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                <div className="w-8 h-8 rounded-full bg-[#52b788] text-white flex items-center justify-center font-bold text-sm shrink-0">2</div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-[#13221C]">Sanitization &amp; PII Scrubbing (`apps/processing`)</h4>
                   <p className="text-xs text-[#687870]">
@@ -276,7 +276,7 @@ export default function ArchitecturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0B4F3A] text-white flex items-center justify-center font-bold text-sm shrink-0">3</div>
+                <div className="w-8 h-8 rounded-full bg-[#52b788] text-white flex items-center justify-center font-bold text-sm shrink-0">3</div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-[#13221C]">Fingerprinting &amp; Polyglot Persistence (`apps/grouping`)</h4>
                   <p className="text-xs text-[#687870]">
@@ -286,7 +286,7 @@ export default function ArchitecturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0B4F3A] text-white flex items-center justify-center font-bold text-sm shrink-0">4</div>
+                <div className="w-8 h-8 rounded-full bg-[#52b788] text-white flex items-center justify-center font-bold text-sm shrink-0">4</div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-[#13221C]">Redis Cooldown &amp; Burst Evaluation (`apps/alerting`)</h4>
                   <p className="text-xs text-[#687870]">
@@ -296,7 +296,7 @@ export default function ArchitecturePage() {
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-[#0B4F3A] text-white flex items-center justify-center font-bold text-sm shrink-0">5</div>
+                <div className="w-8 h-8 rounded-full bg-[#52b788] text-white flex items-center justify-center font-bold text-sm shrink-0">5</div>
                 <div className="space-y-1">
                   <h4 className="text-sm font-bold text-[#13221C]">Notification Dispatch &amp; DLQ (`apps/notification`)</h4>
                   <p className="text-xs text-[#687870]">
@@ -358,7 +358,7 @@ export default function ArchitecturePage() {
 
           <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#0B4F3A] bg-[#E6F7F0] px-3 py-1 rounded-full">apps/alerting</span>
+              <span className="text-xs font-bold text-[#52b788] bg-[#d8f3dc] px-3 py-1 rounded-full">apps/alerting</span>
               <span className="text-xs text-[#687870]">Rate Limiting &amp; Cooldown</span>
             </div>
             <h3 className="text-base font-bold text-[#13221C]">Alerting Service</h3>
@@ -485,7 +485,7 @@ export default function ArchitecturePage() {
                   <span>Local Docker Compose Multi-Container Stack</span>
                   <button
                     onClick={() => copyToClipboard('docker compose up --build', 'docker')}
-                    className="text-[#0B4F3A] hover:underline"
+                    className="text-[#52b788] hover:underline"
                   >
                     {copiedCmd === 'docker' ? 'Copied!' : 'Copy Command'}
                   </button>
@@ -505,7 +505,7 @@ export default function ArchitecturePage() {
                         'k8s'
                       )
                     }
-                    className="text-[#0B4F3A] hover:underline"
+                    className="text-[#52b788] hover:underline"
                   >
                     {copiedCmd === 'k8s' ? 'Copied!' : 'Copy Command'}
                   </button>

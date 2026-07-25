@@ -77,7 +77,7 @@ export default function SourcesPage() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#0B4F3A] to-[#13221C] p-6 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="rounded-3xl bg-gradient-to-r from-[#52b788] to-[#13221C] p-6 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
@@ -113,7 +113,7 @@ export default function SourcesPage() {
             <p className="text-sm font-medium text-[#13221C]">No projects created yet.</p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-full"
+              className="px-4 py-2 bg-[#52b788] text-white text-xs font-bold rounded-full"
             >
               Create Your First Project
             </button>
@@ -127,24 +127,24 @@ export default function SourcesPage() {
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0B4F3A] font-bold text-[10px]">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#52b788] font-bold text-[10px]">
                       Node.js / Express
                     </span>
                     <h4 className="text-base font-bold text-[#13221C]">{src.name}</h4>
                   </div>
                   <p className="text-xs text-[#687870]">
-                    Project ID: <code className="font-mono text-[#0B4F3A]">{src.externalId}</code> &bull; Created: {new Date(src.createdAt).toLocaleDateString()}
+                    Project ID: <code className="font-mono text-[#52b788]">{src.externalId}</code> &bull; Created: {new Date(src.createdAt).toLocaleDateString()}
                   </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#E2E8E4]">
-                    <Key className="w-3.5 h-3.5 text-[#0B4F3A]" />
+                    <Key className="w-3.5 h-3.5 text-[#52b788]" />
                     <code className="text-xs font-mono text-[#13221C]">{src.apiKeyPrefix}...</code>
                   </div>
                   <button
                     onClick={() => handleCopy(src.id, src.apiKeyPrefix)}
-                    className="p-2 rounded-full bg-white hover:bg-emerald-50 text-[#0B4F3A] border border-[#E2E8E4] transition-all"
+                    className="p-2 rounded-full bg-white hover:bg-emerald-50 text-[#52b788] border border-[#E2E8E4] transition-all"
                     title="Copy API key prefix"
                   >
                     {copiedId === src.id ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -162,7 +162,7 @@ export default function SourcesPage() {
           <div className="bg-white rounded-3xl border border-[#E2E8E4] shadow-2xl max-w-lg w-full p-6 space-y-6 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-4">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-[#0B4F3A]" />
+                <ShieldCheck className="w-5 h-5 text-[#52b788]" />
                 <h3 className="text-base font-bold text-[#13221C]">
                   {createdKey ? 'Project Created Successfully!' : 'Create New Project'}
                 </h3>
@@ -187,7 +187,7 @@ export default function SourcesPage() {
                     placeholder="e.g. Payment Gateway Service"
                     value={projectName}
                     onChange={(e) => setProjectName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]"
                   />
                 </div>
 
@@ -207,7 +207,7 @@ export default function SourcesPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-5 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white text-xs font-bold rounded-full disabled:opacity-50"
+                    className="px-5 py-2 bg-[#52b788] hover:bg-[#40916c] text-white text-xs font-bold rounded-full disabled:opacity-50"
                   >
                     {isSubmitting ? 'Creating...' : 'Generate API Key'}
                   </button>
@@ -216,7 +216,7 @@ export default function SourcesPage() {
             ) : (
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-                  <p className="text-xs font-bold text-[#0B4F3A]">
+                  <p className="text-xs font-bold text-[#52b788]">
                     ⚠️ Store your API Key securely. It will not be shown again!
                   </p>
                   <div className="flex items-center justify-between gap-2 p-3 bg-white rounded-xl border border-emerald-300">
@@ -225,7 +225,7 @@ export default function SourcesPage() {
                     </code>
                     <button
                       onClick={() => handleCopy('modal_key', createdKey)}
-                      className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg text-[#0B4F3A] shrink-0"
+                      className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg text-[#52b788] shrink-0"
                     >
                       {copiedId === 'modal_key' ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
                     </button>
@@ -234,7 +234,7 @@ export default function SourcesPage() {
 
                 <div className="space-y-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#13221C]">
-                    <Code2 className="w-4 h-4 text-[#0B4F3A]" />
+                    <Code2 className="w-4 h-4 text-[#52b788]" />
                     <span>SDK Initialization Code</span>
                   </div>
                   <pre className="p-4 rounded-2xl bg-slate-950 text-emerald-400 text-xs font-mono overflow-x-auto">
@@ -252,7 +252,7 @@ init({
                 <div className="flex justify-end pt-2">
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-full"
+                    className="px-5 py-2 bg-[#52b788] text-white text-xs font-bold rounded-full"
                   >
                     Done
                   </button>

@@ -37,7 +37,7 @@
   margin-left: -8px;
   border-radius: 50%;
   /* We use the theme's emerald color, but add a glow */
-  background: #0B4F3A;
+  background: #52b788;
   box-shadow: 0 0 10px rgba(11, 79, 58, 0.5);
   animation: counterSpin 3s linear infinite;
 }

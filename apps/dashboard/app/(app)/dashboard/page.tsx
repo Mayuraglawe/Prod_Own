@@ -1,9 +1,8 @@
 import { auth } from '../../../auth';
 import { redirect } from 'next/navigation';
 import type { Route } from 'next';
-import { issuesRepository } from '../../../lib/repositories/issues';
 import { tenantsRepository } from '../../../lib/repositories/tenants';
-import { DashboardOverview } from '../../../components/dashboard-overview';
+import { Dashboard, UserRole } from '../../../components/dashboard';
 
 /**
  * Main dashboard view for authenticated users.
@@ -31,14 +30,16 @@ export default async function DashboardPage() {
     redirect('/onboarding' as Route);
   }
 
-  const issues = await issuesRepository.findByTenant(user.tenantId);
 
-  const totalIssues = issues.length;
-  const resolvedIssues = issues.filter((i) => i.status === 'RESOLVED').length;
-  const totalEvents = issues.reduce((acc, curr) => acc + curr.eventCount, 0);
+  let normalizedRole: UserRole = 'EMPLOYEE';
+  if (user.role) {
+    const roleStr = user.role.toUpperCase();
+    if (roleStr.includes('SUPER')) {
+      normalizedRole = 'SUPER_ADMIN';
+    } else if (roleStr.includes('ADMIN')) {
+      normalizedRole = 'ADMIN';
+    }
+  }
 
-  const stats = { totalIssues, totalEvents, resolvedIssues };
-  const activeIssues = issues.slice(0, 5);
-
-  return <DashboardOverview stats={stats} activeIssues={activeIssues} />;
+  return <Dashboard role={normalizedRole} />;
 }

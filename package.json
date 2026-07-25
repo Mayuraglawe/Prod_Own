@@ -3,7 +3,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency=20",
     "clean": "node -e \"const fs = require('fs'); ['apps/dashboard/.next', '.turbo', 'apps/dashboard/.turbo'].forEach(p => fs.rmSync(p, { recursive: true, force: true }))\"",
     "build": "turbo run build",
     "lint": "turbo run lint",

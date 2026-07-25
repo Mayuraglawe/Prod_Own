@@ -177,7 +177,7 @@ export default function WorkspacePage() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="rounded-3xl bg-gradient-to-r from-[#0B4F3A] via-[#13221C] to-[#083B2B] p-6 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="rounded-3xl bg-gradient-to-r from-[#52b788] via-[#13221C] to-[#40916c] p-6 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Building2 className="w-6 h-6 text-emerald-400" />
@@ -223,7 +223,7 @@ export default function WorkspacePage() {
           <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-5">
             <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-4">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-[#0B4F3A] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#52b788] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                   Active Workspace
                 </span>
                 <h2 className="text-xl font-bold text-[#13221C] mt-1">
@@ -232,7 +232,7 @@ export default function WorkspacePage() {
               </div>
               {activeWs && (
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-[#0B4F3A] text-white font-bold text-xs rounded-full">
+                  <span className="px-3 py-1 bg-[#52b788] text-white font-bold text-xs rounded-full">
                     Role: {activeWs.role}
                   </span>
                 </div>
@@ -249,7 +249,7 @@ export default function WorkspacePage() {
                 </div>
                 <div className="p-4 rounded-2xl bg-[#FAFBFB] border border-[#E2E8E4]">
                   <p className="text-[10px] font-bold text-[#687870] uppercase">Workspace Slug</p>
-                  <code className="text-xs font-mono font-bold text-[#0B4F3A] block truncate mt-1">
+                  <code className="text-xs font-mono font-bold text-[#52b788] block truncate mt-1">
                     {activeWs.slug}
                   </code>
                 </div>
@@ -274,7 +274,7 @@ export default function WorkspacePage() {
                 </h3>
                 <p className="text-xs text-[#687870]">Each workspace contains exactly 1 dedicated monitoring project.</p>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0B4F3A] font-bold text-[10px]">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#52b788] font-bold text-[10px]">
                 1 Workspace = 1 Project
               </span>
             </div>
@@ -285,20 +285,20 @@ export default function WorkspacePage() {
                   <div>
                     <h4 className="text-sm font-bold text-[#13221C]">{activeWs.project.name}</h4>
                     <p className="text-xs text-[#687870]">
-                      External ID: <code className="font-mono text-[#0B4F3A]">{activeWs.project.externalId}</code>
+                      External ID: <code className="font-mono text-[#52b788]">{activeWs.project.externalId}</code>
                     </p>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <div className="px-3 py-1.5 rounded-xl bg-white border border-[#E2E8E4] flex items-center gap-2">
-                      <Key className="w-3.5 h-3.5 text-[#0B4F3A]" />
+                      <Key className="w-3.5 h-3.5 text-[#52b788]" />
                       <code className="text-xs font-mono text-[#13221C]">
                         {activeWs.project.apiKeyPrefix}...
                       </code>
                     </div>
                     <button
                       onClick={() => handleCopy('project_key', activeWs.project!.apiKeyPrefix)}
-                      className="p-2 rounded-full bg-white hover:bg-emerald-50 text-[#0B4F3A] border border-[#E2E8E4]"
+                      className="p-2 rounded-full bg-white hover:bg-emerald-50 text-[#52b788] border border-[#E2E8E4]"
                       title="Copy key prefix"
                     >
                       {copiedKey === 'project_key' ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
@@ -309,7 +309,7 @@ export default function WorkspacePage() {
                 {/* Integration Code */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs font-bold text-[#13221C]">
-                    <Code2 className="w-4 h-4 text-[#0B4F3A]" />
+                    <Code2 className="w-4 h-4 text-[#52b788]" />
                     <span>Quick SDK Initialization Code</span>
                   </div>
                   <pre className="p-4 rounded-2xl bg-slate-950 text-emerald-400 text-xs font-mono overflow-x-auto">
@@ -346,7 +346,7 @@ init({
                   setInviteEmail('');
                   setIsInviteModalOpen(true);
                 }}
-                className="flex items-center gap-1 px-4 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white rounded-full font-bold text-xs shadow-sm transition-all"
+                className="flex items-center gap-1 px-4 py-2 bg-[#52b788] hover:bg-[#40916c] text-white rounded-full font-bold text-xs shadow-sm transition-all"
               >
                 <Mail className="w-3.5 h-3.5" /> Invite Member
               </button>
@@ -359,7 +359,7 @@ init({
                 members.map((m) => (
                   <div key={m.id} className="py-3.5 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[#E6F7F0] flex items-center justify-center text-[#0B4F3A] font-bold text-xs shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-[#d8f3dc] flex items-center justify-center text-[#52b788] font-bold text-xs shrink-0">
                         {m.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
@@ -374,7 +374,7 @@ init({
                           m.role === 'SUPER_ADMIN'
                             ? 'bg-amber-100 text-amber-800 border-amber-300'
                             : m.role === 'ADMIN'
-                            ? 'bg-emerald-100 text-[#0B4F3A] border-emerald-300'
+                            ? 'bg-emerald-100 text-[#52b788] border-emerald-300'
                             : 'bg-slate-100 text-slate-700 border-slate-300'
                         }`}
                       >
@@ -408,7 +408,7 @@ init({
                   setNewWsName('');
                   setIsWsModalOpen(true);
                 }}
-                className="text-xs font-bold text-[#0B4F3A] hover:underline"
+                className="text-xs font-bold text-[#52b788] hover:underline"
               >
                 + New
               </button>
@@ -421,7 +421,7 @@ init({
                   onClick={() => setActiveWs(ws)}
                   className={`w-full p-3.5 rounded-2xl border text-left flex items-center justify-between transition-all ${
                     activeWs?.id === ws.id
-                      ? 'bg-[#E6F7F0] border-emerald-300 shadow-sm'
+                      ? 'bg-[#d8f3dc] border-emerald-300 shadow-sm'
                       : 'bg-[#FAFBFB] border-[#E2E8E4] hover:border-slate-300'
                   }`}
                 >
@@ -429,7 +429,7 @@ init({
                     <p className="text-xs font-bold text-[#13221C] truncate">{ws.name}</p>
                     <p className="text-[10px] text-[#687870]">Role: {ws.role}</p>
                   </div>
-                  {activeWs?.id === ws.id && <ChevronRight className="w-4 h-4 text-[#0B4F3A] shrink-0" />}
+                  {activeWs?.id === ws.id && <ChevronRight className="w-4 h-4 text-[#52b788] shrink-0" />}
                 </button>
               ))}
             </div>
@@ -443,7 +443,7 @@ init({
           <div className="bg-white rounded-3xl border border-[#E2E8E4] shadow-2xl max-w-md w-full p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-3">
               <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-[#0B4F3A]" />
+                <Shield className="w-5 h-5 text-[#52b788]" />
                 <h3 className="text-base font-bold text-[#13221C]">
                   {createdApiKey ? 'Workspace & Dedicated Project Provisioned!' : 'Create New Workspace (Admin)'}
                 </h3>
@@ -465,7 +465,7 @@ init({
                     placeholder="e.g. Acme Microservices Org"
                     value={newWsName}
                     onChange={(e) => setNewWsName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]"
                   />
                 </div>
 
@@ -485,7 +485,7 @@ init({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-5 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white text-xs font-bold rounded-full disabled:opacity-50"
+                    className="px-5 py-2 bg-[#52b788] hover:bg-[#40916c] text-white text-xs font-bold rounded-full disabled:opacity-50"
                   >
                     {isSubmitting ? 'Provisioning...' : 'Create Workspace'}
                   </button>
@@ -494,7 +494,7 @@ init({
             ) : (
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-                  <p className="text-xs font-bold text-[#0B4F3A]">
+                  <p className="text-xs font-bold text-[#52b788]">
                     Workspace &amp; Project API Key generated:
                   </p>
                   <code className="block p-3 bg-white rounded-xl border border-emerald-300 text-xs font-mono font-bold text-[#13221C] break-all">
@@ -505,7 +505,7 @@ init({
                 <div className="flex justify-end">
                   <button
                     onClick={() => setIsWsModalOpen(false)}
-                    className="px-5 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-full"
+                    className="px-5 py-2 bg-[#52b788] text-white text-xs font-bold rounded-full"
                   >
                     Done
                   </button>
@@ -522,7 +522,7 @@ init({
           <div className="bg-white rounded-3xl border border-[#E2E8E4] shadow-2xl max-w-md w-full p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-3">
               <div className="flex items-center gap-2">
-                <Mail className="w-5 h-5 text-[#0B4F3A]" />
+                <Mail className="w-5 h-5 text-[#52b788]" />
                 <h3 className="text-base font-bold text-[#13221C]">
                   {inviteResult ? 'Email Invitation Sent!' : 'Invite Employee to Workspace'}
                 </h3>
@@ -544,7 +544,7 @@ init({
                     placeholder="employee@company.com"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]"
                   />
                 </div>
 
@@ -555,7 +555,7 @@ init({
                   <select
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value as 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE')}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]"
                   >
                     <option value="EMPLOYEE">EMPLOYEE (Access project metrics &amp; issues)</option>
                     <option value="ADMIN">ADMIN (Workspace &amp; team management)</option>
@@ -574,7 +574,7 @@ init({
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-5 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white text-xs font-bold rounded-full disabled:opacity-50"
+                    className="px-5 py-2 bg-[#52b788] hover:bg-[#40916c] text-white text-xs font-bold rounded-full disabled:opacity-50"
                   >
                     {isSubmitting ? 'Sending Email...' : 'Send Invitation Email'}
                   </button>
@@ -583,7 +583,7 @@ init({
             ) : (
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-                  <p className="text-xs font-bold text-[#0B4F3A]">
+                  <p className="text-xs font-bold text-[#52b788]">
                     Invitation email sent to {inviteResult.email}! Direct token link:
                   </p>
                   <div className="flex items-center justify-between gap-2 p-3 bg-white rounded-xl border border-emerald-300">
@@ -592,7 +592,7 @@ init({
                     </code>
                     <button
                       onClick={() => handleCopy('invite_link', inviteResult.inviteLink)}
-                      className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg text-[#0B4F3A] shrink-0"
+                      className="p-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg text-[#52b788] shrink-0"
                     >
                       {copiedKey === 'invite_link' ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
                     </button>
@@ -602,7 +602,7 @@ init({
                 <div className="flex justify-end">
                   <button
                     onClick={() => setIsInviteModalOpen(false)}
-                    className="px-5 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-full"
+                    className="px-5 py-2 bg-[#52b788] text-white text-xs font-bold rounded-full"
                   >
                     Done
                   </button>

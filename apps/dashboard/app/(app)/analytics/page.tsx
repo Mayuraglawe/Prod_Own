@@ -24,7 +24,7 @@ export default function AnalyticsPage() {
         {metrics.map((m) => (
           <div key={m.label} className="p-5 rounded-2xl border border-[#E2E8E4] bg-emerald-50/50">
             <span className="text-xs font-bold text-[#687870]">{m.label}</span>
-            <div className="text-2xl font-extrabold text-[#0B4F3A] mt-1">{m.value}</div>
+            <div className="text-2xl font-extrabold text-[#52b788] mt-1">{m.value}</div>
           </div>
         ))}
       </div>

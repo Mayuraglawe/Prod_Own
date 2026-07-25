@@ -10,7 +10,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-md bg-white rounded-3xl border border-[#E2E8E4] shadow-sm p-8 space-y-6">
         {/* Header */}
         <div className="space-y-1">
-          <div className="w-10 h-10 rounded-2xl bg-[#0B4F3A] flex items-center justify-center mb-4">
+          <div className="w-10 h-10 rounded-2xl bg-[#52b788] flex items-center justify-center mb-4">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2L2 7l10 5 10-5-10-5z" />
               <path d="M2 17l10 5 10-5" />
@@ -37,13 +37,13 @@ export default function OnboardingPage() {
               minLength={2}
               maxLength={60}
               placeholder="e.g. Acme Corp"
-              className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] bg-[#F3F5F4] text-sm text-[#13221C] placeholder:text-[#A0ABA4] focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/30 focus:border-[#0B4F3A]"
+              className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] bg-[#F3F5F4] text-sm text-[#13221C] placeholder:text-[#A0ABA4] focus:outline-none focus:ring-2 focus:ring-[#52b788]/30 focus:border-[#52b788]"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 bg-[#0B4F3A] text-white font-bold text-sm rounded-xl hover:bg-[#0a3f2f] transition-colors"
+            className="w-full py-2.5 bg-[#52b788] text-white font-bold text-sm rounded-xl hover:bg-[#0a3f2f] transition-colors"
           >
             Create workspace
           </button>

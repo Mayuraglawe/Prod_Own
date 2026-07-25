@@ -17,10 +17,10 @@ const config: Config = {
         donezo: {
           bg: '#F3F5F4',
           surface: '#FFFFFF',
-          dark: '#0B4F3A',
-          'dark-hover': '#083E2D',
-          green: '#20C997',
-          'light-green': '#E6F7F0',
+          dark: '#52b788',
+          'dark-hover': '#40916c',
+          green: '#52b788',
+          'light-green': '#d8f3dc',
           border: '#E2E8E4',
           text: '#13221C',
           muted: '#687870'

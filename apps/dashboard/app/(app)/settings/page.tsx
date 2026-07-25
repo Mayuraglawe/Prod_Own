@@ -13,7 +13,7 @@ const INTEGRATIONS: Integration[] = [
     title: 'Slack Webhook Integration',
     description: 'Dispatch critical error alerts directly to #incidents channel',
     action: (
-      <button className="px-4 py-2 bg-[#0B4F3A] text-white font-bold text-xs rounded-full">
+      <button className="px-4 py-2 bg-[#52b788] text-white font-bold text-xs rounded-full">
         Test Slack Alert
       </button>
     ),
@@ -22,7 +22,7 @@ const INTEGRATIONS: Integration[] = [
     title: 'n8n Workflow Webhook',
     description: 'Trigger custom n8n automation pipelines on error events',
     action: (
-      <button className="px-4 py-2 bg-[#0B4F3A] text-white font-bold text-xs rounded-full">
+      <button className="px-4 py-2 bg-[#52b788] text-white font-bold text-xs rounded-full">
         Test n8n Alert
       </button>
     ),

@@ -80,16 +80,16 @@ export function WorkspaceSwitcher() {
       {/* Active Workspace Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[#F3F5F4] hover:bg-[#E6F7F0] border border-[#E2E8E4] transition-all text-xs font-bold text-[#13221C]"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[#F3F5F4] hover:bg-[#d8f3dc] border border-[#E2E8E4] transition-all text-xs font-bold text-[#13221C]"
       >
-        <Building2 className="w-4 h-4 text-[#0B4F3A]" />
+        <Building2 className="w-4 h-4 text-[#52b788]" />
         <span>{activeWorkspace ? activeWorkspace.name : 'Select Workspace'}</span>
         {activeWorkspace && (
           <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
             activeWorkspace.role === 'SUPER_ADMIN'
               ? 'bg-amber-600 text-white'
               : activeWorkspace.role === 'ADMIN'
-              ? 'bg-[#0B4F3A] text-white'
+              ? 'bg-[#52b788] text-white'
               : 'bg-slate-200 text-slate-700'
           }`}>
             {activeWorkspace.role}
@@ -115,7 +115,7 @@ export function WorkspaceSwitcher() {
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
                   activeWorkspace?.id === ws.id
-                    ? 'bg-[#E6F7F0] text-[#0B4F3A]'
+                    ? 'bg-[#d8f3dc] text-[#52b788]'
                     : 'hover:bg-[#FAFBFB] text-[#13221C]'
                 }`}
               >
@@ -144,7 +144,7 @@ export function WorkspaceSwitcher() {
                 setNewWorkspaceName('');
                 setIsModalOpen(true);
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-[#0B4F3A] hover:bg-emerald-50 transition-all"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-[#52b788] hover:bg-emerald-50 transition-all"
             >
               <Plus className="w-4 h-4" /> Create New Workspace
             </button>
@@ -158,7 +158,7 @@ export function WorkspaceSwitcher() {
           <div className="bg-white rounded-3xl border border-[#E2E8E4] shadow-2xl max-w-md w-full p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-[#E2E8E4] pb-3">
               <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-[#0B4F3A]" />
+                <Shield className="w-5 h-5 text-[#52b788]" />
                 <h3 className="text-base font-bold text-[#13221C]">
                   {createdWorkspaceKey ? 'Workspace & Project Ready!' : 'Create Workspace (Admin)'}
                 </h3>
@@ -180,7 +180,7 @@ export function WorkspaceSwitcher() {
                     placeholder="e.g. Acme Corp Operations"
                     value={newWorkspaceName}
                     onChange={(e) => setNewWorkspaceName(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8E4] text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]"
                   />
                 </div>
 
@@ -200,7 +200,7 @@ export function WorkspaceSwitcher() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-5 py-2 bg-[#0B4F3A] hover:bg-[#083B2B] text-white text-xs font-bold rounded-full disabled:opacity-50"
+                    className="px-5 py-2 bg-[#52b788] hover:bg-[#40916c] text-white text-xs font-bold rounded-full disabled:opacity-50"
                   >
                     {isSubmitting ? 'Creating...' : 'Create Workspace'}
                   </button>
@@ -209,7 +209,7 @@ export function WorkspaceSwitcher() {
             ) : (
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
-                  <p className="text-xs font-bold text-[#0B4F3A]">
+                  <p className="text-xs font-bold text-[#52b788]">
                     Workspace &amp; Project API Key generated:
                   </p>
                   <code className="block p-3 bg-white rounded-xl border border-emerald-300 text-xs font-mono font-bold text-[#13221C] break-all">
@@ -220,7 +220,7 @@ export function WorkspaceSwitcher() {
                 <div className="flex justify-end">
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-full"
+                    className="px-5 py-2 bg-[#52b788] text-white text-xs font-bold rounded-full"
                   >
                     Done
                   </button>

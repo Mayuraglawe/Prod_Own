@@ -11,11 +11,11 @@
   --card: 0 0% 100%; /* #FFFFFF */
   --card-foreground: 160 30% 12%;
   
-  --primary: 161 77% 18%; /* Dark Emerald #0B4F3A */
+  --primary: 152 41% 52%; /* Dark Emerald #52b788 */
   --primary-foreground: 0 0% 100%;
   
-  --accent-green: 158 64% 52%; /* Light Emerald #20C997 */
-  --accent-green-bg: 152 50% 93%; /* Soft tint #E6F7F0 */
+  --accent-green: 152 41% 52%; /* Light Emerald #52b788 */
+  --accent-green-bg: 152 50% 93%; /* Soft tint #d8f3dc */
   
   --muted: 140 10% 92%;
   --muted-foreground: 160 10% 45%; /* #687870 */

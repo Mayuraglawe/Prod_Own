@@ -172,7 +172,7 @@ export default function HelpPage() {
               <div className="p-5 rounded-2xl border border-[#E2E8E4] bg-[#F3F5F4] space-y-2">
                 <h4 className="text-sm font-bold text-[#13221C]">PostgreSQL RLS Architecture</h4>
                 <p className="text-xs text-[#687870]">Learn how Row-Level Security policies isolate tenant multi-tenancy data in Postgres.</p>
-                <a href="/PROJECT_GOVERNANCE_AND_DEVELOPMENT_GUIDELINES.md" className="inline-flex items-center gap-1 text-xs font-bold text-[#0B4F3A]">
+                <a href="/PROJECT_GOVERNANCE_AND_DEVELOPMENT_GUIDELINES.md" className="inline-flex items-center gap-1 text-xs font-bold text-[#52b788]">
                   Read Guidelines <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
@@ -180,7 +180,7 @@ export default function HelpPage() {
               <div className="p-5 rounded-2xl border border-[#E2E8E4] bg-[#F3F5F4] space-y-2">
                 <h4 className="text-sm font-bold text-[#13221C]">Fastify Ingest Endpoint Specs</h4>
                 <p className="text-xs text-[#687870]">POST /ingest specs for sending raw telemetry payloads to BullMQ queues.</p>
-                <a href="/apps/api/AGENTS.md" className="inline-flex items-center gap-1 text-xs font-bold text-[#0B4F3A]">
+                <a href="/apps/api/AGENTS.md" className="inline-flex items-center gap-1 text-xs font-bold text-[#52b788]">
                   View API Specs <ExternalLink className="w-3 h-3" />
                 </a>
               </div>

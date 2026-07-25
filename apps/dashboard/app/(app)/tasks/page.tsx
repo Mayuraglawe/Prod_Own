@@ -176,8 +176,8 @@ export default function TasksPage() {
                       onClick={() => setSeverityFilter(sev)}
                       className={`px-3 py-1 rounded-full text-xs font-bold uppercase transition-all border ${
                         severityFilter === sev
-                          ? 'bg-[#0B4F3A] text-white border-[#0B4F3A]'
-                          : 'bg-[#F3F5F4] text-[#687870] border-[#E2E8E4] hover:bg-[#E6F7F0]'
+                          ? 'bg-[#52b788] text-white border-[#52b788]'
+                          : 'bg-[#F3F5F4] text-[#687870] border-[#E2E8E4] hover:bg-[#d8f3dc]'
                       }`}
                     >
                       {sev}
@@ -189,7 +189,7 @@ export default function TasksPage() {
               {/* Error List */}
               <div className="space-y-3">
                 {filteredErrors.map((err) => (
-                  <div key={err.id} className="p-4 rounded-2xl border border-[#E2E8E4] hover:border-[#0B4F3A]/30 hover:shadow-sm transition-all space-y-3">
+                  <div key={err.id} className="p-4 rounded-2xl border border-[#E2E8E4] hover:border-[#52b788]/30 hover:shadow-sm transition-all space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mr-2 border ${
@@ -208,18 +208,18 @@ export default function TasksPage() {
                     </div>
 
                     <div className="flex items-center justify-between text-xs pt-1 border-t border-[#E2E8E4]">
-                      <span className="font-mono text-[#0B4F3A] text-[11px] font-semibold">{err.tenantId} • {err.source}</span>
+                      <span className="font-mono text-[#52b788] text-[11px] font-semibold">{err.tenantId} • {err.source}</span>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => setSelectedError(selectedError?.id === err.id ? null : err)}
-                          className="px-3 py-1 bg-[#F3F5F4] hover:bg-[#E6F7F0] text-[#0B4F3A] font-bold text-xs rounded-full border border-[#E2E8E4]"
+                          className="px-3 py-1 bg-[#F3F5F4] hover:bg-[#d8f3dc] text-[#52b788] font-bold text-xs rounded-full border border-[#E2E8E4]"
                         >
                           {selectedError?.id === err.id ? 'Hide Trace' : 'View Trace'}
                         </button>
                         {err.status === 'unresolved' ? (
                           <button
                             onClick={() => handleResolveError(err.id)}
-                            className="px-3 py-1 bg-[#0B4F3A] hover:bg-[#083E2D] text-white font-bold text-xs rounded-full"
+                            className="px-3 py-1 bg-[#52b788] hover:bg-[#40916c] text-white font-bold text-xs rounded-full"
                           >
                             Mark Resolved
                           </button>
@@ -233,7 +233,7 @@ export default function TasksPage() {
 
                     {/* Stack Trace Drawer */}
                     {selectedError?.id === err.id && (
-                      <div className="mt-3 p-4 rounded-xl bg-[#052A1F] text-emerald-300 font-mono text-xs overflow-x-auto border border-[#0B4F3A]">
+                      <div className="mt-3 p-4 rounded-xl bg-[#1b4332] text-emerald-300 font-mono text-xs overflow-x-auto border border-[#52b788]">
                         <p className="text-gray-400 text-[10px] mb-2 font-sans font-semibold">// Raw Ingested Stack Trace</p>
                         <pre>{err.stackTrace}</pre>
                       </div>

@@ -80,7 +80,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
         <div className="lg:col-span-2 space-y-6">
           <form onSubmit={handleSubmit} className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-6">
             <h3 className="text-base font-bold text-[#13221C] border-b border-[#E2E8E4] pb-4 flex items-center gap-2">
-              <User className="w-4 h-4 text-[#0B4F3A]" />
+              <User className="w-4 h-4 text-[#52b788]" />
               Personal Information
             </h3>
             
@@ -91,7 +91,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
                   type="text" 
                   name="firstName"
                   defaultValue={user?.name?.split(' ')[0] || ''}
-                  className="w-full px-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/20 focus:border-[#0B4F3A] transition-all"
+                  className="w-full px-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]/20 focus:border-[#52b788] transition-all"
                 />
               </div>
               <div className="space-y-1.5">
@@ -100,7 +100,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
                   type="text" 
                   name="lastName"
                   defaultValue={user?.name?.split(' ').slice(1).join(' ') || ''}
-                  className="w-full px-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/20 focus:border-[#0B4F3A] transition-all"
+                  className="w-full px-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]/20 focus:border-[#52b788] transition-all"
                 />
               </div>
               <div className="space-y-1.5 md:col-span-2">
@@ -111,7 +111,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
                     type="email" 
                     name="email"
                     defaultValue={user?.email || ''}
-                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/20 focus:border-[#0B4F3A] transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]/20 focus:border-[#52b788] transition-all"
                   />
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
               <button 
                 type="submit"
                 disabled={isSaving}
-                className="px-5 py-2.5 bg-[#0B4F3A] hover:bg-[#083E2D] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2"
+                className="px-5 py-2.5 bg-[#52b788] hover:bg-[#40916c] text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center gap-2"
               >
                 {isSaving ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -135,7 +135,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
 
           <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-6">
             <h3 className="text-base font-bold text-[#13221C] border-b border-[#E2E8E4] pb-4 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#0B4F3A]" />
+              <Shield className="w-4 h-4 text-[#52b788]" />
               Security
             </h3>
             
@@ -147,7 +147,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
                   <input 
                     type="password" 
                     placeholder="••••••••"
-                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/20 focus:border-[#0B4F3A] transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]/20 focus:border-[#52b788] transition-all"
                   />
                 </div>
               </div>
@@ -158,7 +158,7 @@ export default function ProfileClient({ user }: { user: ProfileUser | null }) {
                   <input 
                     type="password" 
                     placeholder="Enter new password"
-                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F3A]/20 focus:border-[#0B4F3A] transition-all"
+                    className="w-full pl-9 pr-3 py-2 bg-[#F3F5F4] border border-[#E2E8E4] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#52b788]/20 focus:border-[#52b788] transition-all"
                   />
                 </div>
               </div>
