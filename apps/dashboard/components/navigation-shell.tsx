@@ -3,19 +3,27 @@
 import React, { useState } from 'react';
 import { Sidebar } from './sidebar';
 import { Header } from './header';
+import { usePathname } from 'next/navigation';
 
 interface NavigationShellProps {
   user?: {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    role?: string | null;
   };
+  isSuperAdminOverride?: boolean;
   children: React.ReactNode;
 }
 
-export function NavigationShell({ user, children }: NavigationShellProps) {
+export function NavigationShell({ user, isSuperAdminOverride, children }: NavigationShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+  
+  // Use the explicit override if provided, otherwise fallback to basic user.role check
+  const isSuperAdmin = isSuperAdminOverride ?? (user?.role && ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(user.role.toUpperCase().trim()));
+  const isSuperAdminUser = isSuperAdmin || pathname?.startsWith('/super-admin');
 
   return (
     <div className="flex min-h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased overflow-x-hidden">
@@ -25,6 +33,7 @@ export function NavigationShell({ user, children }: NavigationShellProps) {
         onCloseMobile={() => setIsMobileOpen(false)}
         isCollapsed={isCollapsed}
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+        isSuperAdmin={!!isSuperAdmin}
       />
 
       {/* Main Content Area */}
