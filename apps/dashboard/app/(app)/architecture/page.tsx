@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import mermaid from 'mermaid';
 import {
   Cpu,
   Database,
@@ -17,7 +18,82 @@ import {
   ArrowRight,
   Boxes,
   HardDrive,
+  Download,
 } from 'lucide-react';
+
+function VisualArchitectureDiagram({ codeStr }: { codeStr: string }) {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [svgContent, setSvgContent] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#E6F7F0',
+        primaryTextColor: '#13221C',
+        primaryBorderColor: '#20C997',
+        lineColor: '#20C997',
+        secondaryColor: '#20C997',
+        tertiaryColor: '#FAFBFB'
+      },
+      fontFamily: 'Inter, sans-serif'
+    });
+    
+    const renderChart = async () => {
+      try {
+        const id = `mermaid-${Math.random().toString(36).substring(2, 9)}`;
+        const { svg } = await mermaid.render(id, codeStr);
+        setSvgContent(svg);
+        setError(null);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to render diagram');
+      }
+    };
+    renderChart();
+  }, [codeStr]);
+
+  if (error) {
+    return (
+      <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-mono overflow-auto whitespace-pre-wrap">
+        {error}
+      </div>
+    );
+  }
+
+  const downloadSvg = () => {
+    if (!svgContent) return;
+    const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `diagram-${Date.now()}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="relative group p-4 rounded-2xl bg-white border border-[#E2E8E4] shadow-sm mb-6 w-full">
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <button
+          onClick={downloadSvg}
+          title="Download SVG Diagram"
+          className="p-1.5 bg-white border border-[#E2E8E4] rounded-md shadow-sm hover:bg-[#E6F7F0] hover:text-[#0B4F3A] text-[#687870] transition-colors flex items-center justify-center"
+        >
+          <Download className="w-4 h-4" />
+        </button>
+      </div>
+      <div 
+        ref={chartRef}
+        dangerouslySetInnerHTML={{ __html: svgContent }} 
+        className="flex justify-center overflow-x-auto w-full [&>svg]:max-w-full [&>svg]:h-auto"
+      />
+    </div>
+  );
+}
 
 export default function ArchitecturePage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'flow' | 'components' | 'resilience' | 'storage' | 'deploy' | 'governance'>('overview');
@@ -252,7 +328,55 @@ export default function ArchitecturePage() {
       {activeTab === 'flow' && (
         <div className="space-y-6 animate-in fade-in duration-200">
           <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-6">
-            <h3 className="text-lg font-bold text-[#13221C]">Step-by-Step Telemetry Processing Pipeline</h3>
+            <h3 className="text-lg font-bold text-[#13221C]">Event-Driven Sequence & End-to-End Data Flow</h3>
+            <p className="text-xs text-[#687870]">The sequence diagram below details the asynchronous event pipeline from client error telemetry submission to notification dispatch.</p>
+            <VisualArchitectureDiagram codeStr={`sequenceDiagram
+    autonumber
+    actor Client
+    participant GW as API Gateway
+    participant Ingest as Ingestion Service
+    participant Bus as Kafka Event Bus
+    participant Proc as Processing Service
+    participant S3 as S3 Blob Store
+    participant Group as Grouping Service
+    participant DB as PostgreSQL
+    participant CH as ClickHouse
+    participant Alert as Alerting Service
+    participant Redis as Redis
+    participant Notif as Notification Service
+
+    Client->>GW: POST /api/v1/ingest/store (Raw Telemetry)
+    GW->>GW: Validate Auth Header & Rate Limit
+    GW->>Ingest: Proxy Write Request
+    Ingest->>Bus: Publish 'telemetry.received' Event
+    Ingest-->>GW: Return 202 Accepted
+    GW-->>Client: 202 Accepted { eventId }
+
+    Bus->>Proc: Consume 'telemetry.received' Event
+    Proc->>Proc: Scrub PII/Secrets (Email, Bearer Tokens, API Keys)
+    Proc->>S3: Upload raw payload blob
+    Proc->>Bus: Publish 'telemetry.processed' Event
+
+    Bus->>Group: Consume 'telemetry.processed' Event
+    Group->>Group: Generate SHA256 Fingerprint
+    Group->>DB: Upsert Issue Record (Postgres)
+    Group->>CH: Insert Time-Series Occurrence (ClickHouse)
+    Group->>Bus: Publish 'issue.grouped' Event
+
+    Bus->>Alert: Consume 'issue.grouped' Event
+    Alert->>Redis: Check Cooldown Window (5 min)
+    alt Cooldown Active
+        Alert->>Alert: Suppress Duplicate Alert
+    else Cooldown Expired
+        Alert->>Redis: Set Cooldown Timestamp
+        Alert->>Bus: Publish 'alert.triggered' Event
+    end
+
+    Bus->>Notif: Consume 'alert.triggered' Event
+    Notif->>Notif: Format Slack & Webhook Payload
+    Notif->>Client: Dispatch HTTP POST Webhooks`} />
+
+            <h3 className="text-lg font-bold text-[#13221C] pt-6 border-t border-[#E2E8E4]">Step-by-Step Telemetry Processing Pipeline</h3>
 
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-4">

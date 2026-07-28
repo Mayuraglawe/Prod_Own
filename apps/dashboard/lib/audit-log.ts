@@ -8,7 +8,9 @@ export type AuditAction =
   | 'tenant.updated'
   | 'member.role_changed'
   | 'member.removed'
-  | 'invite.sent';
+  | 'invite.sent'
+  | 'tenant.impersonate_start'
+  | 'tenant.plan_override';
 
 /**
  * Writes an immutable audit log entry for any Super Admin action.

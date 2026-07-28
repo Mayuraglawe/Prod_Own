@@ -24,6 +24,13 @@ model Tenant {
   /// Optional reason recorded by the Super Admin when suspending.
   suspendedReason String?
 
+  /// The current billing plan tier (e.g. "STARTUP", "BUSINESS", "ENTERPRISE").
+  planTier        String   @default("STARTUP")
+  /// A manual override for monthly event quota. If null, defaults to plan's limits.
+  customEventQuota Int?
+  /// A manual override for data retention days. If null, defaults to plan's limits.
+  customRetentionDays Int?
+
   createdAt    DateTime          @default(now())
   updatedAt    DateTime          @updatedAt
   users        User[]

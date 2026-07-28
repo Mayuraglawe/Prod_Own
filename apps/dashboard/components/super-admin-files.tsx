@@ -628,6 +628,115 @@ kubectl apply -f deploy/kubernetes/microservices-deployments.yaml
 \`\`\`
 - **Horizontal Pod Autoscaler (HPA)**: Auto-scales Ingestion Service from 3 to 20 replicas based on CPU utilization (>65%).
 `
+    },
+    {
+      id: 'gen-004',
+      filename: 'super_admin_capabilities.md',
+      path: 'c:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\b926e82d-ec67-4140-8a3d-0a17439c7821\\super_admin_capabilities.md',
+      category: 'Governance',
+      isFeaturedInGeneral: true,
+      title: 'Super Admin Capabilities — LiteTrace Platform Control',
+      subtitle: 'Platform-level vs Org-level separation & Management Features',
+      description: 'Defines the super admin capabilities for multi-tenant LiteTrace platform control including tenant management, billing overrides, moderation, and infra monitoring priorities for the MVP.',
+      size: '2.5 KB',
+      lines: 65,
+      lastUpdated: '2026-07-28',
+      tags: ['Super Admin', 'Governance', 'Multi-tenant', 'Platform Control'],
+      securityLevel: 'Super Admin',
+      summaryHighlights: [
+        'Separates Platform-level (cross-tenant) and Org-level (single-tenant) controls.',
+        'Defines MVP priorities: Org list, impersonation, queue health, manual overrides, basic audit log.',
+        'Details 7 pillars: Tenant, User, Billing, Ops, Moderation, Config, Security.'
+      ],
+      content: `# Super Admin Capabilities — LiteTrace Platform Control
+
+Since you're multi-tenant (org → project → RLS), split this into **Platform-level** (super admin, cross-tenant) vs **Org-level** (org admin, single-tenant). Super admin = you/your ops team, not customers.
+
+## 1. Tenant / Org Management
+
+| Feature | Purpose |
+|---|---|
+| List/search all orgs | Cross-tenant visibility |
+| View org details (plan, usage, event volume, storage) | Support & billing checks |
+| Suspend/reactivate org | Non-payment, abuse |
+| Force-delete org + cascade data | Offboarding, GDPR/DPDP requests |
+| Impersonate org (view-as, no write) | Debug customer issues without asking for creds |
+| Override plan/limits manually | Custom deals, comped accounts |
+| Org creation on behalf of customer | Manual onboarding/sales-assisted signup |
+
+## 2. User & Access Management
+
+| Feature | Purpose |
+|---|---|
+| Global user search (across all orgs) | Support lookups |
+| Force password reset / revoke sessions | Security incidents |
+| Ban/suspend a user platform-wide | Abuse, spam |
+| View user's org memberships | Multi-org users |
+| Grant/revoke super admin role | Bootstrap other admins |
+| Audit login history (IP, device, timestamp) | Security investigation |
+
+## 3. Billing & Plan Control
+
+| Feature | Purpose |
+|---|---|
+| View/edit subscription state per org | Manual billing fixes |
+| Issue credits/refunds | Support resolution |
+| Change plan tier without payment flow | Sales overrides, trials |
+| Set custom event quota / retention days | Enterprise negotiation |
+| View MRR, churn, org-wise revenue dashboard | Business metrics |
+
+## 4. Platform Ops / Infra Monitoring
+
+| Feature | Purpose |
+|---|---|
+| Ingest pipeline health (Relay/Redis Streams lag, queue depth) | Since you're using Redis Streams — critical to watch backlog |
+| Asynq worker queue dashboard (pending/failed/retrying jobs) | Fingerprint worker health |
+| Postgres connection pool / RLS query stats | Multi-tenant DB health |
+| Global event throughput (events/sec, by org) | Capacity planning |
+| Dead-letter queue viewer + requeue | Failed event reprocessing |
+| Rate-limit config per org (events/min) | Abuse prevention, noisy-neighbor isolation |
+
+## 5. Data & Content Moderation
+
+| Feature | Purpose |
+|---|---|
+| View/delete any org's error events (support access) | Debug on customer's behalf |
+| Global search across all orgs (support only, logged) | Incident investigation |
+| PII scrub/redaction override | DPDP Act compliance |
+| Data export tool (for compliance requests) | Right-to-access requests |
+| Storage usage breakdown per org | Cost attribution |
+
+## 6. Platform Configuration
+
+| Feature | Purpose |
+|---|---|
+| Feature flags per org/plan tier | Gradual rollout, plan gating |
+| Global alert-rule templates | Default rules for new orgs |
+| SDK/integration allowlist (n8n, Slack, webhook targets) | Security control on outbound integrations |
+| System-wide banner/maintenance mode | Incident comms |
+| API key management (revoke any org's key) | Security incident response |
+
+## 7. Security & Audit
+
+| Feature | Purpose |
+|---|---|
+| Full audit log (who did what, when, cross-org) | Compliance, debugging |
+| Anomaly detection (sudden event spike = possible abuse/leak) | Cost & security protection |
+| IP allowlist/blocklist at platform level | Block malicious ingest sources |
+| Webhook/n8n endpoint validation (SSRF protection) | Since n8n is your differentiator — must sanitize outbound URLs |
+
+---
+
+## Priority for MVP (given your stack + solo/small team)
+
+1. Org list + suspend/delete
+2. Impersonate (view-as) — biggest support time-saver
+3. Asynq queue + Redis Streams health dashboard
+4. Manual plan override + usage view
+5. Audit log (basic: actor, action, timestamp, org_id)
+
+Everything else can wait till you have paying customers demanding it.
+`
     }
   ];
 }
