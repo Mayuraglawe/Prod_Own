@@ -42,12 +42,20 @@ export function SuperAdminOverview() {
   }, []);
 
   const fetchData = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
     try {
       const [healthRes, platformRes, tenantsRes] = await Promise.all([
-        fetch('/api/admin/platform/health'),
-        fetch('/api/admin/platform'),
-        fetch('/api/admin/tenants')
+        fetch('/api/admin/platform/health', { signal: controller.signal }),
+        fetch('/api/admin/platform', { signal: controller.signal }),
+        fetch('/api/admin/tenants', { signal: controller.signal })
       ]);
+      clearTimeout(timeoutId);
+
+      if (!healthRes.ok || !platformRes.ok || !tenantsRes.ok) {
+        throw new Error('One or more API requests failed with non-2xx status');
+      }
 
       const healthData = await healthRes.json();
       const platformData = await platformRes.json();
@@ -57,12 +65,17 @@ export function SuperAdminOverview() {
       if (platformData.summary) setSummary(platformData.summary);
       if (tenantsData.tenants) {
         // Sort by event usage roughly (events usually correlate with _count.issues for now)
-        const sorted = [...tenantsData.tenants].sort((a: Tenant, b: Tenant) => b._count.issues - a._count.issues);
+        const sorted = [...tenantsData.tenants].sort((a: Tenant, b: Tenant) => (b._count?.issues || 0) - (a._count?.issues || 0));
         setTenants(sorted.slice(0, 5)); // Top 5
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        console.error('[Platform Overview] API requests timed out after 8 seconds (backend may be down).');
+      } else {
+        console.error('[Platform Overview] API fetch error:', err);
+      }
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -105,8 +118,6 @@ export function SuperAdminOverview() {
     { name: 'Retrying', value: (health?.queues.fingerprints.delayed || 0) + (health?.queues.alerts.delayed || 0) },
     { name: 'Processed', value: 8540 } // Mock processed count
   ];
-
-  const poolUsage = 82; // Mock PG pool usage
 
   return (
     <div className="font-sans">
@@ -344,10 +355,18 @@ function StatCard({ title, value, trend, trendColor, suffix, chartData, chartCol
   );
 }
 
-function AlertItem({ type, message, time, severity }: any) {
-  const Icon = type === 'security' ? ShieldAlert : AlertTriangle;
-  const colors = severity === 'critical' ? 'text-red-600 bg-red-50 border-red-200' : 'text-amber-600 bg-amber-50 border-amber-200';
-  const iconColor = severity === 'critical' ? 'text-red-500 bg-white border-red-100' : 'text-amber-500 bg-white border-amber-100';
+interface AlertItemProps {
+  type: 'security' | 'warning' | 'info' | 'danger';
+  message?: string;
+  title?: string;
+  time: string;
+  severity?: 'critical' | 'warning' | 'info';
+}
+
+function AlertItem({ type, message, title, time, severity }: AlertItemProps) {
+  const Icon = type === 'security' || type === 'danger' ? ShieldAlert : AlertTriangle;
+  const colors = severity === 'critical' || type === 'danger' ? 'text-red-600 bg-red-50 border-red-200' : 'text-amber-600 bg-amber-50 border-amber-200';
+  const iconColor = severity === 'critical' || type === 'danger' ? 'text-red-500 bg-white border-red-100' : 'text-amber-500 bg-white border-amber-100';
   
   return (
     <div className="flex gap-4 relative z-10">
@@ -356,7 +375,7 @@ function AlertItem({ type, message, time, severity }: any) {
       </div>
       <div className={`flex-1 p-3 rounded-lg border ${colors} shadow-sm`}>
         <div className="flex justify-between items-start">
-          <p className="text-sm font-medium text-slate-900">{message}</p>
+          <p className="text-sm font-medium text-slate-900">{message || title}</p>
           <span className="text-xs text-slate-500 font-mono mt-0.5">{time}</span>
         </div>
       </div>

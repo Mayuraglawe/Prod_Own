@@ -95,16 +95,16 @@ export function Sidebar({
           <div className="space-y-1.5">
             <nav className="space-y-1">
               <Link
-                href={'/super-admin' as Route}
+                href={'/super-admin/dashboard' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/dashboard') ? activeClass : inactiveClass}`}
                 title="Dashboard"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <LayoutDashboard className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Dashboard</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/super-admin/dashboard') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
@@ -370,7 +370,7 @@ export function Sidebar({
                 )}
                 <nav className="space-y-1">
                   <Link
-                    href={'/super-admin' as Route}
+                    href={'/super-admin/dashboard' as Route}
                     onClick={onCloseMobile}
                     className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all text-indigo-600 hover:bg-indigo-50`}
                     title="Platform Control Panel"

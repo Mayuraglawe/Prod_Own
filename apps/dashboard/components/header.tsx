@@ -32,7 +32,7 @@ export function Header({
 
   // Breadcrumb / Title text based on route
   const getBreadcrumb = () => {
-    if (pathname === '/super-admin') return 'Dashboard';
+    if (pathname === '/super-admin/dashboard') return 'Dashboard';
     if (pathname?.startsWith('/super-admin/orgs')) return 'Organizations';
     if (pathname?.startsWith('/super-admin/users')) return 'Users';
     if (pathname?.startsWith('/super-admin/billing')) return 'Billing';
