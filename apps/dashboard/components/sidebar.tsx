@@ -393,7 +393,7 @@ export function Sidebar({
     <>
       {/* Desktop Sidebar (Collapsible) */}
       <aside
-        className={`hidden lg:flex flex-col border-r bg-[#E6E6FA] border-[#E2E8E4] p-6 shrink-0 transition-all duration-300 min-h-screen ${
+        className={`hidden lg:flex flex-col border-r bg-[#E6E6FA] border-[#E2E8E4] p-6 shrink-0 transition-all duration-300 sticky top-0 h-screen overflow-y-auto ${
           isCollapsed ? 'w-20 items-center' : 'w-64'
         }`}
       >

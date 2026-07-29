@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Sidebar } from './sidebar';
 import { Header } from './header';
-import { usePathname } from 'next/navigation';
+
 
 interface NavigationShellProps {
   user?: {
@@ -19,14 +19,14 @@ interface NavigationShellProps {
 export function NavigationShell({ user, isSuperAdminOverride, children }: NavigationShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const pathname = usePathname();
+
   
   // Use the explicit override if provided, otherwise fallback to basic user.role check
   const isSuperAdmin = isSuperAdminOverride ?? (user?.role && ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(user.role.toUpperCase().trim()));
-  const isSuperAdminUser = isSuperAdmin || pathname?.startsWith('/super-admin');
+
 
   return (
-    <div className="flex min-h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased overflow-x-hidden">
+    <div className="flex h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased overflow-hidden">
       {/* Flexible Sidebar */}
       <Sidebar
         isMobileOpen={isMobileOpen}
@@ -37,19 +37,23 @@ export function NavigationShell({ user, isSuperAdminOverride, children }: Naviga
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
-        <div className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          {/* Sticky Responsive Header */}
-          <Header
-            user={user}
-            onOpenMobileNav={() => setIsMobileOpen(true)}
-            onToggleDesktopSidebar={() => setIsCollapsed(!isCollapsed)}
-            isSidebarCollapsed={isCollapsed}
-          />
-          <main className="space-y-6">
-            {children}
-          </main>
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 h-screen">
+        <div className="shrink-0 w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 bg-[#F3F5F4]">
+          <div className="max-w-7xl w-full mx-auto">
+            {/* Sticky Responsive Header */}
+            <Header
+              user={user}
+              onOpenMobileNav={() => setIsMobileOpen(true)}
+              onToggleDesktopSidebar={() => setIsCollapsed(!isCollapsed)}
+              isSidebarCollapsed={isCollapsed}
+            />
+          </div>
         </div>
+        <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
+          <div className="max-w-7xl w-full mx-auto space-y-6">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );

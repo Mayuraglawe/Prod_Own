@@ -20,7 +20,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         isSuperAdminUser = true;
       } else {
         // Fallback to checking workspaceMember if user isn't globally super admin
-        const dbClient = prisma as any;
+        const dbClient = prisma as unknown as {
+          workspaceMember?: {
+            findFirst: (args: {
+              where: { userId: string; role: string };
+              select: { id: boolean };
+            }) => Promise<{ id: string } | null>;
+          };
+        };
         if (typeof dbClient.workspaceMember?.findFirst === 'function') {
           const superMembership = await dbClient.workspaceMember.findFirst({
             where: { userId: user.id, role: 'SUPER_ADMIN' },
