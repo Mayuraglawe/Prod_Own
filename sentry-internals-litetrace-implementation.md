@@ -118,7 +118,7 @@ Rules are stored per-project as condition trees, evaluated on every issue state 
   "condition_logic": "any",
   "actions": [
     {"type": "slack", "channel": "#alerts", "workspace_id": "T123"},
-    {"type": "webhook", "url": "https://n8n.example.com/webhook/abc"}
+    {"type": "webhook", "url": "https://example.com/webhook/abc"}
   ]
 }
 ```
@@ -501,7 +501,7 @@ func dispatch(ctx context.Context, rule AlertRule, p NotifyPayload) {
 	case "slack":
 		sendSlack(rule.ActionConfig["webhook_url"], fmt.Sprintf(
 			"🔴 Issue seen %d times — <https://litetrace.io/issues/%s|view>", p.TimesSeen, p.IssueID))
-	case "webhook": // your n8n differentiator
+	case "webhook":
 		sendGenericWebhook(rule.ActionConfig["url"], map[string]interface{}{
 			"issue_id": p.IssueID, "times_seen": p.TimesSeen, "event": "issue_notification",
 		})
@@ -517,7 +517,7 @@ func sendGenericWebhook(url string, payload map[string]interface{}) {
 	body, _ := json.Marshal(payload)
 	req, _ := http.NewRequest("POST", url, bytesReader(body))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-LiteTrace-Signature", signPayload(body)) // HMAC, so n8n can verify authenticity
+	req.Header.Set("X-LiteTrace-Signature", signPayload(body)) // HMAC
 	http.DefaultClient.Do(req)
 }
 ```
@@ -575,7 +575,7 @@ App throws error
         → Query alert_rules for this project
         → Match trigger_type against (times_seen, was_resolved)
         → For each matched rule: SETNX dedup key (5 min TTL)
-        → If not already sent recently: dispatch to Slack / n8n webhook / email
+        → If not already sent recently: dispatch to Slack / webhook / email
    → notification_log row written (audit trail + "notified at" for dashboard)
 ```
 
@@ -585,7 +585,7 @@ App throws error
 |---|---|---|
 | 1 | Ingest API + Redis stream | Nothing works without capture |
 | 2 | Fingerprint worker + Postgres upsert | Core value prop — dedup |
-| 3 | `new_issue` trigger only, webhook action only | Simplest notification path, n8n is your differentiator anyway |
+| 3 | `new_issue` trigger only, webhook action only | Simplest notification path |
 | 4 | Dashboard read (Next.js, list issues) | Needed for demo/pitch |
 | 5 | Frequency-based rules + Slack action | Add once core loop is proven |
 | 6 | Digest/batching for high-frequency issues | Polish, not MVP-blocking |

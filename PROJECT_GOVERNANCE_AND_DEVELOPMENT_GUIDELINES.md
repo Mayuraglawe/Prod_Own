@@ -20,7 +20,7 @@ graph TD
 
     subgraph External Integrations
         API -->|Alert Hooks| Slack[Slack Webhook]
-        API -->|Alert Hooks| N8N[n8n Webhook]
+        API -->|Alert Hooks| SLACK[Slack Webhook]
         API -->|Payment Hooks| Razorpay[Razorpay Webhook]
     end
 
@@ -84,7 +84,7 @@ All code introduced into the repository must conform to the established monorepo
 3. **No Direct `process.env`**: Access environment variables **only** via the `@prod-own/config` central package (`import { env } from '@prod-own/config'`).
 4. **Multi-Tenancy via Postgres RLS**: Tenant boundaries are enforced at the database level with Row-Level Security (RLS) policies scoped by `tenantId`, not by ad-hoc application `WHERE` clauses alone ([schema.prisma](file:///e:/Prod_Own/packages/db/prisma/schema.prisma#L13-L28)).
 5. **Standardized Queueing**: Use BullMQ queues for retries and asynchronous background work ([packages/queue](file:///e:/Prod_Own/packages/queue/src/factories.ts)). Never write custom inline retry/backoff loops.
-6. **Lean HTTP Integrations**: Use plain HTTP integrations for external alerts (Slack webhooks, n8n webhooks) and payment hooks (Razorpay APIs) to prevent vendor SDK bloat.
+6. **Lean HTTP Integrations**: Use plain HTTP integrations for external alerts (Slack webhooks) and payment hooks (Razorpay APIs) to prevent vendor SDK bloat.
 
 ---
 
@@ -175,7 +175,7 @@ When implementing or modifying features, you must write/update tests covering:
 2. **Strict Multi-Tenancy Boundary**: Enforce tenant and project isolation via PostgreSQL RLS policies tied to `tenantId`.
 3. **Queueing Standard**: Use BullMQ for queueing, retries, and background job handling. Do not write custom retry loops.
 4. **Config Integrity**: All configuration variables must pass through `@prod-own/config` Zod schema parsing.
-5. **Lean Dependencies**: Prefer lightweight HTTP hooks (Slack, n8n, Razorpay) over vendor SDK expansion.
+5. **Lean Dependencies**: Prefer lightweight HTTP hooks (Slack, Razorpay) over vendor SDK expansion.
 6. **Scrubbing Priority**: Always scrub telemetry payloads before database persistence.
 7. **Strict Type Safety**: Avoid `any` types unless accompanied by inline technical justification.
 8. **Verification First**: Validate changed packages via target package commands (`pnpm --filter <pkg>`) before completing tasks.

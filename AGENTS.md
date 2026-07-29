@@ -44,3 +44,13 @@ Before onboarding real customers, ensure:
 - Ingest rate limiting is live.
 - Scrubbing tests pass against realistic data.
 - Fingerprinting misgroupings have a review process.
+
+## Design Principles (SOLID)
+
+All code modifications and architectural decisions MUST strictly adhere to the SOLID principles outlined in the following documents. Before writing or refactoring code, ensure compliance with these rules to prevent technical debt and maintain a clean, extensible codebase:
+
+- **Single Responsibility Principle (SRP):** [01-single-responsibility-principle.md](./01-single-responsibility-principle.md) - Ensure classes/modules have only one axis of change.
+- **Open/Closed Principle (OCP):** [02-open-closed-principle.md](./02-open-closed-principle.md) - Design for extension via abstractions (interfaces/polymorphism) rather than modifying existing code.
+- **Liskov Substitution Principle (LSP):** [03-liskov-substitution-principle.md](./03-liskov-substitution-principle.md) - Subtypes must be behaviorally compatible with their base types without breaking expected contracts.
+- **Interface Segregation Principle (ISP):** [04-interface-segregation-principle.md](./04-interface-segregation-principle.md) - Prefer small, client-specific interfaces over "fat" general-purpose ones.
+- **Dependency Inversion Principle (DIP):** [05-dependency-inversion-principle.md](./05-dependency-inversion-principle.md) - High-level modules and low-level modules must both depend on abstractions, using dependency injection where appropriate.

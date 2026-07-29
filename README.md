@@ -10,7 +10,7 @@ TypeScript monorepo scaffold for a self-hosted multi-tenant product stack.
 - Node worker for fingerprinting jobs
 - Next.js + Tailwind + shadcn/ui dashboard
 - OpenTelemetry SDK wiring
-- Slack webhook and n8n alert hooks
+- Slack webhook alert hooks
 - Razorpay payment integration surface
 
 ## Layout
