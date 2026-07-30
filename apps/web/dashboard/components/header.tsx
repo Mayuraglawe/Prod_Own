@@ -29,6 +29,7 @@ export function Header({
   const isSuperAdmin = user?.role && ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(user.role.toUpperCase().trim());
   const isSuperAdminView = pathname?.startsWith('/superadmin');
   const isSuperAdminUser = isSuperAdmin || isSuperAdminView;
+  const rolePrefix = user?.role ? (user.role.toUpperCase() === "SUPER_ADMIN" ? "admin" : user.role.toLowerCase()) : "employee";
 
   // Breadcrumb / Title text based on route
   const getBreadcrumb = () => {
@@ -117,7 +118,7 @@ export function Header({
 
           {/* User Profile Badge */}
           <Link
-            href="/profile"
+            href={`/${rolePrefix}/profile`}
             className="flex items-center gap-2.5 pl-1.5 cursor-pointer hover:opacity-85 transition-opacity"
           >
             <img

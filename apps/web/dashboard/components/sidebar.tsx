@@ -31,6 +31,7 @@ interface SidebarProps {
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
   isSuperAdmin?: boolean;
+  userRole?: string;
 }
 
 export function Sidebar({
@@ -39,6 +40,7 @@ export function Sidebar({
   isCollapsed = false,
   onToggleCollapse,
   isSuperAdmin = false,
+  userRole,
 }: SidebarProps) {
   const pathname = usePathname();
 
@@ -46,6 +48,7 @@ export function Sidebar({
   const isSuperAdminView = pathname?.startsWith('/superadmin');
   const isSuperAdminUser = isSuperAdmin || isSuperAdminView;
 
+  const rolePrefix = userRole ? (userRole.toUpperCase() === "SUPER_ADMIN" ? "admin" : userRole.toLowerCase()) : "employee";
   const activeClass = "bg-[#0B4F3A] text-white shadow-sm";
   const inactiveClass = "text-[#687870] hover:bg-[#E6F7F0] hover:text-[#0B4F3A]";
 
@@ -222,22 +225,22 @@ export function Sidebar({
               )}
               <nav className="space-y-1">
                 <Link
-                  href="/dashboard"
+                  href={`/${rolePrefix}/dashboard` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/dashboard') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/dashboard`) ? activeClass : inactiveClass}`}
                   title="Dashboard"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <LayoutDashboard className="w-4 h-4 shrink-0" />
                     {!isCollapsed && <span className="truncate">Dashboard</span>}
                   </div>
-                  {!isCollapsed && isActive('/dashboard') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                  {!isCollapsed && isActive(`/${rolePrefix}/dashboard`) && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
                 </Link>
 
                 <Link
-                  href="/tasks"
+                  href={`/${rolePrefix}/tasks` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/tasks') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/tasks`) ? activeClass : inactiveClass}`}
                   title="Issues & Errors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -250,9 +253,9 @@ export function Sidebar({
                 </Link>
 
                 <Link
-                  href="/calendar"
+                  href={`/${rolePrefix}/calendar` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/calendar') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/calendar`) ? activeClass : inactiveClass}`}
                   title="Calendar"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -262,9 +265,9 @@ export function Sidebar({
                 </Link>
 
                 <Link
-                  href="/analytics"
+                  href={`/${rolePrefix}/analytics` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/analytics') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/analytics`) ? activeClass : inactiveClass}`}
                   title="Analytics"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -282,9 +285,9 @@ export function Sidebar({
               )}
               <nav className="space-y-1">
                 <Link
-                  href="/sources"
+                  href={`/${rolePrefix}/sources` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/sources') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/sources`) ? activeClass : inactiveClass}`}
                   title="Projects & SDK Keys"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -294,9 +297,9 @@ export function Sidebar({
                 </Link>
 
                 <Link
-                  href="/workers"
+                  href={`/${rolePrefix}/workers` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/workers') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/workers`) ? activeClass : inactiveClass}`}
                   title="Queue Workers"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -306,9 +309,9 @@ export function Sidebar({
                 </Link>
 
                 <Link
-                  href="/settings"
+                  href={`/${rolePrefix}/settings` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/settings') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/settings`) ? activeClass : inactiveClass}`}
                   title="Alert Rules & Integrations"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -326,22 +329,22 @@ export function Sidebar({
               )}
               <nav className="space-y-1">
                 <Link
-                  href="/workspace"
+                  href={`/${rolePrefix}/workspace` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/workspace') || isActive('/team') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/workspace`) || isActive(`/${rolePrefix}/team`) ? activeClass : inactiveClass}`}
                   title="Workspace & Team"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Building2 className="w-4 h-4 shrink-0" />
                     {!isCollapsed && <span className="truncate">Workspace &amp; Team</span>}
                   </div>
-                  {!isCollapsed && (isActive('/workspace') || isActive('/team')) && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                  {!isCollapsed && (isActive(`/${rolePrefix}/workspace`) || isActive(`/${rolePrefix}/team`)) && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
                 </Link>
 
                 <Link
-                  href="/profile"
+                  href={`/${rolePrefix}/profile` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/profile') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/profile`) ? activeClass : inactiveClass}`}
                   title="Profile Settings"
                 >
                   <div className="flex items-center gap-3 min-w-0">
@@ -351,14 +354,27 @@ export function Sidebar({
                 </Link>
 
                 <Link
-                  href="/help"
+                  href={`/${rolePrefix}/help` as Route}
                   onClick={onCloseMobile}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/help') ? activeClass : inactiveClass}`}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/help`) ? activeClass : inactiveClass}`}
                   title="Help & Docs"
                 >
                   <HelpCircle className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Help & Docs</span>}
                 </Link>
+                {userRole && ['ADMIN', 'SUPER_ADMIN', 'OWNER'].includes(userRole.toUpperCase()) && (
+                  <Link
+                    href={`/${rolePrefix}/payments` as Route}
+                    onClick={onCloseMobile}
+                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive(`/${rolePrefix}/payments`) ? activeClass : inactiveClass}`}
+                    title="Billing & Payments"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <CreditCard className="w-4 h-4 shrink-0" />
+                      {!isCollapsed && <span className="truncate">Billing & Payments</span>}
+                    </div>
+                  </Link>
+                )}
               </nav>
             </div>
 

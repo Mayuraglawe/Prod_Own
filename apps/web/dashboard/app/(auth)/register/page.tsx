@@ -5,20 +5,20 @@ import { ClientRegisterForm } from "./client-form"
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-transparent flex flex-col md:flex-row font-sans text-neutral-100 overflow-hidden">
+    <div className="min-h-screen bg-neutral-950 flex flex-col md:flex-row font-sans text-neutral-100 overflow-hidden">
       {/* Left Pane - Branding & Value Prop */}
       <div className="hidden md:flex md:w-1/2 relative bg-transparent p-12 flex-col justify-between overflow-hidden">
         {/* Decorative Gradients */}
         <div className="absolute top-[-20%] left-[-10%] w-[140%] h-[140%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-neutral-900 to-neutral-950 blur-[100px] pointer-events-none" />
         
-        <div className="relative z-10 flex items-center gap-3">
+        <Link href="/" className="relative z-10 flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
             <Monitor className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neutral-100 to-neutral-400">
             ProdOwn
           </span>
-        </div>
+        </Link>
 
         <div className="relative z-10 space-y-6 max-w-md">
           <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.1] text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-200 to-neutral-500">

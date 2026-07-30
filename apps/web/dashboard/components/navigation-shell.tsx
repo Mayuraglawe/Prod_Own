@@ -34,6 +34,7 @@ export function NavigationShell({ user, isSuperAdminOverride, children }: Naviga
         isCollapsed={isCollapsed}
         onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         isSuperAdmin={!!isSuperAdmin}
+        userRole={user?.role || undefined}
       />
 
       {/* Main Content Area */}

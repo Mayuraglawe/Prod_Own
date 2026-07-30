@@ -1,4 +1,4 @@
-import { createWorkspace } from '../../../lib/actions/tenants';
+import { createWorkspace } from '../../../../lib/actions/tenants';
 
 /**
  * Onboarding page shown to authenticated users who do not yet have a workspace.

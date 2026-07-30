@@ -1,4 +1,4 @@
-import { auth } from '../../../auth';
+import { auth } from '../../../../auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@litetrace/db';
 import ProfileClient from './profile-client';

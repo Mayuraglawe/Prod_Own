@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { prisma } from '@litetrace/db';
+import { auth } from '../../../auth';
 
 /**
  * GET /api/workspaces
@@ -9,28 +10,38 @@ import { prisma } from '@litetrace/db';
  */
 export async function GET() {
   try {
-    const tenants = await prisma.tenant.findMany({
-      orderBy: { createdAt: 'desc' },
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const memberships = await prisma.workspaceMember.findMany({
+      where: { userId: session.user.id },
       include: {
-        sources: {
-          take: 1, // Exactly 1 project per workspace
-          select: {
-            id: true,
-            name: true,
-            externalId: true,
-            apiKeyPrefix: true,
-          },
-        },
+        tenant: {
+          include: {
+            sources: {
+              take: 1, // Exactly 1 project per workspace
+              select: {
+                id: true,
+                name: true,
+                externalId: true,
+                apiKeyPrefix: true,
+              },
+            },
+          }
+        }
       },
+      orderBy: { createdAt: 'desc' }
     });
 
-    const workspaces = tenants.map((t, idx) => ({
-      id: t.id,
-      name: t.name,
-      slug: t.slug,
-      role: idx === 0 ? 'SUPER_ADMIN' : 'ADMIN', // Primary workspace is SUPER_ADMIN
-      project: t.sources[0] || null,
-      createdAt: t.createdAt,
+    const workspaces = memberships.map((m) => ({
+      id: m.tenant.id,
+      name: m.tenant.name,
+      slug: m.tenant.slug,
+      role: m.role,
+      project: m.tenant.sources[0] || null,
+      createdAt: m.tenant.createdAt,
     }));
 
     return NextResponse.json({ workspaces }, { status: 200 });
@@ -49,6 +60,11 @@ export async function GET() {
  */
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const name = String(body.name || '').trim();
 
@@ -64,6 +80,15 @@ export async function POST(req: Request) {
         name,
         slug,
       },
+    });
+
+    // 1.5 Assign the creating user as SUPER_ADMIN of this workspace
+    await prisma.workspaceMember.create({
+      data: {
+        userId: session.user.id,
+        tenantId: tenant.id,
+        role: 'SUPER_ADMIN'
+      }
     });
 
     // 2. Automatically create the 1 single dedicated Project for this Workspace

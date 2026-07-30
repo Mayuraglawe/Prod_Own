@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { ShieldCheck, Activity, Zap, ArrowRight, Github } from 'lucide-react';
+import { ShieldCheck, Activity, Zap, ArrowRight } from 'lucide-react';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-transparent font-sans text-neutral-100 overflow-x-hidden selection:bg-blue-500/30">
+    <div className="min-h-screen bg-neutral-950 font-sans text-neutral-100 overflow-x-hidden selection:bg-blue-500/30">
       {/* Navigation */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-neutral-800/50 bg-neutral-950/50 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -20,7 +20,7 @@ export default function LandingPage() {
               href="/login"
               className="text-sm font-medium text-neutral-300 hover:text-white transition-colors"
             >
-              Sign In
+              Login
             </Link>
             <Link 
               href="/register"
@@ -29,7 +29,7 @@ export default function LandingPage() {
               <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
                 <div className="relative h-full w-8 bg-white/20" />
               </div>
-              Get Started
+              Register
             </Link>
           </div>
         </div>
@@ -60,18 +60,15 @@ export default function LandingPage() {
               href="/register"
               className="group flex items-center gap-2 px-8 py-4 bg-white hover:bg-neutral-100 text-neutral-900 text-base font-semibold rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.15)] active:scale-[0.98]"
             >
-              Start Tracking Now
+              Register Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <a 
-              href="https://github.com/your-org/prodown"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-2 px-8 py-4 bg-neutral-900 hover:bg-neutral-800 text-white text-base font-medium rounded-xl border border-neutral-800 transition-colors"
+            <Link 
+              href="/login"
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-neutral-900 hover:bg-neutral-800 text-white text-base font-medium rounded-xl border border-neutral-800 transition-colors"
             >
-              <Github className="w-5 h-5" />
-              View on GitHub
-            </a>
+              Login to Account
+            </Link>
           </div>
         </div>
 

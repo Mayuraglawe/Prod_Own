@@ -79,23 +79,23 @@ export function AdminDashboard() {
     <div className="space-y-6">
 
       {/* ─── Header Banner ─────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-sky-700 via-sky-800 to-indigo-900 p-6 text-white shadow-lg">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0B4F3A] via-[#0D5F46] to-[#127054] p-6 text-white shadow-lg">
         <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 80% 50%, #38BDF8 0%, transparent 60%)'
+          backgroundImage: 'radial-gradient(circle at 80% 50%, #20C997 0%, transparent 60%)'
         }} />
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <FolderOpen className="w-5 h-5 text-sky-300" />
-              <span className="text-xs font-bold text-sky-300 uppercase tracking-widest">Workspace Admin</span>
+              <FolderOpen className="w-5 h-5 text-[#20C997]" />
+              <span className="text-xs font-bold text-[#20C997] uppercase tracking-widest">Workspace Admin</span>
             </div>
             <h1 className="text-2xl font-extrabold tracking-tight">Acme Corp — Workspace</h1>
-            <p className="text-sm text-sky-100/70 mt-1">Monitor your projects, team, and error telemetry.</p>
+            <p className="text-sm text-white/70 mt-1">Monitor your projects, team, and error telemetry.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-center">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 text-center border border-white/10">
               <div className="text-2xl font-extrabold">{totalErrors}</div>
-              <div className="text-[10px] font-semibold text-sky-200 uppercase tracking-widest mt-0.5">Open Issues</div>
+              <div className="text-[10px] font-semibold text-[#E6F7F0] uppercase tracking-widest mt-0.5">Open Issues</div>
             </div>
           </div>
         </div>
@@ -103,8 +103,8 @@ export function AdminDashboard() {
 
       {/* ─── Stat Cards ─────────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <WorkspaceStatCard label="Active Projects" value={`${WORKSPACE_PROJECTS.length}`} sub={`${degradedProjects} need attention`} icon={FolderOpen} accent="bg-gradient-to-br from-sky-700 to-indigo-800 text-white" trend="neutral" />
-        <WorkspaceStatCard label="Open Issues" value={`${totalErrors}`} sub="Across all projects" icon={AlertTriangle} accent={totalErrors > 30 ? 'bg-gradient-to-br from-rose-600 to-rose-700 text-white' : 'bg-white border border-[#E2E8E4] text-[#13221C]'} trend="up" />
+        <WorkspaceStatCard label="Active Projects" value={`${WORKSPACE_PROJECTS.length}`} sub={`${degradedProjects} need attention`} icon={FolderOpen} accent="bg-white border border-[#E2E8E4] text-[#13221C]" trend="neutral" />
+        <WorkspaceStatCard label="Open Issues" value={`${totalErrors}`} sub="Across all projects" icon={AlertTriangle} accent="bg-white border border-[#E2E8E4] text-[#13221C]" trend="up" />
         <WorkspaceStatCard label="Team Members" value={`${WORKSPACE_TEAM.length}`} sub={`${WORKSPACE_TEAM.filter(u => u.status === 'online').length} online now`} icon={Users} accent="bg-white border border-[#E2E8E4] text-[#13221C]" trend="neutral" />
         <WorkspaceStatCard label="Alert Hooks" value={`${ALERT_HOOKS.filter(h => h.status === 'active').length}/${ALERT_HOOKS.length}`} sub="Active webhooks" icon={Bell} accent="bg-white border border-[#E2E8E4] text-[#13221C]" trend="neutral" />
       </div>
@@ -119,16 +119,20 @@ export function AdminDashboard() {
               <h3 className="text-sm font-bold text-[#13221C]">Error Volume</h3>
               <p className="text-[11px] text-[#687870] mt-0.5">Issues ingested over the last 12 intervals</p>
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200">
-              <Activity className="w-3 h-3 text-rose-600" />
-              <span className="text-[10px] font-bold text-rose-600">Monitoring</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 border border-red-200">
+              <Activity className="w-3 h-3 text-red-600" />
+              <span className="text-[10px] font-bold text-red-600">Monitoring</span>
             </div>
           </div>
-          <div className="flex items-end gap-1.5 h-32">
+          <div className="flex items-end gap-1.5 h-32 group">
             {ERROR_BARS.map((h, i) => (
-              <div key={i} className="flex-1">
+              <div key={i} className="flex-1 group/bar cursor-pointer relative">
+                {/* Tooltip on hover */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#13221C] text-white text-[10px] font-bold py-1 px-2 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                  {h} errors
+                </div>
                 <div
-                  className={`w-full rounded-t-lg ${i === ERROR_BARS.length - 1 ? 'bg-rose-500' : h > 20 ? 'bg-rose-100' : 'bg-[#52b788]/20'}`}
+                  className={`w-full rounded-t-lg transition-all duration-300 ${i === ERROR_BARS.length - 1 ? 'bg-red-500 group-hover/bar:bg-red-600' : h > 20 ? 'bg-red-100 group-hover/bar:bg-red-200' : 'bg-[#52b788]/20 group-hover/bar:bg-[#52b788]/40'}`}
                   style={{ height: `${(h / 40) * 128}px` }}
                 />
               </div>
@@ -146,7 +150,7 @@ export function AdminDashboard() {
               <h3 className="text-sm font-bold text-[#13221C]">My Projects</h3>
               <p className="text-[11px] text-[#687870] mt-0.5">SDK-connected applications in your workspace</p>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold rounded-lg transition-colors">
+            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0B4F3A] hover:bg-[#0D5F46] text-white text-xs font-bold rounded-lg transition-colors">
               <Key className="w-3.5 h-3.5" />
               <span>New SDK Key</span>
             </button>
@@ -162,7 +166,7 @@ export function AdminDashboard() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={`text-xs font-bold ${p.errorCount > 10 ? 'text-rose-600' : 'text-[#687870]'}`}>
+                  <span className={`text-xs font-bold ${p.errorCount > 10 ? 'text-red-600' : 'text-[#687870]'}`}>
                     {p.errorCount} issues
                   </span>
                 </div>
@@ -186,10 +190,10 @@ export function AdminDashboard() {
           </div>
           <div className="divide-y divide-[#F0F2F1]">
             {errors.map(e => {
-              const colors = { critical: 'bg-rose-50 text-rose-700 border-rose-200', error: 'bg-yellow-50 text-yellow-700 border-yellow-200', warning: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
+              const colors = { critical: 'bg-red-50 text-red-700 border-red-200', error: 'bg-yellow-50 text-yellow-700 border-yellow-200', warning: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
               return (
                 <div key={e.id} className="flex items-start gap-4 px-6 py-4 hover:bg-[#FAFBFB] transition-colors group">
-                  <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${e.severity === 'critical' ? 'text-rose-500' : e.severity === 'error' ? 'text-yellow-500' : 'text-yellow-500'}`} />
+                  <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${e.severity === 'critical' ? 'text-red-500' : e.severity === 'error' ? 'text-yellow-500' : 'text-yellow-500'}`} />
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-[#13221C] truncate">{e.title}</div>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -234,8 +238,8 @@ export function AdminDashboard() {
             </div>
             {showInvite && (
               <div className="mb-4 flex gap-2">
-                <input className="flex-1 text-xs border border-[#E2E8E4] rounded-lg px-3 py-2 outline-none focus:border-sky-400" placeholder="email@acme.com" />
-                <button className="px-3 py-2 bg-sky-700 text-white text-xs font-bold rounded-lg hover:bg-sky-800 transition-colors">Send</button>
+                <input className="flex-1 text-xs border border-[#E2E8E4] rounded-lg px-3 py-2 outline-none focus:border-[#20C997]" placeholder="email@acme.com" />
+                <button className="px-3 py-2 bg-[#0B4F3A] text-white text-xs font-bold rounded-lg hover:bg-[#0D5F46] transition-colors">Send</button>
               </div>
             )}
             <div className="space-y-3">
@@ -273,7 +277,7 @@ export function AdminDashboard() {
                 </div>
               ))}
             </div>
-            <button className="mt-4 w-full text-xs font-bold text-sky-700 hover:underline text-left">+ Add webhook</button>
+            <button className="mt-4 w-full text-xs font-bold text-[#0B4F3A] hover:text-[#20C997] hover:underline text-left transition-colors">+ Add webhook</button>
           </div>
         </div>
       </div>

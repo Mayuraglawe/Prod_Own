@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '../../../auth';
+import { auth } from '../../../../auth';
 import { prisma } from '@litetrace/db';
 import { revalidatePath } from 'next/cache';
 
@@ -29,6 +29,6 @@ export async function updateProfile(formData: FormData) {
     }
   });
 
-  revalidatePath('/profile');
+  revalidatePath('/', 'layout');
   return { success: true };
 }

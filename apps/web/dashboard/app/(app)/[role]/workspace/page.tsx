@@ -13,7 +13,7 @@ import {
   X,
   ChevronRight
 } from 'lucide-react';
-import { LoadingSpinner } from '../../../components/loading-spinner';
+import { LoadingSpinner } from '../../../../components/loading-spinner';
 
 interface WorkspaceItem {
   id: string;

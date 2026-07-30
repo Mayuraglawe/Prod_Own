@@ -2,7 +2,8 @@ import { auth } from '../../../auth';
 import { redirect } from 'next/navigation';
 import type { Route } from 'next';
 import { tenantsRepository } from '../../../lib/repositories/tenants';
-import { Dashboard, UserRole } from '../../../components/dashboard';
+import { prisma } from '@litetrace/db';
+
 
 /**
  * Main dashboard view for authenticated users.
@@ -27,12 +28,23 @@ export default async function DashboardPage() {
 
   // New users without a workspace must go through onboarding
   if (!user.tenantId) {
-    redirect('/onboarding' as Route);
+    const defaultRole = (user.role || 'employee').toLowerCase();
+    const rolePath = defaultRole.includes('admin') ? 'admin' : 'employee';
+    redirect(`/${rolePath}/onboarding` as Route);
   }
 
+  // Fetch their actual role for this workspace
+  const membership = await prisma.workspaceMember.findFirst({
+    where: {
+      userId: user.id,
+      tenantId: user.tenantId
+    }
+  });
 
-  if (user.role) {
-    const roleStr = user.role.toUpperCase();
+  const role = membership?.role || user.role;
+
+  if (role) {
+    const roleStr = role.toUpperCase();
     if (roleStr.includes('SUPER')) {
       redirect('/superadmin/dashboard' as Route);
     } else if (roleStr.includes('ADMIN')) {

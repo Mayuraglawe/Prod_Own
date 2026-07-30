@@ -3,7 +3,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-import { CalendarEvent, MOCK_CALENDAR } from '../../../lib/mock-data';
+import { CalendarEvent, MOCK_CALENDAR } from '../../../../lib/mock-data';
 
 export default function CalendarPage() {
   return (

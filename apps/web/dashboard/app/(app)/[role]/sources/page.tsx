@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Plus, Copy, Check, ShieldCheck, Key, Code2, X } from 'lucide-react';
-import { LoadingSpinner } from '../../../components/loading-spinner';
+import { LoadingSpinner } from '../../../../components/loading-spinner';
 
 interface SourceItem {
   id: string;

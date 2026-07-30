@@ -48,9 +48,20 @@ export async function createWorkspace(formData: FormData) {
     const tenant = await tx.tenant.create({
       data: { slug, name },
     });
+    
+    // Assign the user to this tenant as their active workspace
     await tx.user.update({
       where: { id: user.id },
       data: { tenantId: tenant.id },
+    });
+    
+    // Create the RBAC WorkspaceMember record giving them full permissions
+    await tx.workspaceMember.create({
+      data: {
+        userId: user.id,
+        tenantId: tenant.id,
+        role: 'SUPER_ADMIN'
+      }
     });
   });
 
