@@ -42,8 +42,8 @@ export function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
 
-  const isActive = (path: string) => pathname === path;
-  const isSuperAdminView = pathname?.startsWith('/super-admin');
+  const isActive = (path: string) => pathname === path || (path === '/dashboard' && (pathname === '/admin/dashboard' || pathname === '/employee/dashboard'));
+  const isSuperAdminView = pathname?.startsWith('/superadmin');
   const isSuperAdminUser = isSuperAdmin || isSuperAdminView;
 
   const activeClass = "bg-[#0B4F3A] text-white shadow-sm";
@@ -95,120 +95,120 @@ export function Sidebar({
           <div className="space-y-1.5">
             <nav className="space-y-1">
               <Link
-                href={'/super-admin/dashboard' as Route}
+                href={'/superadmin/dashboard' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/dashboard') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/dashboard') ? activeClass : inactiveClass}`}
                 title="Dashboard"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <LayoutDashboard className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Dashboard</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/dashboard') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/dashboard') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/orgs' as Route}
+                href={'/superadmin/orgs' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/orgs') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/orgs') ? activeClass : inactiveClass}`}
                 title="Organizations"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Building2 className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Organizations</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/orgs') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/orgs') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/users' as Route}
+                href={'/superadmin/users' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/users') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/users') ? activeClass : inactiveClass}`}
                 title="Users (Global)"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Users className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Users (Global)</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/users') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/users') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/billing' as Route}
+                href={'/superadmin/billing' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/billing') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/billing') ? activeClass : inactiveClass}`}
                 title="Billing & Revenue"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <CreditCard className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Billing & Revenue</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/billing') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/billing') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/health' as Route}
+                href={'/superadmin/health' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/health') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/health') ? activeClass : inactiveClass}`}
                 title="Platform Ops"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Settings className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Platform Ops</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/health') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/health') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/files' as Route}
+                href={'/superadmin/files' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/files') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/files') ? activeClass : inactiveClass}`}
                 title="Files & System Documentation"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <FolderGit2 className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Files Vault</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/files') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/files') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/data' as Route}
+                href={'/superadmin/data' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/data') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/data') ? activeClass : inactiveClass}`}
                 title="Data & Compliance"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Database className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Data & Compliance</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/data') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/data') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/config' as Route}
+                href={'/superadmin/config' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/config') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/config') ? activeClass : inactiveClass}`}
                 title="Configuration"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Settings className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Configuration</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/config') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/config') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
 
               <Link
-                href={'/super-admin/audit' as Route}
+                href={'/superadmin/audit' as Route}
                 onClick={onCloseMobile}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/super-admin/audit') ? activeClass : inactiveClass}`}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all ${isActive('/superadmin/audit') ? activeClass : inactiveClass}`}
                 title="Security & Audit"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <ShieldCheck className="w-4 h-4 shrink-0" />
                   {!isCollapsed && <span className="truncate">Security & Audit</span>}
                 </div>
-                {!isCollapsed && isActive('/super-admin/audit') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
+                {!isCollapsed && isActive('/superadmin/audit') && <span className="w-2 h-2 rounded-full bg-[#20C997]"></span>}
               </Link>
             </nav>
           </div>
@@ -370,7 +370,7 @@ export function Sidebar({
                 )}
                 <nav className="space-y-1">
                   <Link
-                    href={'/super-admin/dashboard' as Route}
+                    href={'/superadmin/dashboard' as Route}
                     onClick={onCloseMobile}
                     className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-sm font-semibold transition-all text-indigo-600 hover:bg-indigo-50`}
                     title="Platform Control Panel"

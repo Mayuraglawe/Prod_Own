@@ -65,7 +65,8 @@ export async function PATCH(req: Request, { params }: RouteContext) {
   try {
     const body = await req.json();
     const tenantId = String(body.tenantId || '').trim();
-    const newRole  = normaliseRole(String(body.role || 'EMPLOYEE')) as UserRole;
+    const newRole  = normaliseRole(String(body.role || 'ADMIN')) as UserRole;
+    const newStatus = body.status === 'ACTIVE' ? 'ACTIVE' : 'PENDING';
 
     if (!tenantId) {
       return NextResponse.json({ error: 'tenantId is required' }, { status: 400 });
@@ -82,13 +83,13 @@ export async function PATCH(req: Request, { params }: RouteContext) {
       where: { userId_tenantId: { userId, tenantId } },
       select: { role: true },
     });
-    const previousRole = existing ? normaliseRole(existing.role) : 'EMPLOYEE';
+    const previousRole = existing ? normaliseRole(existing.role) : 'ADMIN';
 
     const membership = await dbClient.workspaceMember.upsert({
       where: { userId_tenantId: { userId, tenantId } },
-      update: { role: newRole },
-      create: { userId, tenantId, role: newRole },
-      select: { id: true, userId: true, tenantId: true, role: true },
+      update: { role: newRole, status: newStatus },
+      create: { userId, tenantId, role: newRole, status: newStatus },
+      select: { id: true, userId: true, tenantId: true, role: true, status: true },
     });
 
     if (actorId) {

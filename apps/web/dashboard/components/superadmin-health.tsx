@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Activity, Database, Server, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { LoadingSpinner } from './loading-spinner';
 
 type HealthData = {
   streamLag: number;
@@ -37,7 +38,12 @@ export function SuperAdminHealth() {
   };
 
   if (loading && !health) {
-    return <div className="p-8 text-center text-slate-500">Loading infrastructure health...</div>;
+    return (
+      <div className="flex flex-col h-64 items-center justify-center space-y-6">
+        <LoadingSpinner />
+        <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Infrastructure Health...</div>
+      </div>
+    );
   }
 
   if (!health) return null;
@@ -111,7 +117,7 @@ export function SuperAdminHealth() {
         {/* Alerts Queue */}
         <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl">
+            <div className="p-2.5 bg-yellow-50 text-yellow-600 rounded-xl">
               <Activity className="w-5 h-5" />
             </div>
             <div>

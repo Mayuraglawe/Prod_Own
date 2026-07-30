@@ -1,5 +1,5 @@
 import React from 'react';
-import { SuperAdminFiles } from '../../../../components/super-admin-files';
+import { SuperAdminFiles } from '../../../../components/superadmin-files';
 
 export const metadata = {
   title: 'Super Admin Files & System Documentation | LiteTrace',

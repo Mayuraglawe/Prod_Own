@@ -26,7 +26,7 @@ export function NavigationShell({ user, isSuperAdminOverride, children }: Naviga
 
 
   return (
-    <div className="flex h-screen bg-[#F3F5F4] text-[#13221C] font-sans antialiased overflow-hidden">
+    <div className="flex h-screen bg-transparent text-[#13221C] font-sans antialiased overflow-hidden">
       {/* Flexible Sidebar */}
       <Sidebar
         isMobileOpen={isMobileOpen}
@@ -37,8 +37,8 @@ export function NavigationShell({ user, isSuperAdminOverride, children }: Naviga
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 h-screen">
-        <div className="shrink-0 w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 bg-[#F3F5F4]">
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 h-screen border-l-2 border-dotted border-[#13221C]/20">
+        <div className="shrink-0 w-full px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 bg-transparent">
           <div className="max-w-7xl w-full mx-auto">
             {/* Sticky Responsive Header */}
             <Header

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SuperAdminAuditLog } from '../../../../components/super-admin-audit-log';
+import { SuperAdminAuditLog } from '../../../../components/superadmin-audit-log';
 
 export const metadata = {
   title: 'Super Admin - Audit Log | LiteTrace',

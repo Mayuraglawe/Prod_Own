@@ -131,7 +131,7 @@ export default function TasksPage() {
                       <div>
                         <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase mr-2 border ${
                           err.severity === 'critical' ? 'bg-rose-50 text-rose-700 border-rose-200' :
-                          err.severity === 'error' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          err.severity === 'error' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         }`}>
                           {err.severity}
                         </span>

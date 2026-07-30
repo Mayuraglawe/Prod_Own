@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS "User" (
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "password" TEXT,
-    "role" TEXT NOT NULL DEFAULT 'member',
+    "role" TEXT NOT NULL DEFAULT 'ADMIN',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "User_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -100,7 +100,8 @@ CREATE TABLE IF NOT EXISTS "WorkspaceMember" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "tenantId" TEXT NOT NULL,
-    "role" TEXT NOT NULL DEFAULT 'EMPLOYEE',
+    "role" TEXT NOT NULL DEFAULT 'ADMIN',
+    "status" TEXT NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "WorkspaceMember_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "WorkspaceMember_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS "WorkspaceInvite" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "tenantId" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" TEXT NOT NULL DEFAULT 'EMPLOYEE',
+    "role" TEXT NOT NULL DEFAULT 'ADMIN',
     "token" TEXT NOT NULL UNIQUE,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -59,7 +59,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-  role          String    @default("member")
+  role          String    @default("ADMIN")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -77,7 +77,8 @@ model WorkspaceMember {
   id        String   @id @default(cuid())
   userId    String
   tenantId  String
-  role      String   @default("EMPLOYEE") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
+  role      String   @default("ADMIN") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
+  status    String   @default("PENDING") // "PENDING" | "ACTIVE"
   createdAt DateTime @default(now())
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -93,7 +94,7 @@ model WorkspaceInvite {
   id        String   @id @default(cuid())
   tenantId  String
   email     String
-  role      String   @default("EMPLOYEE") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
+  role      String   @default("ADMIN") // "SUPER_ADMIN" | "ADMIN" | "EMPLOYEE"
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())

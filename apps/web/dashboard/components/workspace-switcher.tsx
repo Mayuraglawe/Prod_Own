@@ -87,7 +87,7 @@ export function WorkspaceSwitcher() {
         {activeWorkspace && (
           <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
             activeWorkspace.role === 'SUPER_ADMIN'
-              ? 'bg-amber-600 text-white'
+              ? 'bg-yellow-600 text-white'
               : activeWorkspace.role === 'ADMIN'
               ? 'bg-[#52b788] text-white'
               : 'bg-slate-200 text-slate-700'
@@ -125,7 +125,7 @@ export function WorkspaceSwitcher() {
                 </div>
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                   ws.role === 'SUPER_ADMIN'
-                    ? 'bg-amber-100 text-amber-800'
+                    ? 'bg-yellow-100 text-yellow-800'
                     : ws.role === 'ADMIN'
                     ? 'bg-emerald-100 text-emerald-800'
                     : 'bg-slate-100 text-slate-700'

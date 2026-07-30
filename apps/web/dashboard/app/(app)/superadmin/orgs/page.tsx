@@ -1,5 +1,5 @@
 import React from 'react';
-import { SuperAdminOrgs } from '../../../../components/super-admin-orgs';
+import { SuperAdminOrgs } from '../../../../components/superadmin-orgs';
 
 export const metadata = {
   title: 'Super Admin - Tenant Management | LiteTrace',

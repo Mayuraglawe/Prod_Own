@@ -27,19 +27,19 @@ export function Header({
   const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
   const isSuperAdmin = user?.role && ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(user.role.toUpperCase().trim());
-  const isSuperAdminView = pathname?.startsWith('/super-admin');
+  const isSuperAdminView = pathname?.startsWith('/superadmin');
   const isSuperAdminUser = isSuperAdmin || isSuperAdminView;
 
   // Breadcrumb / Title text based on route
   const getBreadcrumb = () => {
-    if (pathname === '/super-admin/dashboard') return 'Dashboard';
-    if (pathname?.startsWith('/super-admin/orgs')) return 'Organizations';
-    if (pathname?.startsWith('/super-admin/users')) return 'Users';
-    if (pathname?.startsWith('/super-admin/billing')) return 'Billing';
-    if (pathname?.startsWith('/super-admin/health')) return 'Platform Ops';
-    if (pathname?.startsWith('/super-admin/data')) return 'Data & Compliance';
-    if (pathname?.startsWith('/super-admin/config')) return 'Configuration';
-    if (pathname?.startsWith('/super-admin/audit')) return 'Security & Audit';
+    if (pathname === '/superadmin/dashboard') return 'Dashboard';
+    if (pathname?.startsWith('/superadmin/orgs')) return 'Organizations';
+    if (pathname?.startsWith('/superadmin/users')) return 'Users';
+    if (pathname?.startsWith('/superadmin/billing')) return 'Billing';
+    if (pathname?.startsWith('/superadmin/health')) return 'Platform Ops';
+    if (pathname?.startsWith('/superadmin/data')) return 'Data & Compliance';
+    if (pathname?.startsWith('/superadmin/config')) return 'Configuration';
+    if (pathname?.startsWith('/superadmin/audit')) return 'Security & Audit';
     return 'Dashboard';
   };
 

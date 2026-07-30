@@ -31,10 +31,10 @@ const SERVICES = [
 
 const STORES = [
   { name: 'PostgreSQL', role: 'Tenants · Issues · Users', status: 'healthy', usage: 62, color: 'bg-sky-500' },
-  { name: 'ClickHouse', role: 'Occurrences · Analytics', status: 'healthy', usage: 44, color: 'bg-amber-500' },
+  { name: 'ClickHouse', role: 'Occurrences · Analytics', status: 'healthy', usage: 44, color: 'bg-yellow-500' },
   { name: 'Redis', role: 'Rate limits · Cooldowns', status: 'healthy', usage: 31, color: 'bg-rose-500' },
   { name: 'MinIO / S3', role: 'Raw blob storage', status: 'healthy', usage: 78, color: 'bg-purple-500' },
-  { name: 'Kafka', role: 'Event streaming backbone', status: 'degraded', usage: 55, color: 'bg-orange-500' },
+  { name: 'Kafka', role: 'Event streaming backbone', status: 'degraded', usage: 55, color: 'bg-yellow-500' },
 ];
 
 const RECENT_EVENTS = [
@@ -79,7 +79,7 @@ function ServiceRow({ svc }: { svc: typeof SERVICES[0] }) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-[#F0F2F1] last:border-0 group">
       <div className="flex items-center gap-3">
-        <span className={`w-2 h-2 rounded-full shrink-0 ${svc.status === 'healthy' ? 'bg-[#52b788]' : 'bg-amber-500 animate-pulse'}`} />
+        <span className={`w-2 h-2 rounded-full shrink-0 ${svc.status === 'healthy' ? 'bg-[#52b788]' : 'bg-yellow-500 animate-pulse'}`} />
         <div>
           <span className="text-xs font-bold text-[#13221C] font-mono">{svc.name}</span>
           <span className="ml-2 text-[10px] text-[#687870] font-semibold bg-[#F0F2F1] px-1.5 py-0.5 rounded">{svc.lang}</span>
@@ -88,7 +88,7 @@ function ServiceRow({ svc }: { svc: typeof SERVICES[0] }) {
       <div className="flex items-center gap-4 text-[11px] font-semibold text-[#687870]">
         <span className="hidden sm:inline font-mono">{svc.latency}</span>
         <span className="hidden md:inline">{svc.rpm} rpm</span>
-        <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${svc.status === 'healthy' ? 'bg-[#52b788]/10 text-[#2d6a4f]' : 'bg-amber-50 text-amber-700'}`}>
+        <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] ${svc.status === 'healthy' ? 'bg-[#52b788]/10 text-[#2d6a4f]' : 'bg-yellow-50 text-yellow-700'}`}>
           {svc.status}
         </span>
       </div>
@@ -101,7 +101,7 @@ function StoreRow({ store }: { store: typeof STORES[0] }) {
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${store.status === 'healthy' ? 'bg-[#52b788]' : 'bg-amber-500 animate-pulse'}`} />
+          <span className={`w-2 h-2 rounded-full ${store.status === 'healthy' ? 'bg-[#52b788]' : 'bg-yellow-500 animate-pulse'}`} />
           <span className="font-bold text-[#13221C]">{store.name}</span>
         </div>
         <div className="flex items-center gap-3 text-[#687870]">
@@ -122,7 +122,7 @@ function StoreRow({ store }: { store: typeof STORES[0] }) {
 function TenantRow({ tenant, onToggle }: { tenant: typeof TENANTS[0]; onToggle: (id: string) => void }) {
   const statusColors = {
     active: 'bg-[#52b788]/10 text-[#2d6a4f] border-[#52b788]/30',
-    degraded: 'bg-amber-50 text-amber-700 border-amber-200',
+    degraded: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     suspended: 'bg-rose-50 text-rose-700 border-rose-200',
   };
 
@@ -147,7 +147,7 @@ function TenantRow({ tenant, onToggle }: { tenant: typeof TENANTS[0]; onToggle: 
       </td>
       <td className="px-4 py-3">
         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold text-[10px] border ${statusColors[tenant.status as keyof typeof statusColors]}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${tenant.status === 'active' ? 'bg-[#52b788]' : tenant.status === 'degraded' ? 'bg-amber-500' : 'bg-rose-500'}`} />
+          <span className={`w-1.5 h-1.5 rounded-full ${tenant.status === 'active' ? 'bg-[#52b788]' : tenant.status === 'degraded' ? 'bg-yellow-500' : 'bg-rose-500'}`} />
           {tenant.status}
         </span>
       </td>
@@ -170,7 +170,7 @@ function TenantRow({ tenant, onToggle }: { tenant: typeof TENANTS[0]; onToggle: 
 }
 
 function EventLog({ event }: { event: typeof RECENT_EVENTS[0] }) {
-  const colors = { info: 'text-sky-600 bg-sky-50', warn: 'text-amber-600 bg-amber-50', error: 'text-rose-600 bg-rose-50' };
+  const colors = { info: 'text-sky-600 bg-sky-50', warn: 'text-yellow-600 bg-yellow-50', error: 'text-rose-600 bg-rose-50' };
   const icons = { info: CheckCircle2, warn: AlertTriangle, error: AlertTriangle };
   const Icon = icons[event.level as keyof typeof icons];
 
@@ -258,7 +258,7 @@ export function SuperAdminDashboard() {
           value={`${tenants.length}`}
           sub={`${activeTenants} active workspaces`}
           icon={Users}
-          accent="bg-gradient-to-br from-[#52b788] to-[#2d6a4f] text-white"
+          accent="bg-white border border-[#E2E8E4] text-[#13221C]"
           trend="up"
         />
         <StatCard
@@ -266,7 +266,7 @@ export function SuperAdminDashboard() {
           value={`${SERVICES.length - degradedServices}/${SERVICES.length}`}
           sub={degradedServices > 0 ? `${degradedServices} degraded` : 'All systems nominal'}
           icon={Server}
-          accent={degradedServices > 0 ? "bg-gradient-to-br from-amber-600 to-amber-700 text-white" : "bg-white border border-[#E2E8E4] text-[#13221C]"}
+          accent="bg-white border border-[#E2E8E4] text-[#13221C]"
           trend={degradedServices > 0 ? 'down' : 'neutral'}
         />
         <StatCard
@@ -341,7 +341,7 @@ export function SuperAdminDashboard() {
             {[
               { icon: Terminal, label: 'Run DB Migration', color: 'hover:bg-white/10' },
               { icon: RefreshCw, label: 'Flush Redis Cache', color: 'hover:bg-white/10' },
-              { icon: Bell, label: 'Broadcast Alert', color: 'hover:bg-amber-800/40' },
+              { icon: Bell, label: 'Broadcast Alert', color: 'hover:bg-yellow-800/40' },
               { icon: Ban, label: 'Global Rate Limit', color: 'hover:bg-rose-800/40' },
               { icon: Layers, label: 'View Kafka Topics', color: 'hover:bg-white/10' },
               { icon: ExternalLink, label: 'Open Grafana', color: 'hover:bg-white/10' },
@@ -366,7 +366,7 @@ export function SuperAdminDashboard() {
               <p className="text-[11px] text-[#687870] mt-0.5">All 7 services · CQRS architecture</p>
             </div>
             {degradedServices > 0 && (
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-700">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-yellow-50 border border-yellow-200 text-[10px] font-bold text-yellow-700">
                 <AlertTriangle className="w-3 h-3" /> {degradedServices} Degraded
               </span>
             )}

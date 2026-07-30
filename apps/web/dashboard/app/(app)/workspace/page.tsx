@@ -13,6 +13,7 @@ import {
   X,
   ChevronRight
 } from 'lucide-react';
+import { LoadingSpinner } from '../../../components/loading-spinner';
 
 interface WorkspaceItem {
   id: string;
@@ -49,7 +50,7 @@ export default function WorkspacePage() {
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState<'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('EMPLOYEE');
+  const [inviteRole, setInviteRole] = useState<'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE'>('ADMIN');
   const [inviteResult, setInviteResult] = useState<{ email: string; inviteLink: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [members, setMembers] = useState<MemberItem[]>([]);
@@ -174,6 +175,26 @@ export default function WorkspacePage() {
     }
   };
 
+  const handleApproveMember = async (userId: string) => {
+    if (!activeWs) return;
+    try {
+      const res = await fetch(`/api/admin/members/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantId: activeWs.id,
+          status: 'ACTIVE'
+        }),
+      });
+
+      if (res.ok) {
+        setMembers(prev => prev.map(m => m.id === userId ? { ...m, status: 'Active' } : m));
+      }
+    } catch (e) {
+      console.error('Failed to approve member:', e);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Top Banner */}
@@ -182,7 +203,7 @@ export default function WorkspacePage() {
           <div className="flex items-center gap-2">
             <Building2 className="w-6 h-6 text-emerald-400" />
             <h1 className="text-2xl font-bold">Dedicated Workspace Dashboard</h1>
-            <span className="ml-2 px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-extrabold rounded-full">
+            <span className="ml-2 px-2.5 py-0.5 bg-yellow-500/20 text-yellow-300 border border-yellow-400/30 text-[10px] font-extrabold rounded-full">
               SUPER_ADMIN CONTROLLED
             </span>
           </div>
@@ -258,9 +279,14 @@ export default function WorkspacePage() {
                   <p className="text-xs font-bold text-emerald-700 block mt-1">Postgres RLS Active</p>
                 </div>
               </div>
+            ) : loading ? (
+              <div className="flex flex-col h-64 items-center justify-center space-y-6">
+                <LoadingSpinner />
+                <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Workspace Details...</div>
+              </div>
             ) : (
               <div className="py-8 text-center text-xs text-[#687870]">
-                {loading ? 'Loading workspace details...' : 'No active workspace selected.'}
+                No active workspace selected.
               </div>
             )}
           </div>
@@ -372,7 +398,7 @@ init({
                       <span
                         className={`px-2.5 py-0.5 text-[10px] font-bold rounded-full border ${
                           m.role === 'SUPER_ADMIN'
-                            ? 'bg-amber-100 text-amber-800 border-amber-300'
+                            ? 'bg-yellow-100 text-yellow-800 border-yellow-300'
                             : m.role === 'ADMIN'
                             ? 'bg-emerald-100 text-[#52b788] border-emerald-300'
                             : 'bg-slate-100 text-slate-700 border-slate-300'
@@ -384,11 +410,19 @@ init({
                         className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold border ${
                           m.status === 'Active'
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : 'bg-amber-50 text-amber-700 border-amber-200'
+                            : 'bg-yellow-50 text-yellow-700 border-yellow-200'
                         }`}
                       >
                         {m.status}
                       </span>
+                      {m.status === 'Pending' && (
+                        <button
+                          onClick={() => handleApproveMember(m.id)}
+                          className="px-2 py-0.5 rounded border border-emerald-400 bg-emerald-500 text-white text-[10px] font-bold hover:bg-emerald-600 transition-colors"
+                        >
+                          Approve
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))

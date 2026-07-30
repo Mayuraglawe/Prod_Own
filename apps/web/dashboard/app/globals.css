@@ -30,7 +30,8 @@
 html,
 body {
   min-height: 100vh;
-  background-color: #F3F5F4;
+  background: linear-gradient(135deg, #ffffff 0%, #8FBC8B 100%);
+  background-attachment: fixed;
   color: #13221C;
   margin: 0;
   padding: 0;

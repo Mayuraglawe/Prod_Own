@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Plus, Copy, Check, ShieldCheck, Key, Code2, X } from 'lucide-react';
+import { LoadingSpinner } from '../../../components/loading-spinner';
 
 interface SourceItem {
   id: string;
@@ -107,7 +108,10 @@ export default function SourcesPage() {
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-xs text-[#687870]">Loading projects...</div>
+          <div className="flex flex-col h-64 items-center justify-center space-y-6">
+            <LoadingSpinner />
+            <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Projects...</div>
+          </div>
         ) : sources.length === 0 ? (
           <div className="py-12 text-center space-y-3">
             <p className="text-sm font-medium text-[#13221C]">No projects created yet.</p>

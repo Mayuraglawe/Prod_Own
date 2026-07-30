@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Calendar, User, AlignLeft, Target } from 'lucide-react';
+import { LoadingSpinner } from './loading-spinner';
 
 type AuditLog = {
   id: string;
@@ -47,7 +48,10 @@ export function SuperAdminAuditLog() {
 
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Loading audit trail...</div>
+          <div className="flex flex-col h-64 items-center justify-center space-y-6">
+            <LoadingSpinner />
+            <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Audit Trail...</div>
+          </div>
         ) : (
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">

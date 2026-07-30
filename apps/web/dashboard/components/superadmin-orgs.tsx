@@ -5,6 +5,7 @@ import {
   Server, Power, PowerOff,
   Search, ExternalLink, Activity, Ban, Trash2, Edit
 } from 'lucide-react';
+import { LoadingSpinner } from './loading-spinner';
 
 type Tenant = {
   id: string;
@@ -126,7 +127,10 @@ export function SuperAdminOrgs() {
 
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Loading tenants...</div>
+          <div className="flex flex-col h-64 items-center justify-center space-y-6">
+            <LoadingSpinner />
+            <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Loading Tenants...</div>
+          </div>
         ) : (
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 border-b border-slate-200">
@@ -177,14 +181,14 @@ export function SuperAdminOrgs() {
                     </button>
                     <button 
                       onClick={() => handleEditPlan(t)}
-                      className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                      className="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
                       title="Edit Plan"
                     >
                       <Edit className="w-4 h-4" />
                     </button>
                     <button 
                       onClick={() => handleSuspend(t.id, t.suspended)}
-                      className={`p-1.5 rounded-lg transition-colors ${t.suspended ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
+                      className={`p-1.5 rounded-lg transition-colors ${t.suspended ? 'text-emerald-500 hover:bg-emerald-50' : 'text-yellow-500 hover:bg-yellow-50'}`}
                       title={t.suspended ? 'Reactivate' : 'Suspend'}
                     >
                       {t.suspended ? <Power className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />}

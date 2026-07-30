@@ -1,5 +1,5 @@
 import React from 'react';
-import { SuperAdminOverview } from '../../../../components/super-admin-overview';
+import { SuperAdminOverview } from '../../../../components/superadmin-overview';
 
 export const metadata = {
   title: 'Super Admin - Platform Overview | LiteTrace',

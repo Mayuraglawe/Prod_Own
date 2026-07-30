@@ -955,7 +955,7 @@ function MarkdownPreviewRenderer({ content, file }: { content: string; file: Sys
         NOTE: { bg: 'bg-sky-50 border-sky-200 text-sky-950', icon: Info, iconColor: 'text-sky-600', badge: 'Note' },
         TIP: { bg: 'bg-[#E6F7F0] border-[#20C997]/40 text-[#0B4F3A]', icon: Sparkles, iconColor: 'text-[#20C997]', badge: 'Pro Tip' },
         IMPORTANT: { bg: 'bg-purple-50 border-purple-200 text-purple-950', icon: ShieldCheck, iconColor: 'text-purple-600', badge: 'Important' },
-        WARNING: { bg: 'bg-amber-50 border-amber-200 text-amber-950', icon: AlertTriangle, iconColor: 'text-amber-600', badge: 'Warning' },
+        WARNING: { bg: 'bg-yellow-50 border-yellow-200 text-yellow-950', icon: AlertTriangle, iconColor: 'text-yellow-600', badge: 'Warning' },
         CAUTION: { bg: 'bg-rose-50 border-rose-200 text-rose-950', icon: ShieldAlert, iconColor: 'text-rose-600', badge: 'Critical Caution' },
       };
 
@@ -1247,7 +1247,7 @@ export function SuperAdminFiles() {
                   {cat.count}
                 </span>
                 {cat.badge && (
-                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-amber-950 ml-0.5">
+                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold uppercase bg-yellow-400 text-yellow-950 ml-0.5">
                     {cat.badge}
                   </span>
                 )}

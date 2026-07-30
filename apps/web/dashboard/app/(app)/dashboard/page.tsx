@@ -31,15 +31,17 @@ export default async function DashboardPage() {
   }
 
 
-  let normalizedRole: UserRole = 'EMPLOYEE';
   if (user.role) {
     const roleStr = user.role.toUpperCase();
     if (roleStr.includes('SUPER')) {
-      normalizedRole = 'SUPER_ADMIN';
+      redirect('/superadmin/dashboard' as Route);
     } else if (roleStr.includes('ADMIN')) {
-      normalizedRole = 'ADMIN';
+      redirect('/admin/dashboard' as Route);
+    } else {
+      redirect('/employee/dashboard' as Route);
     }
   }
 
-  return <Dashboard role={normalizedRole} />;
+  // Default fallback if role is somehow undefined
+  redirect('/employee/dashboard' as Route);
 }

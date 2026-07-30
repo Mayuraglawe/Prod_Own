@@ -155,7 +155,7 @@ export function AdminDashboard() {
             {WORKSPACE_PROJECTS.map(p => (
               <div key={p.id} className="flex items-center justify-between p-3 rounded-xl border border-[#F0F2F1] hover:border-[#E2E8E4] hover:bg-[#FAFBFB] transition-all">
                 <div className="flex items-center gap-3">
-                  <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${p.status === 'active' ? 'bg-[#52b788]' : 'bg-amber-500 animate-pulse'}`} />
+                  <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${p.status === 'active' ? 'bg-[#52b788]' : 'bg-yellow-500 animate-pulse'}`} />
                   <div>
                     <div className="text-xs font-bold text-[#13221C]">{p.name}</div>
                     <div className="text-[10px] text-[#687870]">{p.type} · last seen {p.lastSeen}</div>
@@ -186,10 +186,10 @@ export function AdminDashboard() {
           </div>
           <div className="divide-y divide-[#F0F2F1]">
             {errors.map(e => {
-              const colors = { critical: 'bg-rose-50 text-rose-700 border-rose-200', error: 'bg-amber-50 text-amber-700 border-amber-200', warning: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
+              const colors = { critical: 'bg-rose-50 text-rose-700 border-rose-200', error: 'bg-yellow-50 text-yellow-700 border-yellow-200', warning: 'bg-yellow-50 text-yellow-700 border-yellow-200' };
               return (
                 <div key={e.id} className="flex items-start gap-4 px-6 py-4 hover:bg-[#FAFBFB] transition-colors group">
-                  <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${e.severity === 'critical' ? 'text-rose-500' : e.severity === 'error' ? 'text-amber-500' : 'text-yellow-500'}`} />
+                  <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${e.severity === 'critical' ? 'text-rose-500' : e.severity === 'error' ? 'text-yellow-500' : 'text-yellow-500'}`} />
                   <div className="flex-1 min-w-0">
                     <div className="text-xs font-bold text-[#13221C] truncate">{e.title}</div>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -243,7 +243,7 @@ export function AdminDashboard() {
                 <div key={u.id} className="flex items-center gap-3">
                   <div className="relative shrink-0">
                     <img src={u.avatar} alt={u.name} className="w-8 h-8 rounded-full object-cover" />
-                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${u.status === 'online' ? 'bg-[#52b788]' : 'bg-amber-400'}`} />
+                    <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${u.status === 'online' ? 'bg-[#52b788]' : 'bg-yellow-400'}`} />
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-[#13221C] truncate">{u.name}</div>

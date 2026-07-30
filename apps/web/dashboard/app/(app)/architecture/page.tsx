@@ -113,7 +113,7 @@ export default function ArchitecturePage() {
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-400/30 font-bold text-xs rounded-full flex items-center gap-1.5">
+              <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-400/30 font-bold text-xs rounded-full flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5" /> SUPER_ADMIN GOVERNANCE
               </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold text-xs rounded-full">
@@ -212,8 +212,8 @@ export default function ArchitecturePage() {
             onClick={() => setActiveTab('governance')}
             className={`px-4 py-2.5 rounded-xl transition-all flex items-center gap-2 whitespace-nowrap ${
               activeTab === 'governance'
-                ? 'bg-amber-400 text-amber-950 shadow-md'
-                : 'text-amber-300 hover:bg-amber-400/10'
+                ? 'bg-yellow-400 text-yellow-950 shadow-md'
+                : 'text-yellow-300 hover:bg-yellow-400/10'
             }`}
           >
             <Lock className="w-4 h-4" /> Super Admin Controls
@@ -236,7 +236,7 @@ export default function ArchitecturePage() {
             </div>
 
             <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-2xl bg-yellow-50 text-yellow-700 flex items-center justify-center font-bold">
                 <Zap className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#13221C]">Kafka Streaming Backbone</h3>
@@ -282,7 +282,7 @@ export default function ArchitecturePage() {
 
                 {/* Ingestion Layer */}
                 <div className="p-4 bg-slate-800 rounded-xl border border-slate-700 w-44 text-center space-y-2">
-                  <div className="text-xs font-bold text-amber-400 uppercase tracking-wider">Layer 2: Ingestion</div>
+                  <div className="text-xs font-bold text-yellow-400 uppercase tracking-wider">Layer 2: Ingestion</div>
                   <div className="text-sm font-extrabold text-white">apps/ingestion</div>
                   <div className="text-[10px] text-slate-400">Non-blocking 202 Accepted</div>
                 </div>
@@ -310,7 +310,7 @@ export default function ArchitecturePage() {
                 </div>
 
                 <div className="p-3 bg-slate-800/80 rounded-xl border border-slate-700 text-center space-y-1">
-                  <div className="text-[11px] font-bold text-amber-300">apps/alerting</div>
+                  <div className="text-[11px] font-bold text-yellow-300">apps/alerting</div>
                   <div className="text-[10px] text-slate-400">Redis Cooldown &amp; Burst</div>
                 </div>
 
@@ -449,7 +449,7 @@ export default function ArchitecturePage() {
 
           <div className="rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1 rounded-full">apps/ingestion</span>
+              <span className="text-xs font-bold text-yellow-800 bg-yellow-50 px-3 py-1 rounded-full">apps/ingestion</span>
               <span className="text-xs text-[#687870]">Write Path</span>
             </div>
             <h3 className="text-base font-bold text-[#13221C]">Ingestion Write Service</h3>
@@ -511,11 +511,11 @@ export default function ArchitecturePage() {
             <h3 className="text-lg font-bold text-[#13221C]">Resilience &amp; Fault Tolerance Control Matrix</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-5 rounded-2xl bg-amber-50/50 border border-amber-200 space-y-3">
-                <div className="flex items-center gap-2 text-amber-800 font-bold text-sm">
+              <div className="p-5 rounded-2xl bg-yellow-50/50 border border-yellow-200 space-y-3">
+                <div className="flex items-center gap-2 text-yellow-800 font-bold text-sm">
                   <RefreshCw className="w-4 h-4" /> Exponential Backoff
                 </div>
-                <p className="text-xs text-amber-900/80 leading-relaxed">
+                <p className="text-xs text-yellow-900/80 leading-relaxed">
                   Failed consumer events automatically retry with doubling backoff delays (`initialBackoffMs * 2^(attempt-1)`).
                 </p>
               </div>
@@ -568,7 +568,7 @@ export default function ArchitecturePage() {
                   </tr>
                   <tr>
                     <td className="p-3 font-semibold text-[#13221C]">Processing</td>
-                    <td className="p-3 text-amber-800 font-bold">S3 / MinIO</td>
+                    <td className="p-3 text-yellow-800 font-bold">S3 / MinIO</td>
                     <td className="p-3 text-[#687870]">Object Storage</td>
                     <td className="p-3 text-[#687870]">Raw stack trace payloads &amp; blobs</td>
                   </tr>
@@ -647,33 +647,33 @@ export default function ArchitecturePage() {
       {/* TAB 7: SUPER ADMIN GOVERNANCE */}
       {activeTab === 'governance' && (
         <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="rounded-3xl bg-gradient-to-br from-amber-500/10 via-amber-600/5 to-amber-700/10 border border-amber-300 p-6 shadow-sm space-y-6">
-            <div className="flex items-center justify-between border-b border-amber-200 pb-4">
+          <div className="rounded-3xl bg-gradient-to-br from-yellow-500/10 via-yellow-600/5 to-yellow-700/10 border border-yellow-300 p-6 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-yellow-200 pb-4">
               <div>
-                <div className="flex items-center gap-2 text-amber-900 font-extrabold text-lg">
-                  <Shield className="w-5 h-5 text-amber-600" /> Super Admin System Governance
+                <div className="flex items-center gap-2 text-yellow-900 font-extrabold text-lg">
+                  <Shield className="w-5 h-5 text-yellow-600" /> Super Admin System Governance
                 </div>
-                <p className="text-xs text-amber-800">
+                <p className="text-xs text-yellow-800">
                   Global controls restricted exclusively to `SUPER_ADMIN` role accounts.
                 </p>
               </div>
-              <span className="px-3 py-1 bg-amber-600 text-white font-bold text-xs rounded-full shadow-sm">
+              <span className="px-3 py-1 bg-yellow-600 text-white font-bold text-xs rounded-full shadow-sm">
                 SUPER_ADMIN ACTIVE
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-2xl p-5 border border-amber-200 space-y-3 shadow-sm">
+              <div className="bg-white rounded-2xl p-5 border border-yellow-200 space-y-3 shadow-sm">
                 <h4 className="text-sm font-bold text-[#13221C]">System Access &amp; Member Elevation</h4>
                 <p className="text-xs text-[#687870]">
                   Elevate or demote workspace accounts between `SUPER_ADMIN`, `ADMIN`, and `EMPLOYEE` roles across tenants.
                 </p>
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
-                  <CheckCircle2 className="w-4 h-4 text-amber-600" /> All 3 roles active in database &amp; API
+                <div className="flex items-center gap-2 text-xs font-bold text-yellow-800 bg-yellow-50 p-2.5 rounded-xl border border-yellow-200">
+                  <CheckCircle2 className="w-4 h-4 text-yellow-600" /> All 3 roles active in database &amp; API
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 border border-amber-200 space-y-3 shadow-sm">
+              <div className="bg-white rounded-2xl p-5 border border-yellow-200 space-y-3 shadow-sm">
                 <h4 className="text-sm font-bold text-[#13221C]">Global API Ingestion Rate Limiting</h4>
                 <p className="text-xs text-[#687870]">
                   Configure rate limit bounds (e.g. 100 req/min) enforced by `apps/gateway` across API keys.

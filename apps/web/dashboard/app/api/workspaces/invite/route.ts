@@ -30,10 +30,10 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const email = String(body.email || '').trim().toLowerCase();
-    const roleInput = String(body.role || 'EMPLOYEE').toUpperCase();
+    const roleInput = String(body.role || 'ADMIN').toUpperCase();
     const grantedRole = (['SUPER_ADMIN', 'ADMIN', 'EMPLOYEE'].includes(roleInput)
       ? roleInput
-      : 'EMPLOYEE') as 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
+      : 'ADMIN') as 'SUPER_ADMIN' | 'ADMIN' | 'EMPLOYEE';
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'Valid email address is required' }, { status: 400 });

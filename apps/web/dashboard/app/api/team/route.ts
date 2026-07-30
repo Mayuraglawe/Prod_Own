@@ -6,6 +6,7 @@ type PrismaClientWithModels = typeof prisma & {
     findMany: (args: unknown) => Promise<Array<{
       id: string;
       role: string;
+      status: string;
       user: { id: string; name: string | null; email: string | null; image: string | null };
     }>>;
   };
@@ -63,16 +64,17 @@ export async function GET(req: Request) {
       const upper = String(rawRole || '').toUpperCase();
       if (upper === 'SUPER_ADMIN' || upper === 'SUPERADMIN' || upper === 'OWNER') return 'SUPER_ADMIN';
       if (upper === 'ADMIN') return 'ADMIN';
-      return 'EMPLOYEE';
+      return 'ADMIN';
     };
 
     // If no members in join table yet, fallback to Users attached directly to Tenant
-    let members = membersData.map((m: { id: string; role: string; user: { name: string | null; email: string | null } }) => ({
+    type RawMember = { id: string; role: string; status?: string; user: { name: string | null; email: string | null } };
+    let members = (membersData as RawMember[]).map((m) => ({
       id: m.id,
       name: m.user.name || m.user.email?.split('@')[0] || 'Member',
       email: m.user.email || '',
       role: formatRole(m.role),
-      status: 'Active' as const,
+      status: m.status === 'PENDING' ? 'Pending' : 'Active',
     }));
 
     if (members.length === 0) {

@@ -206,7 +206,7 @@ export function EmployeeDashboard() {
 
                   <div className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer" onClick={() => {}}>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">🔥</div>
+                      <div className="w-8 h-8 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center font-bold text-xs">🔥</div>
                       <div>
                         <h5 className="text-xs font-bold text-[#13221C]">Optimize Page Load</h5>
                         <p className="text-[10px] text-[#687870]">Due date: Mar 05, 2024</p>

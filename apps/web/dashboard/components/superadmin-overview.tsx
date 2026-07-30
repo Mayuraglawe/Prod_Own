@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  RefreshCw, AlertTriangle, ExternalLink, PowerOff, ShieldAlert,
+  AlertTriangle, ExternalLink, PowerOff, ShieldAlert,
   ChevronDown, Search
 } from 'lucide-react';
 import { 
   AreaChart, Area, LineChart, Line, BarChart, Bar,
-  XAxis, YAxis, ResponsiveContainer, Cell
+  XAxis, YAxis, ResponsiveContainer, Cell, CartesianGrid, Tooltip
 } from 'recharts';
+import { LoadingSpinner } from './loading-spinner';
 
 type HealthData = {
   streamLag: number;
@@ -43,7 +44,7 @@ export function SuperAdminOverview() {
 
   const fetchData = async () => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout for DB cold starts
 
     try {
       const [healthRes, platformRes, tenantsRes] = await Promise.all([
@@ -70,7 +71,7 @@ export function SuperAdminOverview() {
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') {
-        console.error('[Platform Overview] API requests timed out after 8 seconds (backend may be down).');
+        console.error('[Platform Overview] API requests timed out after 30 seconds (backend may be down).');
       } else {
         console.error('[Platform Overview] API fetch error:', err);
       }
@@ -95,8 +96,9 @@ export function SuperAdminOverview() {
 
   if (loading) {
     return (
-      <div className="flex h-64 items-center justify-center text-slate-400 font-mono text-sm">
-        <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> INITIALIZING PLATFORM OVERVIEW...
+      <div className="flex flex-col h-64 items-center justify-center space-y-6">
+        <LoadingSpinner />
+        <div className="text-slate-400 font-mono text-xs uppercase tracking-widest animate-pulse">Initializing Platform Overview...</div>
       </div>
     );
   }
@@ -171,7 +173,7 @@ export function SuperAdminOverview() {
       {/* MIDDLE SECTION - HEALTH */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         {/* Pipeline Health */}
-        <div className="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div className="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h3 className="text-slate-900 font-medium text-sm">Ingest Pipeline Health</h3>
@@ -181,35 +183,45 @@ export function SuperAdminOverview() {
               OK <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
             </div>
           </div>
-          <div className="h-40 w-full">
+          <div className="flex-1 min-h-[160px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={pipelineHistory}>
-                <Line type="monotone" dataKey="lag" stroke="#10B981" strokeWidth={2} dot={false} isAnimationActive={false} />
+              <LineChart data={pipelineHistory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cccccc" />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold', color: '#0f172a' }}
+                  itemStyle={{ color: '#10B981' }}
+                  labelStyle={{ color: '#64748b', marginBottom: '4px' }}
+                />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B' }} />
+                <XAxis dataKey="time" hide={true} />
+                <Line type="monotone" dataKey="lag" name="Lag (ms)" stroke="#10B981" strokeWidth={2} dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: '#10B981' }} isAnimationActive={false} />
               </LineChart>
             </ResponsiveContainer>
-          </div>
-          <div className="flex justify-between text-[10px] text-slate-500 font-mono mt-2 px-2">
-            <span>10:00</span>
-            <span>13:30</span>
-            <span>18:00</span>
-            <span>18:30</span>
-            <span>12:00</span>
           </div>
         </div>
 
         {/* Worker Queue */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h3 className="text-slate-900 font-medium text-sm">Worker Queues</h3>
               <p className="text-xs text-slate-500">BullMQ Processing State</p>
             </div>
+            <div className="flex gap-1.5 items-center bg-emerald-50 text-emerald-600 px-2 py-1 rounded text-[10px] font-bold">
+              LIVE <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
           </div>
-          <div className="h-40 w-full pl-2">
+          <div className="flex-1 min-h-[160px] w-full pl-2">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={queueData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+              <BarChart data={queueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#cccccc" />
+                <Tooltip 
+                  cursor={{ fill: '#F1F5F9' }}
+                  contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold', color: '#0f172a' }}
+                  itemStyle={{ color: '#64748b' }}
+                />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#64748B' }} />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={48} minPointSize={4}>
                   {queueData.map((entry, index) => {
                     const colors = ['#F59E0B', '#EF4444', '#F97316', '#10B981'];
                     return <Cell key={`cell-${index}`} fill={colors[index]} />;
@@ -225,55 +237,82 @@ export function SuperAdminOverview() {
       {/* BOTTOM SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Top Organizations Table */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden mb-6">
-          <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+        {/* Top Organizations Table */}
+        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden mb-6 flex flex-col">
+          <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-slate-50/50">
             <h2 className="text-slate-900 font-semibold text-sm">Active Organizations</h2>
-            <button className="text-xs font-medium text-indigo-600 hover:text-indigo-500">View All</button>
+            <button className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">View All Orgs</button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
-              <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
+              <thead className="text-[10px] text-slate-800 uppercase tracking-wider bg-gradient-to-r from-[#cccccc] via-[#e5e5e5] to-white border-b border-slate-300">
                 <tr>
-                  <th className="p-4 font-medium text-slate-400">Org Name</th>
-                  <th className="p-4 font-medium text-slate-400">Plan</th>
-                  <th className="p-4 font-medium text-slate-400">Current Usage %</th>
-                  <th className="p-4 font-medium text-slate-400">Quick Actions</th>
+                  <th className="px-6 py-4 font-semibold">Organization</th>
+                  <th className="px-6 py-4 font-semibold">Plan</th>
+                  <th className="px-6 py-4 font-semibold">Usage</th>
+                  <th className="px-6 py-4 font-semibold text-right">Quick Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100/80 bg-white">
                 {tenants.map((t, idx) => {
                   const usage = [60, 55, 30, 85, 20][idx] || 10;
-                  const usageColor = usage > 80 ? 'bg-red-500' : usage > 50 ? 'bg-emerald-500' : 'bg-blue-500';
-                  const usageBg = usage > 80 ? 'bg-red-50' : usage > 50 ? 'bg-emerald-50' : 'bg-blue-50';
+                  const usageColor = usage > 80 ? 'bg-red-500' : usage > 50 ? 'bg-amber-500' : 'bg-emerald-500';
+                  const usageBg = usage > 80 ? 'bg-red-50' : usage > 50 ? 'bg-amber-50' : 'bg-emerald-50';
+                  const avatarGradients = [
+                    'from-blue-500 to-indigo-600',
+                    'from-emerald-400 to-teal-600',
+                    'from-orange-400 to-red-500',
+                    'from-purple-500 to-pink-600',
+                    'from-cyan-400 to-blue-500'
+                  ];
+                  const avatarGrad = avatarGradients[idx % avatarGradients.length];
 
                   return (
-                    <tr key={t.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="p-4 text-slate-900">{t.name}</td>
-                      <td className="p-4 text-slate-600">{t.planTier || 'Enterprise'}</td>
-                      <td className="p-4">
+                    <tr key={t.id} className="hover:bg-slate-50/60 transition-colors group">
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <span className="text-slate-500 text-xs w-8">{usage}%</span>
-                          <div className={`w-24 h-1.5 rounded-full ${usageBg}`}>
-                            <div className={`h-1.5 rounded-full ${usageColor}`} style={{ width: `${usage}%` }}></div>
+                          <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${avatarGrad} flex items-center justify-center text-white font-bold text-xs shadow-sm`}>
+                            {t.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900">{t.name}</div>
+                            <div className="text-[11px] text-slate-500 font-mono mt-0.5">ID: {t.id.slice(0,8)}...</div>
                           </div>
                         </div>
                       </td>
-                      <td className="p-4">
-                        <div className="flex gap-2">
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide uppercase bg-slate-100 text-slate-600 border border-slate-200">
+                          {t.planTier || 'Enterprise'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1.5 w-32">
+                          <div className="flex justify-between items-center text-[11px]">
+                            <span className="text-slate-500 font-medium">Capacity</span>
+                            <span className="font-bold text-slate-700">{usage}%</span>
+                          </div>
+                          <div className={`w-full h-1.5 rounded-full ${usageBg} overflow-hidden`}>
+                            <div className={`h-full rounded-full ${usageColor} transition-all duration-500`} style={{ width: `${usage}%` }}></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                           {t.suspended ? (
-                             <button className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-red-600 bg-red-50 border border-red-200 hover:bg-red-100 transition-colors">
-                                <PowerOff className="w-3 h-3" /> Reactivate
+                             <button className="flex items-center justify-center w-8 h-8 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 border border-red-100 transition-colors" title="Reactivate">
+                                <PowerOff className="w-4 h-4" />
                              </button>
                           ) : (
-                             <button className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-slate-600 border border-slate-200 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-                                <PowerOff className="w-3 h-3 text-red-500" /> Suspend
+                             <button className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-colors" title="Suspend">
+                                <PowerOff className="w-4 h-4" />
                              </button>
                           )}
                           <button 
                             onClick={() => handleImpersonate(t.id)}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-slate-600 border border-slate-200 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                            className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-100 transition-colors"
+                            title="Impersonate"
                           >
-                            <ExternalLink className="w-3 h-3 text-indigo-500" /> Impersonate
+                            <ExternalLink className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -290,10 +329,10 @@ export function SuperAdminOverview() {
           <div className="p-5 border-b border-slate-200">
             <h3 className="text-slate-900 font-medium text-sm">Platform Alerts & Anomalies</h3>
           </div>
-          <div className="p-5 flex-1 relative">
-             <div className="absolute left-7 top-6 bottom-6 w-[2px] bg-slate-100"></div>
+          <div className="p-6 flex-1 relative">
+             <div className="absolute left-[41px] top-10 bottom-10 w-[2px] bg-slate-100"></div>
 
-             <div className="space-y-6 relative">
+             <div className="space-y-5 relative">
                <AlertItem 
                  type="danger" 
                  title="Org BetaCorp: Sudden event spike +500% detected" 
@@ -365,18 +404,25 @@ interface AlertItemProps {
 
 function AlertItem({ type, message, title, time, severity }: AlertItemProps) {
   const Icon = type === 'security' || type === 'danger' ? ShieldAlert : AlertTriangle;
-  const colors = severity === 'critical' || type === 'danger' ? 'text-red-600 bg-red-50 border-red-200' : 'text-amber-600 bg-amber-50 border-amber-200';
-  const iconColor = severity === 'critical' || type === 'danger' ? 'text-red-500 bg-white border-red-100' : 'text-amber-500 bg-white border-amber-100';
+  
+  const isDanger = severity === 'critical' || type === 'danger';
+  const iconClass = isDanger 
+    ? 'bg-red-50 text-red-600 border-red-100' 
+    : 'bg-amber-50 text-amber-600 border-amber-100';
+  
+  const boxClass = isDanger 
+    ? 'bg-white border-red-100 hover:border-red-200 hover:shadow-md hover:bg-red-50/30' 
+    : 'bg-white border-amber-100 hover:border-amber-200 hover:shadow-md hover:bg-amber-50/30';
   
   return (
-    <div className="flex gap-4 relative z-10">
-      <div className={`w-10 h-10 rounded-full border flex items-center justify-center shrink-0 ${iconColor} shadow-sm`}>
+    <div className="flex gap-4 relative z-10 group cursor-default">
+      <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 ${iconClass} shadow-sm transition-all duration-200 mt-0.5`}>
         <Icon className="w-4 h-4" />
       </div>
-      <div className={`flex-1 p-3 rounded-lg border ${colors} shadow-sm`}>
-        <div className="flex justify-between items-start">
-          <p className="text-sm font-medium text-slate-900">{message || title}</p>
-          <span className="text-xs text-slate-500 font-mono mt-0.5">{time}</span>
+      <div className={`flex-1 p-3.5 rounded-xl border ${boxClass} shadow-sm transition-all duration-200`}>
+        <div className="flex justify-between items-start gap-4">
+          <p className="text-sm font-medium text-slate-800 leading-snug">{message || title}</p>
+          <span className="text-[11px] text-slate-400 font-medium whitespace-nowrap shrink-0 pt-0.5">{time}</span>
         </div>
       </div>
     </div>

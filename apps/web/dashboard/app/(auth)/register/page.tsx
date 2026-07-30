@@ -5,9 +5,9 @@ import { ClientRegisterForm } from "./client-form"
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col md:flex-row font-sans text-neutral-100 overflow-hidden">
+    <div className="min-h-screen bg-transparent flex flex-col md:flex-row font-sans text-neutral-100 overflow-hidden">
       {/* Left Pane - Branding & Value Prop */}
-      <div className="hidden md:flex md:w-1/2 relative bg-neutral-900 p-12 flex-col justify-between overflow-hidden">
+      <div className="hidden md:flex md:w-1/2 relative bg-transparent p-12 flex-col justify-between overflow-hidden">
         {/* Decorative Gradients */}
         <div className="absolute top-[-20%] left-[-10%] w-[140%] h-[140%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/40 via-neutral-900 to-neutral-950 blur-[100px] pointer-events-none" />
         

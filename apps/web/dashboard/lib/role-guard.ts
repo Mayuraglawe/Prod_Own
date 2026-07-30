@@ -12,7 +12,7 @@ export function normaliseRole(raw: string | null | undefined): UserRole {
   const upper = String(raw || '').toUpperCase().trim();
   if (upper === 'SUPER_ADMIN' || upper === 'SUPERADMIN' || upper === 'OWNER') return 'SUPER_ADMIN';
   if (upper === 'ADMIN') return 'ADMIN';
-  return 'EMPLOYEE';
+  return 'ADMIN';
 }
 
 /**
@@ -39,10 +39,14 @@ export async function resolveCallerRole(
   if (typeof dbClient.workspaceMember?.findUnique === 'function') {
     const membership = await dbClient.workspaceMember.findUnique({
       where: { userId_tenantId: { userId: user.id, tenantId } },
-      select: { role: true },
+      select: { role: true, status: true },
     });
-    if (membership) {
+    if (membership && membership.status === 'ACTIVE') {
       return { userId: user.id, role: normaliseRole(membership.role) };
+    }
+    // If pending or rejected, return null to block access
+    if (membership && membership.status !== 'ACTIVE') {
+      return null;
     }
   }
 

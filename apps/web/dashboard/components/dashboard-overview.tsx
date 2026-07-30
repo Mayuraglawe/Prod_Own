@@ -167,7 +167,7 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
               {stats.totalIssues > 0 ? Math.round((stats.totalIssues - stats.resolvedIssues) / stats.totalIssues * 100) : 0}%
             </div>
             <div className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#687870]">
-              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-bold border border-amber-200">Unresolved %</span>
+              <span className="px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 font-bold border border-yellow-200">Unresolved %</span>
             </div>
           </div>
         </div>
@@ -288,7 +288,7 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
                     </div>
                     <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] border ${
                       issue.status === 'RESOLVED' ? 'bg-[#d8f3dc] text-[#2d6a4f] border-[#d8f3dc]' :
-                      issue.status === 'OPEN' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+                      issue.status === 'OPEN' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-yellow-50 text-yellow-700 border-yellow-200'
                     }`}>
                       {issue.status}
                     </span>

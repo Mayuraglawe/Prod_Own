@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SuperAdminDashboard } from './super-admin-dashboard';
+import { SuperAdminDashboard } from './superadmin-dashboard';
 import { AdminDashboard } from './admin-dashboard';
 import { EmployeeDashboard } from './employee-dashboard';
 
