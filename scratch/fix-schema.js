@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fs = require('fs');
 let content = fs.readFileSync('packages/db/schema.sql', 'utf8');
 
