@@ -44,4 +44,13 @@ export const authConfig = {
       return session;
     },
   },
+  events: {
+    async createUser({ user }) {
+      if (user.id && user.email) {
+        // Auto-provision a workspace for OAuth users
+        const { autoProvisionWorkspace } = await import('./lib/services/workspace-provisioner');
+        await autoProvisionWorkspace(user.id, user.email);
+      }
+    }
+  }
 } satisfies NextAuthConfig;

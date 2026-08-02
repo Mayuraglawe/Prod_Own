@@ -27,12 +27,16 @@ export async function registerUser(formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
       }
     })
+
+    // Auto-provision a workspace for the new user so they don't need onboarding
+    const { autoProvisionWorkspace } = await import('../../../lib/services/workspace-provisioner')
+    await autoProvisionWorkspace(user.id, user.email!)
 
     return { success: true }
   } catch (e: unknown) {

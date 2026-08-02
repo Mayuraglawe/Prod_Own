@@ -55,7 +55,7 @@ export default async function RoleLayout({
   // 3. Security Guard: Prevent unauthorized role access
   if (requestedRole !== actualRole) {
     // If they are trying to access a role that isn't theirs, redirect to their assigned role path
-    redirect(`/${actualRole}/${user.tenantId ? 'dashboard' : 'onboarding'}`);
+    redirect(`/${actualRole}/dashboard`);
   }
 
   return <>{children}</>;

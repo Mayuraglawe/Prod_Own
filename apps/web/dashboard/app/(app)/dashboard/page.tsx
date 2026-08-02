@@ -26,18 +26,19 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  // New users without a workspace must go through onboarding
-  if (!user.tenantId) {
-    const defaultRole = (user.role || 'employee').toLowerCase();
-    const rolePath = defaultRole.includes('admin') ? 'admin' : 'employee';
-    redirect(`/${rolePath}/onboarding` as Route);
+  // New users without a workspace are now auto-provisioned during registration,
+  // but if an existing user slipped through without a tenant, provision one now.
+  let tenantId = user.tenantId;
+  if (!tenantId) {
+    const { autoProvisionWorkspace } = await import('../../../lib/services/workspace-provisioner');
+    tenantId = await autoProvisionWorkspace(user.id, user.email!);
   }
 
   // Fetch their actual role for this workspace
   const membership = await prisma.workspaceMember.findFirst({
     where: {
       userId: user.id,
-      tenantId: user.tenantId
+      tenantId: tenantId!
     }
   });
 
