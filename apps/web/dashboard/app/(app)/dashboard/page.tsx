@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import type { Route } from 'next';
 import { tenantsRepository } from '../../../lib/repositories/tenants';
 import { prisma } from '@litetrace/db';
+import crypto from 'crypto';
 
 
 /**
@@ -26,19 +27,45 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  // New users without a workspace are now auto-provisioned during registration,
-  // but if an existing user slipped through without a tenant, provision one now.
-  let tenantId = user.tenantId;
-  if (!tenantId) {
-    const { autoProvisionWorkspace } = await import('../../../lib/services/workspace-provisioner');
-    tenantId = await autoProvisionWorkspace(user.id, user.email!);
+  // If the user somehow has no workspace (e.g. legacy account), auto-create one
+  if (!user.tenantId) {
+    const name = "My Workspace";
+    const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const slug = `${baseSlug}-${user.id.slice(0, 6)}`;
+    
+    await prisma.$transaction(async (tx) => {
+      const tenant = await tx.tenant.create({ data: { slug, name } });
+      await tx.user.update({ where: { id: user.id }, data: { tenantId: tenant.id } });
+      await tx.workspaceMember.create({ 
+        data: { userId: user.id, tenantId: tenant.id, role: 'SUPER_ADMIN' } 
+      });
+      
+      const projectName = `${name} Main Project`;
+      const externalId = `${slug}-main`;
+      const randomHex = crypto.randomBytes(16).toString('hex');
+      const plainApiKey = `lt_live_${randomHex}`;
+      const apiKeyHash = crypto.createHash('sha256').update(plainApiKey).digest('hex');
+      const apiKeyPrefix = plainApiKey.substring(0, 15);
+
+      await tx.source.create({
+        data: {
+          tenantId: tenant.id,
+          name: projectName,
+          externalId,
+          apiKeyHash,
+          apiKeyPrefix,
+        },
+      });
+    });
+    
+    redirect('/dashboard');
   }
 
   // Fetch their actual role for this workspace
   const membership = await prisma.workspaceMember.findFirst({
     where: {
       userId: user.id,
-      tenantId: tenantId!
+      tenantId: user.tenantId
     }
   });
 

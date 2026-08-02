@@ -25,10 +25,10 @@ export default async function RoleLayout({
   // 2. Enforce Role Isolation
   const resolvedParams = await params;
   const requestedRole = resolvedParams.role.toLowerCase();
-  
+
   // Get the actual role from DB
   let actualRole = 'employee';
-  
+
   if (user.tenantId) {
     const membership = await prisma.workspaceMember.findFirst({
       where: { userId: user.id, tenantId: user.tenantId }
@@ -43,18 +43,19 @@ export default async function RoleLayout({
       }
     }
   } else {
-    // No tenant yet (e.g. onboarding) - fallback to User default role
+    // No tenant yet (onboarding path) — derive role from user.role field
     if (user.role) {
       const roleStr = user.role.toUpperCase();
-      if (roleStr.includes('ADMIN')) {
+      if (roleStr.includes('SUPER')) {
+        actualRole = 'superadmin';
+      } else if (roleStr.includes('ADMIN')) {
         actualRole = 'admin';
       }
     }
   }
 
-  // 3. Security Guard: Prevent unauthorized role access
+  // 3. Security Guard: Prevent unauthorized role access.
   if (requestedRole !== actualRole) {
-    // If they are trying to access a role that isn't theirs, redirect to their assigned role path
     redirect(`/${actualRole}/dashboard`);
   }
 

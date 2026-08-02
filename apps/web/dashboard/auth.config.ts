@@ -18,19 +18,11 @@ export const authConfig = {
         token.tenantId = user.tenantId;
       }
       
-      // Handle session updates
-      if (trigger === "update") {
-        console.log("== JWT UPDATE TRIGGERED ==");
-        console.log("Session payload:", session);
-        if (session?.user?.tenantId !== undefined) {
+      if (trigger === 'update' && session?.user) {
+        if (session.user.tenantId !== undefined) {
           token.tenantId = session.user.tenantId;
         }
-        if (session?.user?.role !== undefined) {
-          token.role = session.user.role;
-        }
-        console.log("Updated token:", token);
       }
-      
       return token;
     },
     async session({ session, token }) {
@@ -44,13 +36,4 @@ export const authConfig = {
       return session;
     },
   },
-  events: {
-    async createUser({ user }) {
-      if (user.id && user.email) {
-        // Auto-provision a workspace for OAuth users
-        const { autoProvisionWorkspace } = await import('./lib/services/workspace-provisioner');
-        await autoProvisionWorkspace(user.id, user.email);
-      }
-    }
-  }
 } satisfies NextAuthConfig;
