@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@litetrace/db';
-import { auth } from '../../auth';
+import { auth, update } from '../../auth';
 import { redirect } from 'next/navigation';
 
 /**
@@ -44,7 +44,7 @@ export async function createWorkspace(formData: FormData) {
     .replace(/^-+|-+$/g, '');
   const slug = `${baseSlug}-${user.id.slice(0, 6)}`;
 
-  await prisma.$transaction(async (tx) => {
+  const tenantId = await prisma.$transaction(async (tx) => {
     const tenant = await tx.tenant.create({
       data: { slug, name },
     });
@@ -63,7 +63,12 @@ export async function createWorkspace(formData: FormData) {
         role: 'SUPER_ADMIN'
       }
     });
+
+    return tenant.id;
   });
+
+  // Update NextAuth session with the new tenantId and role
+  await update({ user: { tenantId, role: 'superadmin' } });
 
   redirect('/dashboard');
 }

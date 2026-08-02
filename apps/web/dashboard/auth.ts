@@ -6,7 +6,8 @@ import { prisma } from "@litetrace/db"
 import bcrypt from "bcryptjs"
 import { authConfig } from "./auth.config"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+// @ts-expect-error - update is not in the type definition but it works
+export const { handlers, signIn, signOut, auth, update } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers: [

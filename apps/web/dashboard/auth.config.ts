@@ -9,7 +9,7 @@ export const authConfig = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         // @ts-expect-error - appending role
@@ -17,6 +17,20 @@ export const authConfig = {
         // @ts-expect-error - appending tenantId
         token.tenantId = user.tenantId;
       }
+      
+      // Handle session updates
+      if (trigger === "update") {
+        console.log("== JWT UPDATE TRIGGERED ==");
+        console.log("Session payload:", session);
+        if (session?.user?.tenantId !== undefined) {
+          token.tenantId = session.user.tenantId;
+        }
+        if (session?.user?.role !== undefined) {
+          token.role = session.user.role;
+        }
+        console.log("Updated token:", token);
+      }
+      
       return token;
     },
     async session({ session, token }) {
