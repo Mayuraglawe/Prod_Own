@@ -220,7 +220,7 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
               <p className="text-xs text-[#687870]">Time : 02.00 pm - 04.00 pm</p>
             </div>
           </div>
-          <Link href="/calendar" className="mt-6 w-full flex items-center justify-center gap-2 py-3 bg-[#52b788] hover:bg-[#8E9671] text-white font-bold text-xs rounded-full shadow-sm transition-all">
+          <Link href={"/calendar" as never} className="mt-6 w-full flex items-center justify-center gap-2 py-3 bg-[#52b788] hover:bg-[#8E9671] text-white font-bold text-xs rounded-full shadow-sm transition-all">
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>Start Meeting</span>
           </Link>
@@ -229,13 +229,13 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
         <div className="lg:col-span-4 rounded-3xl bg-white border border-[#E2E8E4] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-[#13221C]">Project</h3>
-            <Link href="/tasks" className="flex items-center gap-1 text-xs font-bold text-[#52b788] hover:underline">
+            <Link href={"/tasks" as never} className="flex items-center gap-1 text-xs font-bold text-[#52b788] hover:underline">
               <Plus className="w-3.5 h-3.5" />
               <span>New</span>
             </Link>
           </div>
           <div className="space-y-3">
-            <Link href="/tasks" className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
+            <Link href={"/tasks" as never} className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">⚡</div>
                 <div>
@@ -244,7 +244,7 @@ export function DashboardOverview({ stats, activeIssues }: { stats: DashboardSta
                 </div>
               </div>
             </Link>
-            <Link href="/tasks" className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
+            <Link href={"/tasks" as never} className="flex items-center justify-between p-2 rounded-2xl hover:bg-gray-50 transition-all cursor-pointer">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-xs">🛡️</div>
                 <div>

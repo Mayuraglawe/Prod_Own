@@ -6,7 +6,7 @@ export default NextAuth(authConfig).auth((req) => {
   try {
     const isLoggedIn = !!req.auth;
     const user = req.auth?.user as { role?: string; tenantId?: string } | undefined;
-    const role = user?.role?.toLowerCase() || 'admin';
+    const role = user?.role?.toLowerCase() || 'employee';
     const rolePrefix = role === 'super_admin' ? 'superadmin' : role;
 
     const isAuthRoute = req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register");
@@ -14,7 +14,7 @@ export default NextAuth(authConfig).auth((req) => {
     const isAuthApiRoute = req.nextUrl.pathname.startsWith("/api/auth");
     
     // Define role specific paths
-    const rolePaths = ["/admin", "/employee", "/owner", "/superadmin"];
+    const rolePaths = ["/admin", "/employee", "/owner", "/superadmin", "/candidate"];
     const isProtectedRoute = 
       req.nextUrl.pathname.startsWith("/dashboard") || 
       rolePaths.some(p => req.nextUrl.pathname.startsWith(p)) ||

@@ -849,7 +849,6 @@ Based on this data, it makes strict routing decisions:
 ## Summary
 The middleware is "filled in" by the NextAuth \`auth.config.ts\` callbacks, which inject the user's \`role\` and \`tenantId\` into the session token. The \`middleware.ts\` file then intercepts every request, reads that token, and acts as a traffic controller to ensure users only reach the exact pages and APIs they are authorized to access.
 `
-    }
     },
     {
       id: 'gen-006',
