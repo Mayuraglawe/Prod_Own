@@ -45,6 +45,7 @@ model Tenant {
   issues       Issue[]
   tracker      TimeTracker?
   auditLogs    AuditLog[]
+  subscriptions Subscription[]
 
   @@index([slug])
   @@index([suspended])
@@ -68,6 +69,7 @@ model User {
   accounts    Account[]
   sessions    Session[]
   auditLogs   AuditLog[]
+  subscriptions Subscription[]
 
   @@index([tenantId])
 }
@@ -225,6 +227,40 @@ model PaymentEvent {
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, provider])
+}
+
+/// Represents available subscription tiers and their pricing.
+model SubscriptionPlan {
+  id          String   @id @default(cuid())
+  tierCode    String   @unique // e.g. "starter", "pro"
+  name        String   // "Starter Plan"
+  price       Int      // e.g. 9900 (amount in paise)
+  currency    String   @default("INR")
+  isPopular   Boolean  @default(false)
+  features    Json     // Array of feature strings
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+/// Explicit tracking of monthly billing cycles and the admin who initiated them.
+model Subscription {
+  id              String   @id @default(cuid())
+  tenantId        String   
+  userId          String?  
+  planCode        String   
+  status          String   @default("ACTIVE") // ACTIVE, EXPIRED, CANCELED
+  startDate       DateTime @default(now())
+  endDate         DateTime 
+  razorpayOrderId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([tenantId])
+  @@index([userId])
 }
 
 enum IssueStatus {

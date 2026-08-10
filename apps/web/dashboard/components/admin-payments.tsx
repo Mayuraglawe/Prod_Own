@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CheckCircle2,
   Zap,
@@ -13,13 +13,64 @@ import {
   Rocket
 } from 'lucide-react';
 
-export function AdminPayments() {
+export interface SubscriptionPlan {
+  id: string;
+  tierCode: string;
+  name: string;
+  price: number;
+  currency: string;
+  isPopular: boolean;
+  features: string[];
+}
+
+export function AdminPayments({ tenantId, plans }: { tenantId: string | null; plans?: SubscriptionPlan[] }) {
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayment = async (plan: 'starter' | 'pro') => {
+    if (!tenantId) {
+      alert("No active workspace found to upgrade.");
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      // 1. Create order on the server
+      const res = await fetch('/api/payments/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan,
+          tenantId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to create order');
+      }
+
+      const order = await res.json();
+
+      // Open the dedicated payment page in a new tab for isolation, routing to the specific plan page
+      window.open(`/pay/${plan}/${order.id}`, '_blank');
+      setIsProcessing(false);
+    } catch (error) {
+      console.error('Payment Error:', error);
+      alert(`Checkout Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setIsProcessing(false);
+    }
+  };
   const invoices = [
     { id: 'INV-2026-004', date: 'Jul 01, 2026', amount: '₹99.00', credits: '+30 Credits', status: 'Paid' },
     { id: 'INV-2026-003', date: 'Jun 01, 2026', amount: '₹99.00', credits: '+30 Credits', status: 'Paid' },
     { id: 'INV-2026-002', date: 'May 01, 2026', amount: '₹99.00', credits: '+30 Credits', status: 'Paid' },
     { id: 'INV-2026-001', date: 'Apr 01, 2026', amount: '₹99.00', credits: '+30 Credits', status: 'Paid' },
   ];
+
+  const starterPlan = plans?.find(p => p.tierCode === 'starter');
+  const proPlan = plans?.find(p => p.tierCode === 'pro');
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
@@ -29,11 +80,15 @@ export function AdminPayments() {
           <h1 className="text-3xl font-bold tracking-tight text-[#13221C]">Billing & Credits</h1>
           <p className="text-[#687870] mt-1">Manage your workspace credits, subscription plans, and billing history.</p>
         </div>
-        <button className="px-6 py-3 bg-[#02042B] text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 border border-[#02042B]/20">
+        <button 
+          onClick={() => handlePayment('starter')}
+          disabled={isProcessing}
+          className="px-6 py-3 bg-[#02042B] text-white text-sm font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 border border-[#02042B]/20 disabled:opacity-70"
+        >
           <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12.5 3L11.5 11H18L11.5 21L12.5 13H6L12.5 3Z"/>
           </svg>
-          Buy Credits via Razorpay
+          {isProcessing ? 'Processing...' : 'Buy Credits via Razorpay'}
         </button>
       </div>
 
@@ -73,101 +128,91 @@ export function AdminPayments() {
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
-          {/* 99 INR Plan */}
-          <div className="relative overflow-hidden bg-white/70 backdrop-blur-xl border-2 border-transparent hover:border-[#20C997] transition-all rounded-3xl p-8 shadow-sm flex flex-col h-full group">
-            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-              <ShieldCheck className="w-24 h-24 text-[#0B4F3A]" />
-            </div>
-            <div className="relative z-10 flex-1">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-2xl font-black text-[#13221C]">Starter Plan</h4>
-                <span className="px-3 py-1 bg-slate-100 text-[#687870] text-xs font-bold uppercase tracking-wider rounded-full">Most Popular</span>
+          {/* Dynamic Starter Plan */}
+          {starterPlan && (
+            <div className="relative overflow-hidden bg-white/70 backdrop-blur-xl border-2 border-transparent hover:border-[#20C997] transition-all rounded-3xl p-8 shadow-sm flex flex-col h-full group">
+              <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <ShieldCheck className="w-24 h-24 text-[#0B4F3A]" />
               </div>
-              <div className="mb-6">
-                <span className="text-4xl font-extrabold text-[#13221C]">₹99</span>
-                <span className="text-[#687870] font-medium"> / month</span>
-              </div>
-              
-              <div className="p-4 rounded-xl bg-gradient-to-r from-[#E6F7F0] to-white border border-[#20C997]/20 mb-6">
-                <div className="flex items-center gap-3">
-                  <Coins className="w-5 h-5 text-[#20C997]" />
-                  <span className="font-bold text-[#0B4F3A]">Includes 30 Credits</span>
+              <div className="relative z-10 flex-1">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-2xl font-black text-[#13221C]">{starterPlan.name}</h4>
+                  {starterPlan.isPopular && (
+                    <span className="px-3 py-1 bg-slate-100 text-[#687870] text-xs font-bold uppercase tracking-wider rounded-full">Most Popular</span>
+                  )}
                 </div>
-              </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-extrabold text-[#13221C]">₹{starterPlan.price / 100}</span>
+                  <span className="text-[#687870] font-medium"> / month</span>
+                </div>
+                
+                <div className="p-4 rounded-xl bg-gradient-to-r from-[#E6F7F0] to-white border border-[#20C997]/20 mb-6">
+                  <div className="flex items-center gap-3">
+                    <Coins className="w-5 h-5 text-[#20C997]" />
+                    <span className="font-bold text-[#0B4F3A]">Includes 30 Credits</span>
+                  </div>
+                </div>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-[#20C997]" /> 
-                  <span className="font-semibold">100,000</span> Log Events per month
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-[#20C997]" /> 
-                  <span className="font-semibold">7 Days</span> Data Retention
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-[#20C997]" /> 
-                  <span className="font-semibold">Up to 3</span> Team Members
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-[#20C997]" /> 
-                  Community Support
+                <div className="space-y-4 mb-8">
+                  {Array.isArray(starterPlan.features) && starterPlan.features.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3 text-sm text-[#3E5248]">
+                      <CheckCircle2 className="w-5 h-5 text-[#20C997]" /> 
+                      <span className="font-medium">{feature as React.ReactNode}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
+              <button 
+                onClick={() => handlePayment('starter')}
+                disabled={isProcessing}
+                className="w-full py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8E4] text-[#13221C] font-bold hover:bg-[#E6F7F0] hover:text-[#0B4F3A] hover:border-[#20C997] transition-all disabled:opacity-70"
+              >
+                Current Plan / Upgrade
+              </button>
             </div>
-            <button className="w-full py-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8E4] text-[#13221C] font-bold hover:bg-[#E6F7F0] hover:text-[#0B4F3A] hover:border-[#20C997] transition-all">
-              Current Plan
-            </button>
-          </div>
+          )}
 
-          {/* 499 INR Plan */}
-          <div className="relative overflow-hidden bg-gradient-to-b from-white to-slate-50/50 backdrop-blur-xl border border-[#E2E8E4] hover:border-[#02042B] transition-all rounded-3xl p-8 shadow-sm flex flex-col h-full group">
-            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Zap className="w-24 h-24 text-[#02042B]" />
-            </div>
-            <div className="relative z-10 flex-1">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-2xl font-black text-[#13221C]">Pro Plan</h4>
-                <span className="px-3 py-1 bg-[#02042B] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">Premium</span>
+          {/* Dynamic Pro Plan */}
+          {proPlan && (
+            <div className="relative overflow-hidden bg-gradient-to-b from-white to-slate-50/50 backdrop-blur-xl border border-[#E2E8E4] hover:border-[#02042B] transition-all rounded-3xl p-8 shadow-sm flex flex-col h-full group">
+              <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <Zap className="w-24 h-24 text-[#02042B]" />
               </div>
-              <div className="mb-6">
-                <span className="text-4xl font-extrabold text-[#13221C]">₹499</span>
-                <span className="text-[#687870] font-medium"> / month</span>
-              </div>
-              
-              <div className="p-4 rounded-xl bg-blue-50 border border-blue-100 mb-6">
-                <div className="flex items-center gap-3">
-                  <Coins className="w-5 h-5 text-blue-600" />
-                  <span className="font-bold text-[#02042B]">Includes 180 Credits (6 Months)</span>
+              <div className="relative z-10 flex-1">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-2xl font-black text-[#13221C]">{proPlan.name}</h4>
+                  <span className="px-3 py-1 bg-[#02042B] text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-sm">Premium</span>
                 </div>
-              </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-extrabold text-[#13221C]">₹{proPlan.price / 100}</span>
+                  <span className="text-[#687870] font-medium"> / month</span>
+                </div>
+                
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-100 mb-6">
+                  <div className="flex items-center gap-3">
+                    <Coins className="w-5 h-5 text-blue-600" />
+                    <span className="font-bold text-[#02042B]">Includes 180 Credits (6 Months)</span>
+                  </div>
+                </div>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
-                  <span className="font-semibold">1 Million</span> Log Events per month
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
-                  <span className="font-semibold">30 Days</span> Data Retention
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
-                  <span className="font-semibold">Unlimited</span> Team Members
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
-                  <span className="font-semibold">Advanced Webhook Alerts</span>
-                </div>
-                <div className="flex items-center gap-3 text-sm text-[#3E5248]">
-                  <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
-                  <span className="font-semibold">Priority Processing</span>
+                <div className="space-y-4 mb-8">
+                  {Array.isArray(proPlan.features) && proPlan.features.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3 text-sm text-[#3E5248]">
+                      <CheckCircle2 className="w-5 h-5 text-blue-500" /> 
+                      <span className="font-medium">{feature as React.ReactNode}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
+              <button 
+                onClick={() => handlePayment('pro')}
+                disabled={isProcessing}
+                className="w-full py-3 rounded-xl bg-[#02042B] text-white font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all shadow-md disabled:opacity-70"
+              >
+                Upgrade to Pro
+              </button>
             </div>
-            <button className="w-full py-3 rounded-xl bg-[#02042B] text-white font-bold hover:shadow-lg hover:-translate-y-0.5 transition-all shadow-md">
-              Upgrade to Pro
-            </button>
-          </div>
+          )}
 
         </div>
       </div>

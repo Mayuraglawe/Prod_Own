@@ -5,7 +5,11 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
-    "prisma": "prisma"
+    "prisma": "prisma",
+    "generate": "prisma generate --schema=./prisma/schema.prisma"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
