@@ -22,6 +22,15 @@ export class InMemoryRateLimiter implements RateLimiter {
   }
 }
 
+/**
+ * The ApiGateway serves as the public-facing HTTP surface for the LiteTrace platform.
+ * 
+ * Architecture Role:
+ * It handles raw incoming traffic from client SDKs and Dashboard frontends. 
+ * Its primary responsibilities are enforcing authentication (API Keys, Bearer tokens), 
+ * executing fast-path rate limiting, and routing valid requests to the appropriate 
+ * internal CQRS microservices (e.g., Ingestion Service for writes, Query Service for reads).
+ */
 export class ApiGateway {
   private rateLimiter = new InMemoryRateLimiter();
 

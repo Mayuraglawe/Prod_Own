@@ -19,6 +19,15 @@ export class InMemoryCooldownStore implements CooldownStore {
   }
 }
 
+/**
+ * The AlertingService is the rules engine of the LiteTrace platform.
+ * 
+ * Architecture Role:
+ * It listens to `ISSUE_GROUPED` events (emitted after deduplication). It evaluates these 
+ * events against project-specific alert rules (e.g., "Is this a new issue?", "Did occurrences spike?").
+ * If rules are met, it checks the CooldownStore (Redis) to prevent alert spam, and then emits 
+ * an `ALERT_TRIGGERED` event for the Notification service to dispatch.
+ */
 export class AlertingService {
   constructor(
     private readonly eventBus: IEventBus,

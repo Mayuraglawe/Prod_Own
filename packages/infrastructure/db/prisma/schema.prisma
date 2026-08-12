@@ -1,5 +1,23 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+//
+// ============================================================================
+// ARCHITECTURE OVERVIEW: LiteTrace Data Model
+// ============================================================================
+// The schema adheres strictly to a multi-tenant CQRS architecture.
+// 
+// 1. **Multi-Tenancy (Row-Level Security)**: 
+//    The `Tenant` model is the primary boundary of data isolation. Almost all models 
+//    have a `tenantId` field. In Postgres, RLS policies are applied using this 
+//    field to prevent cross-tenant data leakage.
+//
+// 2. **CQRS & Read/Write Paths**:
+//    This Postgres database serves as the source of truth for **domain objects** 
+//    (Users, Tenants, Subscriptions, Issues). 
+//    Note: High-volume raw analytical events are NOT stored here directly; they are 
+//    streamed via Kafka to ClickHouse for fast querying, while this DB maintains the 
+//    deduplicated 'Issue' states and user metadata.
+// ============================================================================
 
 generator client {
   provider = "prisma-client-js"

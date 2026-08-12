@@ -48,6 +48,14 @@ export class InMemoryIssueReadRepository implements IssueReadRepository {
   }
 }
 
+/**
+ * The QueryService represents the CQRS "Read Path" of the LiteTrace platform.
+ * 
+ * Architecture Role:
+ * It abstracts away the complexity of fetching data for the Next.js Dashboard. 
+ * While ingestion and grouping handle writes, this service queries the underlying 
+ * datastores (Postgres for Issue metadata, ClickHouse for raw analytics and timeseries).
+ */
 export class QueryService {
   constructor(private readonly readRepo: IssueReadRepository = new InMemoryIssueReadRepository()) {}
 

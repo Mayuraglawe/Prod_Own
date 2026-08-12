@@ -13,6 +13,14 @@ export class MockHttpDispatcher implements HttpDispatcher {
   }
 }
 
+/**
+ * The NotificationService handles final dispatching of alerts to external systems.
+ * 
+ * Architecture Role:
+ * It consumes `ALERT_TRIGGERED` events from Kafka and handles the actual HTTP delivery 
+ * to third-party channels like Slack, Webhooks, or Email. It is isolated from the 
+ * AlertingService so that slow third-party APIs don't block the internal rules engine.
+ */
 export class NotificationService {
   constructor(private readonly httpDispatcher: HttpDispatcher = new MockHttpDispatcher()) {}
 

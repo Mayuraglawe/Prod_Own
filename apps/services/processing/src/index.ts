@@ -27,6 +27,15 @@ export interface ParsedTelemetry {
   [key: string]: unknown;
 }
 
+/**
+ * The ProcessingService normalizes and sanitizes raw telemetry data.
+ * 
+ * Architecture Role:
+ * Consumes `TELEMETRY_RECEIVED` events from Kafka. It is responsible for scrubbing PII 
+ * (Personally Identifiable Information) such as emails and tokens from the raw payload, 
+ * uploading the raw crash dump to Blob Storage (S3/MinIO), and parsing the JSON to 
+ * extract the stack trace. It emits the cleaned payload as `TELEMETRY_PROCESSED` for the Grouping service.
+ */
 export class ProcessingService {
   constructor(
     private readonly eventBus: IEventBus,

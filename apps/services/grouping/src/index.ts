@@ -62,18 +62,38 @@ export class InMemoryClickHouseStore implements ClickHouseAnalyticsStore {
   }
 }
 
+/**
+ * The GroupingService is the core deduplication engine of LiteTrace.
+ * 
+ * Architecture Role:
+ * It consumes processed telemetry events from the EventBus, applies a fingerprinting 
+ * algorithm to identify identical issues, and upserts them into the Issue Store (Postgres). 
+ * This prevents 10,000 identical raw errors from creating 10,000 separate issues on the dashboard.
+ */
 export class GroupingService {
   constructor(
     private readonly eventBus: IEventBus,
     private readonly issueStore: IssueStore = new InMemoryIssueStore(),
+
     private readonly clickHouseStore: ClickHouseAnalyticsStore = new InMemoryClickHouseStore()
   ) {}
 
+  /**
+   * Generates a deterministic SHA-256 fingerprint hash used to group identical errors.
+   * 
+   * @param title - The error message or title.
+   * @param culprit - The module or function where the error originated.
+   * @returns A 16-character hexadecimal hash representing the fingerprint.
+   */
   public generateFingerprint(title: string, culprit?: string): string {
     const norm = `${title.trim()}:${(culprit || '').trim()}`;
     return crypto.createHash('sha256').update(norm).digest('hex').substring(0, 16);
   }
 
+  /**
+   * Handles an incoming parsed telemetry event by fingerprinting it, recording the occurrence,
+   * and emitting an ISSUE_GROUPED event for downstream services (like alerting) to act upon.
+   */
   public async handleTelemetryProcessed(event: BaseEvent<TelemetryProcessedPayload>): Promise<void> {
     const fingerprint = this.generateFingerprint(event.payload.message, event.payload.culprit);
 

@@ -1,7 +1,15 @@
+/**
+ * Defines the core messaging topics (Kafka/Redpanda topics) that drive the
+ * asynchronous, decoupled microservices architecture of LiteTrace.
+ */
 export enum EventTopic {
+  /** Emitted by Ingest API when raw telemetry is received. Consumed by Processing Service. */
   TELEMETRY_RECEIVED = 'telemetry.received',
+  /** Emitted by Processing Service after PII scrubbing/parsing. Consumed by Grouping Service. */
   TELEMETRY_PROCESSED = 'telemetry.processed',
+  /** Emitted by Grouping Service after deduplication. Consumed by Alerting Service. */
   ISSUE_GROUPED = 'issue.grouped',
+  /** Emitted by Alerting Service when rules match. Consumed by Notification Service. */
   ALERT_TRIGGERED = 'alert.triggered',
   ATTACHMENT_UPLOADED = 'attachment.uploaded',
 }
@@ -25,6 +33,10 @@ export interface TelemetryReceivedPayload {
   clientIp?: string;
 }
 
+/**
+ * Payload produced by the Processing Service after successfully decoding
+ * and sanitizing a raw telemetry payload. 
+ */
 export interface TelemetryProcessedPayload {
   eventId: string;
   type: 'error' | 'transaction' | 'metric';
@@ -48,6 +60,10 @@ export interface TelemetryProcessedPayload {
   release?: string;
 }
 
+/**
+ * Payload produced by the Grouping Service.
+ * Represents an error occurrence that has been fingerprinted and mapped to a specific Issue (either new or existing).
+ */
 export interface IssueGroupedPayload {
   issueId: string;
   fingerprint: string;
