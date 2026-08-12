@@ -46,7 +46,7 @@ export class ProcessingService {
     return rawText
       .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[SCRUBBED_EMAIL]')
       .replace(/(bearer\s+)[a-zA-Z0-9._~+/-]+=*/gi, '$1[SCRUBBED_TOKEN]')
-      .replace(/(api_key=|apikey=)[a-zA-Z0-9_-]+/gi, '$1[SCRUBBED_KEY]');
+      .replace(/(api_key|apikey)([\s"':=\\]+)[a-zA-Z0-9_-]+/gi, '$1$2[SCRUBBED_KEY]');
   }
 
   public async handleTelemetryReceived(event: BaseEvent<TelemetryReceivedPayload>): Promise<void> {

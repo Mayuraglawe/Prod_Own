@@ -1,4 +1,5 @@
 import { IEventBus, EventTopic, BaseEvent, IssueGroupedPayload } from '@litetrace/events';
+import { shouldFireAlert } from './alertCooldown';
 
 export interface CooldownStore {
   isCoolingDown(issueId: string, cooldownSeconds: number): boolean;
@@ -31,8 +32,7 @@ export class InMemoryCooldownStore implements CooldownStore {
 export class AlertingService {
   constructor(
     private readonly eventBus: IEventBus,
-    private readonly cooldownStore: CooldownStore = new InMemoryCooldownStore(),
-    private readonly cooldownSeconds = 300 // 5 min cooldown window
+    private readonly cooldownSeconds = 1800 // 30 min cooldown window
   ) {}
 
   public async handleIssueGrouped(event: BaseEvent<IssueGroupedPayload>): Promise<void> {
@@ -47,11 +47,11 @@ export class AlertingService {
     }
 
     // Check Redis cooldown state to prevent alert spamming
-    if (this.cooldownStore.isCoolingDown(issueId, this.cooldownSeconds)) {
+    const ruleId = isNew ? 'rule_new_issue' : 'rule_burst';
+    const canFire = await shouldFireAlert(issueId, ruleId, this.cooldownSeconds);
+    if (!canFire) {
       return;
     }
-
-    this.cooldownStore.setCooldown(issueId);
 
     await this.eventBus.publish(
       EventTopic.ALERT_TRIGGERED,

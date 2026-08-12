@@ -1,4 +1,6 @@
 import { IEventBus, EventTopic } from '@litetrace/events';
+import { checkRateLimit, isDuplicate } from './rateLimiter';
+import { IngestionPayloadSchema } from './schema';
 
 /**
  * The IngestionService is the high-throughput write API entry point for the LiteTrace platform.
@@ -25,8 +27,25 @@ export class IngestionService {
     tenantId: string;
     projectId: string;
   }): Promise<{ eventId: string; status: string }> {
-    if (!params.rawBody || params.rawBody.trim().length === 0) {
-      throw new Error('Payload Body Cannot Be Empty');
+    // 1. Hard Size Limit: Reject payloads > 5MB to protect Kafka and downstream workers
+    const MAX_PAYLOAD_SIZE = 5 * 1024 * 1024; // 5MB
+    const byteLength = Buffer.byteLength(params.rawBody || '', 'utf8');
+    if (byteLength > MAX_PAYLOAD_SIZE) {
+      throw new Error('413 Payload Too Large');
+    }
+
+    // 2. Structural Validation
+    const validatedParams = IngestionPayloadSchema.parse(params);
+
+    // Fast-path edge deduplication
+    if (await isDuplicate(params.rawBody, params.tenantId)) {
+      return { eventId: 'dropped_duplicate', status: 'DROPPED' };
+    }
+
+    // Token bucket rate limiting (1000 capacity, 100 tokens/sec refill)
+    const allowed = await checkRateLimit(params.tenantId, 1000, 100);
+    if (!allowed) {
+      throw new Error('429 Too Many Requests');
     }
 
     // Publish the raw event to the message broker.
@@ -34,14 +53,14 @@ export class IngestionService {
     const event = await this.eventBus.publish(
       EventTopic.TELEMETRY_RECEIVED,
       {
-        rawBody: params.rawBody,
-        headers: params.headers,
-        sdkName: params.headers['x-sdk-name'],
-        sdkVersion: params.headers['x-sdk-version'],
+        rawBody: validatedParams.rawBody,
+        headers: validatedParams.headers,
+        sdkName: validatedParams.headers['x-sdk-name'],
+        sdkVersion: validatedParams.headers['x-sdk-version'],
       },
       {
-        tenantId: params.tenantId,
-        projectId: params.projectId,
+        tenantId: validatedParams.tenantId,
+        projectId: validatedParams.projectId,
       }
     );
 

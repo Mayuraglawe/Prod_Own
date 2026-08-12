@@ -1,26 +1,6 @@
 import crypto from 'crypto';
-import { IEventBus, EventTopic, BaseEvent, TelemetryProcessedPayload } from '@litetrace/events';
-
-export interface IssueStore {
-  upsertIssue(params: {
-    tenantId: string;
-    projectId: string;
-    fingerprint: string;
-    title: string;
-    culprit?: string;
-    level: string;
-  }): Promise<{ issueId: string; isNew: boolean; totalCount: number }>;
-}
-
-export interface ClickHouseAnalyticsStore {
-  recordOccurrence(event: {
-    issueId: string;
-    tenantId: string;
-    projectId: string;
-    timestamp: string;
-    environment?: string;
-  }): Promise<void>;
-}
+import { IEventBus, BaseEvent, TelemetryProcessedPayload } from '@litetrace/events';
+import { GroupingBatchWriter, IssueStore, ClickHouseAnalyticsStore, RawOccurrence } from './groupingBatchWriter';
 
 export class InMemoryIssueStore implements IssueStore {
   private issues = new Map<string, { issueId: string; count: number }>();
@@ -47,17 +27,9 @@ export class InMemoryIssueStore implements IssueStore {
   }
 }
 
-export interface OccurrenceEvent {
-  issueId: string;
-  tenantId: string;
-  projectId: string;
-  timestamp: string;
-  environment?: string;
-}
-
 export class InMemoryClickHouseStore implements ClickHouseAnalyticsStore {
-  public occurrences: OccurrenceEvent[] = [];
-  public async recordOccurrence(event: OccurrenceEvent): Promise<void> {
+  public occurrences: RawOccurrence[] = [];
+  public async recordOccurrence(event: RawOccurrence): Promise<void> {
     this.occurrences.push(event);
   }
 }
@@ -71,12 +43,19 @@ export class InMemoryClickHouseStore implements ClickHouseAnalyticsStore {
  * This prevents 10,000 identical raw errors from creating 10,000 separate issues on the dashboard.
  */
 export class GroupingService {
+  private batchWriter: GroupingBatchWriter;
+
   constructor(
     private readonly eventBus: IEventBus,
     private readonly issueStore: IssueStore = new InMemoryIssueStore(),
-
     private readonly clickHouseStore: ClickHouseAnalyticsStore = new InMemoryClickHouseStore()
-  ) {}
+  ) {
+    this.batchWriter = new GroupingBatchWriter(this.eventBus, this.issueStore, this.clickHouseStore);
+    
+    // Ensure we flush on shutdown
+    process.on('SIGTERM', () => this.batchWriter.flush());
+    process.on('SIGINT', () => this.batchWriter.flush());
+  }
 
   /**
    * Generates a deterministic SHA-256 fingerprint hash used to group identical errors.
@@ -95,42 +74,7 @@ export class GroupingService {
    * and emitting an ISSUE_GROUPED event for downstream services (like alerting) to act upon.
    */
   public async handleTelemetryProcessed(event: BaseEvent<TelemetryProcessedPayload>): Promise<void> {
-    const fingerprint = this.generateFingerprint(event.payload.message, event.payload.culprit);
-
-    const { issueId, isNew, totalCount } = await this.issueStore.upsertIssue({
-      tenantId: event.tenantId,
-      projectId: event.projectId,
-      fingerprint,
-      title: event.payload.message,
-      culprit: event.payload.culprit,
-      level: event.payload.level,
-    });
-
-    await this.clickHouseStore.recordOccurrence({
-      issueId,
-      tenantId: event.tenantId,
-      projectId: event.projectId,
-      timestamp: event.timestamp,
-      environment: event.payload.environment,
-    });
-
-    await this.eventBus.publish(
-      EventTopic.ISSUE_GROUPED,
-      {
-        issueId,
-        fingerprint,
-        title: event.payload.message,
-        culprit: event.payload.culprit,
-        level: event.payload.level,
-        isNew,
-        occurrenceCount: totalCount,
-        lastSeen: event.timestamp,
-        eventId: event.payload.eventId,
-      },
-      {
-        tenantId: event.tenantId,
-        projectId: event.projectId,
-      }
-    );
+    // Add to micro-batching buffer instead of sequential db writes
+    await this.batchWriter.add(event);
   }
 }
