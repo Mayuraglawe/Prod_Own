@@ -18,7 +18,7 @@ export default async function AdminPaymentsPage() {
     orderBy: { price: 'asc' },
   });
 
-  const formattedPlans = plans.map((p: any) => ({
+  const formattedPlans = plans.map((p) => ({
     ...p,
     features: p.features as string[],
   }));

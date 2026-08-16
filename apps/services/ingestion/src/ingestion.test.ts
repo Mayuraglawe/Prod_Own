@@ -9,9 +9,9 @@ describe('IngestionService', () => {
 
     const res = await service.processIngestRequest({
       rawBody: '{"message":"TypeError: Cannot read properties of undefined"}',
-      headers: { 'x-sdk-name': 'sentry.javascript.nextjs' },
-      tenantId: 'tenant-100',
-      projectId: 'proj-500',
+      headers: { 'x-sdk-name': 'sentry.javascript.nextjs', 'x-sdk-version': '1.0.0' },
+      tenantId: '123e4567-e89b-12d3-a456-426614174000',
+      projectId: '987fcdeb-51a2-43d7-9012-345678901234',
     });
 
     expect(res.status).toBe('QUEUED');
@@ -25,9 +25,9 @@ describe('IngestionService', () => {
     await expect(
       service.processIngestRequest({
         rawBody: '',
-        headers: {},
-        tenantId: 't1',
-        projectId: 'p1',
+        headers: { 'x-sdk-name': 'sentry.javascript.nextjs', 'x-sdk-version': '1.0.0' },
+        tenantId: '123e4567-e89b-12d3-a456-426614174000',
+        projectId: '987fcdeb-51a2-43d7-9012-345678901234',
       })
     ).rejects.toThrow('Payload Body Cannot Be Empty');
   });

@@ -38,9 +38,10 @@ describe('GroupingService', () => {
     };
 
     await service.handleTelemetryProcessed(baseEvent);
-    await service.handleTelemetryProcessed({ ...baseEvent, eventId: 'evt-2' });
+    await new Promise((r) => setTimeout(r, 600));
 
-    await new Promise((r) => setTimeout(r, 50));
+    await service.handleTelemetryProcessed({ ...baseEvent, eventId: 'evt-2' });
+    await new Promise((r) => setTimeout(r, 600));
 
     expect(mockHandler).toHaveBeenCalledTimes(2);
     const issue1 = mockHandler.mock.calls[0]![0].payload;

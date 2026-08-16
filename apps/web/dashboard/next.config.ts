@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     '@litetrace/observability',
     '@litetrace/types',
   ],
+  serverExternalPackages: ['@opentelemetry/sdk-node', '@opentelemetry/api', '@opentelemetry/core'],
   eslint: {
     ignoreDuringBuilds: true,
   },

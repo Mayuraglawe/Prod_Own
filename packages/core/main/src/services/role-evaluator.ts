@@ -3,14 +3,27 @@ import { IRoleEvaluator } from './role-evaluator.interface';
 
 export class DefaultRoleEvaluator implements IRoleEvaluator {
   async isSuperAdmin(user: IAuthUser, dbClient: IUserReader): Promise<boolean> {
-    if (!user) return false;
+    if (!user || !user.id) return false;
 
-    // 1. Check globally assigned role first
-    if (user.role && ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(String(user.role).toUpperCase().trim())) {
-      return true;
+    // Fast-fail: If the JWT doesn't even claim to be a superadmin, reject immediately.
+    const rawRole = String(user.role).toUpperCase().trim();
+    const isClaimingSuperAdmin = ['SUPER_ADMIN', 'SUPERADMIN', 'OWNER'].includes(rawRole);
+    
+    if (!isClaimingSuperAdmin) {
+      return false;
     }
 
-    // 2. Check if the user has a SUPER_ADMIN membership in any workspace
-    return dbClient.checkSuperAdminMembership(user.id);
+    
+    
+    // Strict Verification: Query the authoritative database.
+    // This ensures that if a superadmin is demoted, their active JWT cannot be used.
+    try {
+      const isVerified = await dbClient.checkSuperAdminMembership(user.id);
+      return isVerified;
+    } catch (error) {
+      // Fail secure: If the database cannot be reached, deny access.
+      console.error(`Failed to verify superadmin status for ${user.id}`, error);
+      return false;
+    }
   }
 }

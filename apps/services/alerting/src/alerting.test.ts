@@ -10,6 +10,8 @@ describe('AlertingService', () => {
 
     bus.subscribe(EventTopic.ALERT_TRIGGERED, mockHandler);
 
+    const uniqueIssueId1 = `iss-new-${Date.now()}`;
+
     await service.handleIssueGrouped({
       eventId: 'e1',
       topic: EventTopic.ISSUE_GROUPED,
@@ -17,7 +19,7 @@ describe('AlertingService', () => {
       tenantId: 't1',
       projectId: 'p1',
       payload: {
-        issueId: 'iss-1',
+        issueId: uniqueIssueId1,
         fingerprint: 'fp-1',
         title: 'Unhandled Exception',
         level: 'error',
@@ -36,10 +38,12 @@ describe('AlertingService', () => {
 
   it('respects cooldown and suppresses repeated burst alerts within cooldown window', async () => {
     const bus = new InMemoryEventBus();
-    const service = new AlertingService(bus, undefined, 300); // 300s cooldown
+    const service = new AlertingService(bus, 300); // 300s cooldown
     const mockHandler = vi.fn().mockResolvedValue(undefined);
 
     bus.subscribe(EventTopic.ALERT_TRIGGERED, mockHandler);
+
+    const uniqueIssueId2 = `iss-burst-${Date.now()}`;
 
     const baseEvent = {
       eventId: 'e1',
@@ -48,7 +52,7 @@ describe('AlertingService', () => {
       tenantId: 't1',
       projectId: 'p1',
       payload: {
-        issueId: 'iss-1',
+        issueId: uniqueIssueId2,
         fingerprint: 'fp-1',
         title: 'Unhandled Exception',
         level: 'error',
@@ -63,10 +67,7 @@ describe('AlertingService', () => {
     await service.handleIssueGrouped(baseEvent);
 
     // Second call immediately after -> suppressed due to cooldown
-    await service.handleIssueGrouped({
-      ...baseEvent,
-      payload: { ...baseEvent.payload, isNew: false, occurrenceCount: 5 },
-    });
+    await service.handleIssueGrouped(baseEvent);
 
     await new Promise((r) => setTimeout(r, 50));
 

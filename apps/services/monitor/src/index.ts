@@ -90,7 +90,7 @@ async function startMonitor() {
     if (queueMetrics) {
       console.log(`[Metrics] BullMQ Notification Queue: Waiting=${queueMetrics.waiting} Active=${queueMetrics.active} Failed=${queueMetrics.failed}`);
       
-      if (queueMetrics.waiting > 1000) {
+      if ((queueMetrics.waiting || 0) > 1000) {
         console.warn(`🚨 [ALERT] High Notification Queue depth! Waiting: ${queueMetrics.waiting}`);
       }
     }

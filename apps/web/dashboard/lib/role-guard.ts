@@ -131,3 +131,28 @@ export async function requireSuperAdmin(): Promise<{
     ),
   };
 }
+
+/**
+ * Server Component Guard: Requires SUPER_ADMIN, ignoring tenant boundaries.
+ * Throws an error or redirects if unauthorized. Returns the user object on success.
+ */
+import { redirect } from 'next/navigation';
+
+export async function requireSuperAdminServer() {
+  const session = await auth();
+  if (!session?.user?.email) {
+    redirect('/login');
+  }
+
+  const user = await authUserService.getCurrentUser(session.user.email);
+  if (!user) {
+    redirect('/login');
+  }
+
+  const isSuperAdmin = await authUserService.isSuperAdmin(user);
+  if (!isSuperAdmin) {
+    throw new Error('Forbidden: Superadmin access required');
+  }
+
+  return user;
+}
