@@ -7,8 +7,8 @@ export interface AuditLogPayload {
   actorEmail: string;
   actionType: AuditActionType;
   targetResourceId: string;
-  oldState?: any;
-  newState?: any;
+  oldState?: Record<string, unknown>;
+  newState?: Record<string, unknown>;
   ipAddress?: string;
   userAgent?: string;
 }

@@ -20,7 +20,7 @@ const notificationQueue = new Queue('notification-queue', { connection: redisCon
 /**
  * Polls Kafka to calculate consumer lag for a specific group and topic.
  */
-async function getKafkaConsumerLag(groupId: string, topic: string): Promise<number> {
+export async function getKafkaConsumerLag(groupId: string, topic: string): Promise<number> {
   try {
     const offsets = await admin.fetchTopicOffsets(topic);
     const consumerOffsets = await admin.fetchOffsets({ groupId, topics: [topic] });
@@ -55,7 +55,7 @@ async function getKafkaConsumerLag(groupId: string, topic: string): Promise<numb
 /**
  * Polls BullMQ to get active queue depth metrics.
  */
-async function getBullMQQueueMetrics(queue: Queue) {
+export async function getBullMQQueueMetrics(queue: Queue) {
   try {
     const counts = await queue.getJobCounts('waiting', 'active', 'delayed', 'failed');
     return counts;
@@ -68,14 +68,14 @@ async function getBullMQQueueMetrics(queue: Queue) {
 /**
  * Main polling loop for the sidecar monitor.
  */
-async function startMonitor() {
+export async function startMonitor() {
   await admin.connect();
   console.log('Monitor Sidecar started...');
 
   const KAFKA_LAG_THRESHOLD = 5000;
   const POLL_INTERVAL_MS = 30000;
 
-  setInterval(async () => {
+  const intervalId = setInterval(async () => {
     // 1. Check Grouping Service Kafka Lag
     const groupingLag = await getKafkaConsumerLag('grouping-service-group', 'TELEMETRY_RECEIVED');
     console.log(`[Metrics] Kafka Consumer Lag (TELEMETRY_RECEIVED): ${groupingLag}`);
@@ -95,16 +95,21 @@ async function startMonitor() {
       }
     }
   }, POLL_INTERVAL_MS);
+
+  return { intervalId, admin, redisConnection };
 }
 
 // Ensure graceful shutdown
-process.on('SIGTERM', async () => {
-  await admin.disconnect();
-  await redisConnection.quit();
-  process.exit(0);
-});
+if (process.env.NODE_ENV !== 'test') {
+  process.on('SIGTERM', async () => {
+    await admin.disconnect();
+    await redisConnection.quit();
+    process.exit(0);
+  });
 
-startMonitor().catch(err => {
-  console.error('Failed to start monitor:', err);
-  process.exit(1);
-});
+  startMonitor().catch(err => {
+    console.error('Failed to start monitor:', err);
+    process.exit(1);
+  });
+}
+
