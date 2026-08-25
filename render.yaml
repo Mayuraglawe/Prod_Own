@@ -2,5 +2,5 @@ services:
   - type: web
     name: litetrace-dashboard
     env: node
-    buildCommand: corepack enable && pnpm install && pnpm build
+    buildCommand: npm install -g pnpm && pnpm install && pnpm build
     startCommand: pnpm start
