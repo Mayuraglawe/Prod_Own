@@ -384,8 +384,12 @@ export async function performMonitorPollCycle(
  * Main polling loop for the sidecar monitor.
  */
 export async function startMonitor(httpDispatcher?: HttpDispatcher) {
-  await admin.connect();
-  console.log('Monitor Sidecar started...');
+  try {
+    await admin.connect();
+    console.log('Monitor Sidecar connected to Kafka successfully...');
+  } catch (err) {
+    console.warn(`[Monitor Sidecar] Warning: Kafka connection unavailable at startup (${err instanceof Error ? err.message : err}). Will poll gracefully.`);
+  }
 
   const KAFKA_LAG_THRESHOLD = 5000;
   const QUEUE_DEPTH_THRESHOLD = 1000;
@@ -410,14 +414,17 @@ export async function startMonitor(httpDispatcher?: HttpDispatcher) {
 // Ensure graceful shutdown
 if (process.env.NODE_ENV !== 'test') {
   process.on('SIGTERM', async () => {
-    await admin.disconnect();
-    await redisConnection.quit();
+    try {
+      await admin.disconnect();
+      await redisConnection.quit();
+    } catch (err) {
+      console.warn('[Monitor Sidecar] Error during shutdown cleanup:', err);
+    }
     process.exit(0);
   });
 
   startMonitor().catch(err => {
     console.error('Failed to start monitor:', err);
-    process.exit(1);
   });
 }
 

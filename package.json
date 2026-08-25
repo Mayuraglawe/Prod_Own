@@ -3,7 +3,9 @@
   "private": true,
   "packageManager": "pnpm@9.15.0",
   "scripts": {
+    "start": "turbo run dev --concurrency=20",
     "dev": "turbo run dev --concurrency=20",
+    "render-build": "corepack enable && pnpm install && pnpm build",
     "clean": "node -e \"const fs = require('fs'); ['apps/web/dashboard/.next', '.turbo', 'apps/web/dashboard/.turbo'].forEach(p => fs.rmSync(p, { recursive: true, force: true }))\"",
     "build": "turbo run build",
     "lint": "turbo run lint",
