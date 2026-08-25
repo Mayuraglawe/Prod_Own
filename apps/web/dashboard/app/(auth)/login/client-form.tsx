@@ -34,12 +34,12 @@ export function ClientLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-lg">
+        <div className="p-3 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg">
           {error}
         </div>
       )}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-neutral-300" htmlFor="email">
+        <label className="text-[13px] font-medium text-white/60" htmlFor="email">
           Email
         </label>
         <input
@@ -48,13 +48,13 @@ export function ClientLoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-800 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition-colors text-sm"
           placeholder="you@example.com"
         />
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-neutral-300" htmlFor="password">
+          <label className="text-[13px] font-medium text-white/60" htmlFor="password">
             Password
           </label>
         </div>
@@ -64,14 +64,14 @@ export function ClientLoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-800 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          className="w-full px-4 py-3 bg-white/[0.03] border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-[#F97316] focus:ring-1 focus:ring-[#F97316] transition-colors text-sm"
           placeholder="••••••••"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all disabled:opacity-50"
+        className="shine-button relative w-full py-3.5 bg-transparent border border-white/10 hover:border-[#F97316]/50 text-white text-[14px] font-medium rounded-xl transition-all duration-200 hover:shadow-[0_0_15px_rgba(249,115,22,0.2)] disabled:opacity-50"
       >
         {loading ? "Signing in..." : "Sign In with Email"}
       </button>
