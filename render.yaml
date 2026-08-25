@@ -2,5 +2,5 @@ services:
   - type: web
     name: litetrace-dashboard
     env: node
-    buildCommand: npm install -g pnpm && pnpm install && pnpm build
-    startCommand: pnpm start
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/dashboard start
