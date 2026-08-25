@@ -2,6 +2,8 @@ import React from 'react';
 import { NavigationShell } from '../../components/navigation-shell';
 import { auth } from '../../auth';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * App shell layout.
  *
@@ -15,12 +17,8 @@ import { auth } from '../../auth';
  * auth.config.ts on login), so no DB call is needed here at all.
  */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  let session = null;
-  try {
-    session = await auth();
-  } catch (err) {
-    console.warn('[AppLayout] Auth session fetch failed:', err);
-  }
+  // Let Next.js natively handle the DYNAMIC_SERVER_USAGE error thrown by auth() during build
+  const session = await auth();
 
   // Build a lightweight user object purely from the JWT token — zero DB queries.
   let user: {
