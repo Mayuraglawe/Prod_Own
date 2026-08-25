@@ -4,9 +4,11 @@ services:
     name: litetrace-dashboard
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 build
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/dashboard build
     startCommand: npx pnpm@9.15.0 --filter @litetrace/dashboard start
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: DATABASE_URL
         sync: false
       - key: REDIS_URL
@@ -18,19 +20,19 @@ services:
       - key: AUTH_SECRET
         sync: false
       - key: AUTH_TRUST_HOST
-        value: true
+        value: "true"
       - key: APP_URL
         sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
-      - key: TENANT_HEADER
-        value: x-tenant-id
-      - key: NODE_ENV
-        value: production
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-dashboard
 
-  # ── 2. API Gateway (stateless HTTP gateway) ───────────────────────────────
+  # ── 2. API Gateway (public-facing HTTP surface) ───────────────────────────
   - type: web
     name: litetrace-gateway
     env: node
@@ -38,12 +40,22 @@ services:
     buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/gateway build
     startCommand: npx pnpm@9.15.0 --filter @litetrace/gateway start
     envVars:
-      - key: PORT
-        value: 8000
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: "8000"
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-gateway
 
-  # ── 3. BullMQ Background Worker (Redis queue consumer) ───────────────────
+  # ── 3. BullMQ Worker (Redis queue consumer) ───────────────────────────────
   - type: worker
     name: litetrace-worker
     env: node
@@ -51,9 +63,188 @@ services:
     buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/worker build
     startCommand: npx pnpm@9.15.0 --filter @litetrace/worker start
     envVars:
-      - key: REDIS_URL
-        sync: false
-      - key: DATABASE_URL
-        sync: false
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-worker
+
+  # ── 4. Ingestion Service ──────────────────────────────────────────────────
+  - type: worker
+    name: litetrace-ingestion
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/ingestion build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/ingestion start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-ingestion
+
+  # ── 5. Grouping Service ───────────────────────────────────────────────────
+  - type: worker
+    name: litetrace-grouping
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/grouping build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/grouping start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-grouping
+
+  # ── 6. Alerting Service ───────────────────────────────────────────────────
+  - type: worker
+    name: litetrace-alerting
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/alerting build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/alerting start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: N8N_ALERT_WEBHOOK_URL
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-alerting
+
+  # ── 7. Notification Service ───────────────────────────────────────────────
+  - type: worker
+    name: litetrace-notification
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/notification build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/notification start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-notification
+
+  # ── 8. Processing Service ─────────────────────────────────────────────────
+  - type: worker
+    name: litetrace-processing
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/processing build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/processing start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKERS
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-processing
+
+  # ── 9. Query Service (read API) ───────────────────────────────────────────
+  - type: web
+    name: litetrace-query
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/query build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/query start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "4000"
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: CLICKHOUSE_URL
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-query
+
+  # ── 10. Monitor Sidecar ───────────────────────────────────────────────────
+  - type: worker
+    name: litetrace-monitor
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/monitor build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/monitor start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: KAFKA_BROKER
+        sync: false
+      - key: MONITOR_WEBHOOK_URL
+        sync: false
+      - key: OTEL_SERVICE_NAME
+        value: litetrace-monitor

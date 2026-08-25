@@ -44,9 +44,9 @@ const envSchema = z.object({
   /** OpenTelemetry OTLP trace HTTP collector URL endpoint */
   OTEL_EXPORTER_OTLP_ENDPOINT: z.string().optional().default(''),
   /** Upstash Redis REST URL */
-  UPSTASH_REDIS_REST_URL: z.string().url(),
+  UPSTASH_REDIS_REST_URL: z.string().url().optional().default(''),
   /** Upstash Redis REST Token */
-  UPSTASH_REDIS_REST_TOKEN: z.string()
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional().default('')
 });
 
 /**
