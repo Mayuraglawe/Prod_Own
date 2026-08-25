@@ -1,6 +1,59 @@
 services:
+  # ── 1. Next.js Dashboard (web frontend) ──────────────────────────────────
   - type: web
     name: litetrace-dashboard
     env: node
+    branch: Mayur
     buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 build
     startCommand: npx pnpm@9.15.0 --filter @litetrace/dashboard start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: AUTH_TRUST_HOST
+        value: true
+      - key: APP_URL
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: TENANT_HEADER
+        value: x-tenant-id
+      - key: NODE_ENV
+        value: production
+
+  # ── 2. API Gateway (stateless HTTP gateway) ───────────────────────────────
+  - type: web
+    name: litetrace-gateway
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/gateway build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/gateway start
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: NODE_ENV
+        value: production
+
+  # ── 3. BullMQ Background Worker (Redis queue consumer) ───────────────────
+  - type: worker
+    name: litetrace-worker
+    env: node
+    branch: Mayur
+    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/worker build
+    startCommand: npx pnpm@9.15.0 --filter @litetrace/worker start
+    envVars:
+      - key: REDIS_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
