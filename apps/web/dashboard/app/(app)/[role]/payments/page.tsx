@@ -1,5 +1,6 @@
 import React from 'react';
 import { AdminPayments } from '../../../../components/admin-payments';
+import type { SubscriptionPlan } from '@prisma/client';
 
 export const metadata = {
   title: 'Billing & Payments | LiteTrace',
@@ -18,7 +19,7 @@ export default async function AdminPaymentsPage() {
     orderBy: { price: 'asc' },
   });
 
-  const formattedPlans = plans.map((p) => ({
+  const formattedPlans = plans.map((p: SubscriptionPlan) => ({
     ...p,
     features: p.features as string[],
   }));
