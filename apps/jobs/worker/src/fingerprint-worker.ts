@@ -1,5 +1,5 @@
 import { redisConnection, enqueueAlert } from '@litetrace/queue';
-import { prisma } from '@litetrace/db';
+import { prisma, Prisma } from '@litetrace/db';
 import { scrubContent, scrubMetadata, fingerprint as computeFingerprint } from '@litetrace/ingest';
 
 const STREAM_KEY = 'litetrace:events';
@@ -149,7 +149,7 @@ async function processEvent(payloadStr: string): Promise<void> {
         sourceId,
         issueId,
         content,
-        metadata: (scrubbedMeta ?? {}) as Parameters<typeof prisma.event.create>[0]['data']['metadata'],
+        metadata: (scrubbedMeta ?? {}) as Prisma.InputJsonValue,
         environment: typeof environment === 'string' ? environment : 'unknown',
         release: typeof release === 'string' ? release : 'unknown',
       },
