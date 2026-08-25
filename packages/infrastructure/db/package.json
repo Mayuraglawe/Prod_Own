@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "scripts": {
     "prisma": "prisma",
-    "generate": "prisma generate --schema=./prisma/schema.prisma"
+    "generate": "prisma generate --schema=./prisma/schema.prisma",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"
