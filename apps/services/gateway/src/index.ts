@@ -84,13 +84,32 @@ export class ApiGateway {
 if (process.env.NODE_ENV !== 'test') {
   const gateway = new ApiGateway();
   const server = http.createServer((req, res) => {
+    // CORS configuration for cross-origin requests from Vercel frontend
+    const allowedOrigin = process.env.CORS_ORIGIN || '*';
+    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key, x-tenant-id');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Handle preflight OPTIONS requests
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 204;
+      res.end();
+      return;
+    }
+
+    const resProxy = {
+      statusCode: 200,
+      setHeader: (k: string, v: string) => res.setHeader(k, v),
+      end: (b: string) => {
+        res.statusCode = resProxy.statusCode;
+        res.end(b);
+      },
+    };
+
     gateway.handleRequest(
       { url: req.url, headers: req.headers as Record<string, string | string[] | undefined>, method: req.method },
-      {
-        statusCode: 200,
-        setHeader: (k, v) => res.setHeader(k, v),
-        end: (b) => res.end(b),
-      }
+      resProxy
     );
   });
   const port = process.env.PORT || 8000;

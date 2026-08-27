@@ -1,37 +1,4 @@
 services:
-  # ── 1. Next.js Dashboard (web frontend) ──────────────────────────────────
-  - type: web
-    name: litetrace-dashboard
-    env: node
-    branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/dashboard build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/dashboard start
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: DATABASE_URL
-        sync: false
-      - key: REDIS_URL
-        sync: false
-      - key: UPSTASH_REDIS_REST_URL
-        sync: false
-      - key: UPSTASH_REDIS_REST_TOKEN
-        sync: false
-      - key: AUTH_SECRET
-        sync: false
-      - key: AUTH_TRUST_HOST
-        value: "true"
-      - key: APP_URL
-        sync: false
-      - key: TENANT_HEADER
-        value: x-tenant-id
-      - key: RAZORPAY_KEY_ID
-        sync: false
-      - key: RAZORPAY_KEY_SECRET
-        sync: false
-      - key: OTEL_SERVICE_NAME
-        value: litetrace-dashboard
-
   # ── 2. API Gateway (public-facing HTTP surface) ───────────────────────────
   - type: web
     name: litetrace-gateway
