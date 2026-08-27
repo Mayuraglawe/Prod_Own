@@ -4,8 +4,8 @@ services:
     name: litetrace-gateway
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/gateway build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/gateway start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/gateway build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/gateway start
     envVars:
       - key: NODE_ENV
         value: production
@@ -27,8 +27,8 @@ services:
     name: litetrace-worker
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/worker build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/worker start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/worker build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/worker start
     envVars:
       - key: NODE_ENV
         value: production
@@ -48,8 +48,8 @@ services:
     name: litetrace-ingestion
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/ingestion build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/ingestion start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/ingestion build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/ingestion start
     envVars:
       - key: NODE_ENV
         value: production
@@ -71,8 +71,8 @@ services:
     name: litetrace-grouping
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/grouping build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/grouping start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/grouping build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/grouping start
     envVars:
       - key: NODE_ENV
         value: production
@@ -94,8 +94,8 @@ services:
     name: litetrace-alerting
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/alerting build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/alerting start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/alerting build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/alerting start
     envVars:
       - key: NODE_ENV
         value: production
@@ -121,8 +121,8 @@ services:
     name: litetrace-notification
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/notification build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/notification start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/notification build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/notification start
     envVars:
       - key: NODE_ENV
         value: production
@@ -146,8 +146,8 @@ services:
     name: litetrace-processing
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/processing build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/processing start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/processing build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/processing start
     envVars:
       - key: NODE_ENV
         value: production
@@ -171,8 +171,8 @@ services:
     name: litetrace-query
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/query build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/query start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/query build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/query start
     envVars:
       - key: NODE_ENV
         value: production
@@ -196,8 +196,8 @@ services:
     name: litetrace-monitor
     env: node
     branch: Mayur
-    buildCommand: npx pnpm@9.15.0 install && npx pnpm@9.15.0 --filter @litetrace/monitor build
-    startCommand: npx pnpm@9.15.0 --filter @litetrace/monitor start
+    buildCommand: npx pnpm@8.15.9 install && npx pnpm@8.15.9 --filter @litetrace/monitor build
+    startCommand: npx pnpm@8.15.9 --filter @litetrace/monitor start
     envVars:
       - key: NODE_ENV
         value: production
